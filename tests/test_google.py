@@ -1,7 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 
 
-def test_google_search(driver):
-    driver.visit('https://google.com')
-    driver.get("[name='q']").type('puppies', Keys.ENTER)
-    assert 'puppies' in driver.title
+def test_google_search(py):
+    py.visit('https://google.com')
+    py.get("[name='q']").type('puppies', Keys.ENTER)
+    assert 'puppies' in py.title
