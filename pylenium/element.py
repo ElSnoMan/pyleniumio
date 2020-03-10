@@ -181,13 +181,18 @@ class Element:
             elements = self.current.find_elements(By.CSS_SELECTOR, css)
         return Elements(self.driver, elements)
 
+    def children(self) -> Elements:
+        """ Gets the Child elements. """
+        elements = self.driver.execute_script('return arguments[0].children;', self.current)
+        return Elements(self.driver, elements)
+
     def parent(self) -> 'Element':
         """ Gets the Parent element. """
         js = '''
         elem = arguments[0];
         return elem.parentNode;
         '''
-        element = self.driver.current.execute_script(js, self.current)
+        element = self.driver.execute_script(js, self.current)
         return Element(self.driver, element)
 
     def siblings(self) -> Elements:
@@ -205,7 +210,7 @@ class Element:
         }
         return siblings;
         '''
-        elements = self.driver.current.execute_script(js, self.current)
+        elements = self.driver.execute_script(js, self.current)
         return Elements(self.driver, elements)
 
 
