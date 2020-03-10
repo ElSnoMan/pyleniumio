@@ -1,37 +1,85 @@
-from collections.abc import Sequence
+from typing import List
 
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebElement
 
 
-class Elements(Sequence):
+class Elements(List['Element']):
     """ Represents a list of DOM elements. """
     def __init__(self, driver, web_elements):
-        self.driver = driver
         self._current = [Element(driver, element) for element in web_elements]
+        self.driver = driver
+        super().__init__(self._current)
 
     @property
     def length(self) -> int:
         """ The number of elements in the list. """
         return len(self._current)
 
-    def pop(self, index=-1) -> 'Element':
-        """ Remove and return element at index (default last).
-
-        Args:
-            index: The default is the last one, but you can specify the element by its index.
+    def first(self) -> 'Element':
+        """ Gets the first element in the list.
 
         Raises:
-            IndexError if list is empty or index is out of range.
+            IndexError if the Elements is empty.
         """
-        return self._current.pop(index)
+        if self.length > 0:
+            return self._current[0]
+        else:
+            raise IndexError('Cannot get first() from an empty list.')
 
-    def __getitem__(self, index) -> 'Element':
-        return self._current[index]
+    def last(self) -> 'Element':
+        """ Gets the last element in the list.
 
-    def __len__(self) -> int:
-        return self.length
+        Raises:
+            IndexError if the Elements is empty.
+        """
+        if self.length > 0:
+            return self._current[-1]
+        else:
+            raise IndexError('Cannot get last() from an empty list.')
+
+    # ACTIONS #
+    ###########
+
+    def check(self, allow_selected=False) -> 'Elements':
+        """ Check all checkboxes or radio buttons in this list.
+
+        Args:
+            allow_selected: Do not raise error if any elements are already selected.
+
+        Raises:
+            ValueError if any elements are already selected.
+            ValueError if any elements are not checkboxes or radio buttons.
+        """
+        for element in self._current:
+            element.check(allow_selected)
+        return self
+
+    def uncheck(self, allow_deselected=False) -> 'Elements':
+        """ Check all checkboxes or radio buttons in this list.
+
+        Args:
+            allow_deselected: Do not raise error if any elements are already deselected.
+
+        Raises:
+            ValueError if any elements are already selected.
+            ValueError if any elements are not checkboxes or radio buttons.
+        """
+        for element in self._current:
+            element.uncheck(allow_deselected)
+        return self
+
+    # CONDITIONS #
+    ##############
+
+    def are_checked(self) -> bool:
+        """ Check that all checkbox or radio buttons in this list are selected. """
+        for element in self._current:
+            if not element.is_checked():
+                return False
+        # every element is checked
+        return True
 
 
 class Element:
@@ -63,9 +111,6 @@ class Element:
     # METHODS #
     ###########
 
-    def should(self):
-        return Should(self)
-
     def get_attribute(self, attribute: str):
         """ Gets the attribute's value.
 
@@ -79,7 +124,30 @@ class Element:
         Returns:
             The value of the attribute. If the attribute does not exist, returns None
         """
-        return self.current.get_attribute(attribute)
+        value = self.current.get_attribute(attribute)
+        if value == 'true':
+            return True
+        elif value == 'false':
+            return False
+        else:
+            return value
+
+    # CONDITIONS #
+    ##############
+
+    def should(self):
+        return Should(self)
+
+    def is_checked(self) -> bool:
+        """ Check that this checkbox or radio button is selected.
+
+        Raises:
+            ValueError if element is not a checkbox or radio button
+        """
+        type_ = self.current.get_attribute('type')
+        if type_ != 'checkbox' or type_ == 'radio':
+            raise ValueError('Element is not a checkbox or radio button.')
+        return self.driver.execute_script('return arguments[0].checked;', self.current)
 
     def is_displayed(self) -> bool:
         """ Check that this element is displayed.
@@ -94,6 +162,56 @@ class Element:
 
     # ACTIONS #
     ###########
+
+    def check(self, allow_selected=False) -> 'Element':
+        """ Check this checkbox or radio button.
+
+        Args:
+            allow_selected: Do not raise error if element is already selected.
+
+        Raises:
+            ValueError if element is already selected.
+            ValueError if element is not a checkbox or radio button
+
+        Returns:
+            This element so you can chain commands.
+        """
+        type_ = self.current.get_attribute('type')
+        if type_ == 'checkbox' or type_ == 'radio':
+            checked = self.driver.execute_script('return arguments[0].checked;', self.current)
+            if not checked:
+                self.current.click()
+                return self
+            elif allow_selected:
+                return self
+            else:
+                raise ValueError(f'{type_} is already selected.')
+        raise ValueError('Element is not a checkbox or radio button.')
+
+    def uncheck(self, allow_deselected=False) -> 'Element':
+        """ Uncheck this checkbox or radio button.
+
+        Args:
+            allow_deselected: Do not raise error if element is already deselected.
+
+        Raises:
+            ValueError if element is already deselected.
+            ValueError if element is not a checkbox or radio button
+
+        Returns:
+            This element so you can chain commands.
+        """
+        type_ = self.current.get_attribute('type')
+        if type_ == 'checkbox' or type_ == 'radio':
+            checked = self.driver.execute_script('return arguments[0].checked;', self.current)
+            if checked:
+                self.current.click()
+                return self
+            elif allow_deselected:
+                return self
+            else:
+                raise ValueError(f'{type_} is already deselected.')
+        raise ValueError('Element is not a checkbox or radio button.')
 
     def clear(self) -> 'Element':
         """ Clears the text of the input or textarea element.
