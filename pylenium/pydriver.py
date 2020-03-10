@@ -28,6 +28,9 @@ class SeleniumDriver:
         """ The current page's title. """
         return self.current.title
 
+    # NAVIGATION #
+    ##############
+
     def visit(self, url: str) -> 'SeleniumDriver':
         """ Navigate to the given URL.
 
@@ -36,6 +39,28 @@ class SeleniumDriver:
         """
         self._driver.get(url)
         return self
+
+    def go(self, direction: str, number: int = 1):
+        """ Navigate forward, back, or refresh.
+
+        This command executes ``window.history.go(<number>)``
+
+        Args:
+            direction: `forward`, `back`, or `refresh`.
+            number: default is 1, will go back or forward one page in history.
+
+        Examples:
+            py.go('back', 2) will go back 2 pages in history.
+            py.go('forward') will go forward 1 page in history.
+        """
+        if direction == 'back':
+            self.execute_script(f'window.history.go(arguments[0])', number * -1)
+        elif direction == 'forward':
+            self.execute_script(f'window.history.go(arguments[0])', number)
+        elif direction == 'refresh':
+            self.current.refresh()
+        else:
+            raise ValueError(f'direction was invalid. Must be `forward`, `back`, or `refresh` but was {direction}')
 
     # FIND ELEMENTS #
     #################
@@ -86,6 +111,47 @@ class SeleniumDriver:
     # Browser #
     ###########
 
+    def delete_cookie(self, name):
+        """ Deletes the cookie with the given name.
+
+        Examples:
+            py.delete_cookie('cookie_name')
+        """
+        self.current.delete_cookie(name)
+
+    def delete_all_cookies(self):
+        """ Delete all cookies in the current session. """
+        self.current.delete_all_cookies()
+
+    def get_cookie(self, name) -> dict:
+        """ Get the cookie with the given name.
+
+        Returns:
+            The cookie if found, else None.
+
+        Examples:
+            py.get_cookie('cookie_name')
+        """
+        return self.current.get_cookie(name)
+
+    def get_cookies(self):
+        """ Get all cookies. """
+        return self.current.get_cookies()
+
+    def set_cookie(self, cookie: dict):
+        """ Adds a cookie to your current session.
+
+        Args:
+            cookie: A dictionary object, with required keys: "name" and "value";
+            optional keys: "path", "domain", "secure", "expiry"
+
+        Examples:
+            py.set_cookie({'name' : 'foo', 'value' : 'bar'})
+            py.set_cookie({'name' : 'foo', 'value' : 'bar', 'path' : '/'})
+            py.set_cookie({'name' : 'foo', 'value' : 'bar', 'path' : '/', 'secure':True})
+        """
+        self.current.add_cookie(cookie)
+
     def execute_script(self, javascript: str, *args):
         """Executes javascript in the current window or frame.
 
@@ -97,10 +163,10 @@ class SeleniumDriver:
             The value returned by the script.
 
         Examples:
-            driver.execute_script('return document.title;')
-            driver.execute_script('return document.getElementById(arguments[0]);', element_id)
+            py.execute_script('return document.title;')
+            py.execute_script('return document.getElementById(arguments[0]);', element_id)
         """
-        return self.current.execute_script(javascript, args)
+        return self.current.execute_script(javascript, *args)
 
     def quit(self):
         """Quits the driver.
