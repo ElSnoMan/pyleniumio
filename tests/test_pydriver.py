@@ -3,8 +3,8 @@ from selenium.webdriver.common.keys import Keys
 
 def test_execute_script(py):
     py.visit('https://google.com')
-    element = py.get("[name='q']")
-    assert py.execute_script('return arguments[0].parentNode;', element.current)
+    webelement = py.get("[name='q']").webelement
+    assert py.execute_script('return arguments[0].parentNode;', webelement)
 
 
 def test_google_search(py):

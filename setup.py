@@ -1,13 +1,13 @@
 from setuptools import setup
 
 setup(
-    name='pyleniumio',
+    name='pylenium',
     version='1.3.0',
     packages=[''],
     url='https://qap.dev',
     license='MIT License',
-    author='carloskidman',
+    author='Carlos Kidman',
     author_email='carlos@qap.dev',
     description='Cypress-like Selenium bindings',
-    install_requires=['selenium']
+    install_requires=['selenium', 'pytest']
 )

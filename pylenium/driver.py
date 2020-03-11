@@ -27,6 +27,11 @@ class Pylenium:
         """ The current page's title. """
         return self.webdriver.title
 
+    @property
+    def url(self) -> str:
+        """ The current page's URL. """
+        return self.webdriver.current_url
+
     # NAVIGATION #
     ##############
 
