@@ -1,17 +1,17 @@
 import pytest
-from pylenium.pydriver import SeleniumDriver
+from pylenium.pydriver import Pylenium
 
 
 @pytest.fixture
 def py():
-    driver = SeleniumDriver()
+    driver = Pylenium()
     yield driver
     driver.quit()
 
 
 @pytest.fixture(scope='module')
 def driver():
-    driver = SeleniumDriver()
+    driver = Pylenium()
     driver.visit('https://deckshop.pro')
     yield driver
     driver.quit()

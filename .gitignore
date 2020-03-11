@@ -1,5 +1,5 @@
 .idea
-__init__.py
+.vscode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
