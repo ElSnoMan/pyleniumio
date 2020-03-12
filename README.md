@@ -2,38 +2,31 @@
 
 The mission here is simple:
 
-> Make the onboarding experience of Selenium more like Cypress.
+> Make the experience of Selenium more like Cypress.
 
-I teach courses and do trainings for both Selenium and Cypress, but Selenium _feels_ more clunky.
+I teach courses and do trainings for both **Selenium** and **Cypress**, but Selenium, out of the box, _feels_ clunky.
 
 Cypress has done an amazing job of making the testing experience more enjoyable - especially for beginners.
 
-Pylenium looks to bring more Cypress-like bindings for Selenium and Python, so behaviors and names will be the same or similar.
+**Pylenium** looks to bring more Cypress-like bindings for Selenium and Python, so behaviors and names will be the same or similar.
 
 ## Get Started
 
 1. Install Pylenium into your Project
 
     ```bash
-    $ pip install pylenium
+    $ pip install pyleniumio
     ```
+
+    * `conftest.py` is created at the Workspace Root
+    * `pylenium.json` is created at the Workspace Root
+    * Pylenium uses `pytest` as the testing framework
 
 2. Create a `test_google.py` file
 
-3. Define a single **pytest fixture** which is your `BeforeEach` and `AfterEach`
+3. Install the chromedriver (in detail below)
 
-```python
-import pytest
-from pylenium import Pylenium
-
-@pytest.fixture
-def py():
-    py = Pylenium()
-    yield py
-    py.quit()
-```
-
-4. Write the test below your fixture
+4. Write the following test in your new test file
 
 ```python
 def test_google_search(py):
