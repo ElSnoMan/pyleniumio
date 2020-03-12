@@ -9,6 +9,7 @@ autopep8 = "*"
 [packages]
 selenium = "*"
 pytest = "*"
+pytest-xdist = "*"
 
 [requires]
 python_version = "3.7"

@@ -9,5 +9,5 @@ setup(
     author='Carlos Kidman',
     author_email='carlos@qap.dev',
     description='Cypress-like Selenium bindings',
-    install_requires=['selenium', 'pytest']
+    install_requires=['selenium', 'pytest', 'pytest-xdist']
 )
