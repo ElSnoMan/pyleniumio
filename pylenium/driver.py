@@ -17,7 +17,7 @@ class Pylenium:
     def __init__(self, config: PyleniumConfig):
         self.config = config
         self._webdriver = webdriver.Chrome()
-        self.wait = WebDriverWait(self._webdriver, timeout=config.wait_time)
+        self.wait = WebDriverWait(self._webdriver, timeout=config.driver.wait_time)
 
     @property
     def webdriver(self) -> WebDriver:
@@ -40,7 +40,7 @@ class Pylenium:
     def visit(self, url: str) -> 'Pylenium':
         """ Navigate to the given URL.
 
-        ### Returns
+        Returns:
             `py` so you can chain another command if needed.
         """
         self.webdriver.get(url)
@@ -51,11 +51,11 @@ class Pylenium:
 
         This command executes `window.history.go(number)`
 
-        ### Args
-            `direction`: 'forward' or 'back'
-            `number`: default is 1, will go back or forward one page in history.
+        Args:
+            direction: 'forward' or 'back'
+            number: default is 1, will go back or forward one page in history.
 
-        ### Examples
+        Examples:
             `py.go('back', 2)` will go back 2 pages in history.
             `py.go('forward')` will go forward 1 page in history.
         """
@@ -77,7 +77,7 @@ class Pylenium:
     def contains(self, text: str) -> Element:
         """ Get the DOM element containing the `text`.
 
-        ### Returns
+        Returns:
             The first element that is found, even if multiple elements match the query.
         """
         element = self.wait.until(
@@ -89,7 +89,7 @@ class Pylenium:
     def get(self, css: str) -> Element:
         """ Get the DOM element that matches the `css` selector.
 
-        ### Returns
+        Returns:
             The first element that is found, even if multiple elements match the query.
         """
         element = self.wait.until(
@@ -101,11 +101,11 @@ class Pylenium:
     def find(self, css: str, at_least_one=True) -> Elements:
         """ Finds all DOM elements that match the `css` selector.
 
-        ### Args
-            `css`: The selector to use.
-            `at_least_one`: True if you want to make sure at least one element is found. False can return an empty list.
+        Args:
+            css: The selector to use.
+            at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
 
-        ### Returns
+        Returns:
             A list of the found elements.
         """
         if at_least_one:
@@ -123,7 +123,7 @@ class Pylenium:
     def delete_cookie(self, name):
         """ Deletes the cookie with the given name.
 
-        ### Examples
+        Examples:
             `py.delete_cookie('cookie_name')`
         """
         self.webdriver.delete_cookie(name)
@@ -135,10 +135,10 @@ class Pylenium:
     def get_cookie(self, name) -> dict:
         """ Get the cookie with the given name.
 
-        ### Returns
+        Returns:
             The cookie if found, else None.
 
-        ### Examples
+        Examples:
             py.get_cookie('cookie_name')
         """
         return self.webdriver.get_cookie(name)
@@ -150,11 +150,11 @@ class Pylenium:
     def set_cookie(self, cookie: dict):
         """ Adds a cookie to your current session.
 
-        ### Args
-            `cookie`: A dictionary object, with required keys: "name" and "value";
+        Args:
+            cookie: A dictionary object, with required keys: "name" and "value";
                 * optional keys: "path", "domain", "secure", "expiry"
 
-        ### Examples
+        Examples:
             `py.set_cookie({'name' : 'foo', 'value' : 'bar'})`
             `py.set_cookie({'name' : 'foo', 'value' : 'bar', 'path' : '/'})`
             `py.set_cookie({'name' : 'foo', 'value' : 'bar', 'path' : '/', 'secure':True})`
@@ -164,22 +164,34 @@ class Pylenium:
     def execute_script(self, javascript: str, *args):
         """ Executes javascript in the current window or frame.
 
-        ### Args
-            `javascript`: The script string to execute.
-            `args`: Any arguments to be used in the script.
+        Args:
+            javascript: The script string to execute.
+            args: Any arguments to be used in the script.
 
-        ### Returns
+        Returns:
             The value returned by the script.
 
-        ### Examples
+        Examples:
             `py.execute_script('return document.title;')`
             `py.execute_script('return document.getElementById(arguments[0]);', element_id)`
         """
         return self.webdriver.execute_script(javascript, *args)
 
     def quit(self):
-        """Quits the driver.
+        """ Quits the driver.
 
         Closes any and every associated window.
         """
         self.webdriver.quit()
+
+    # WINDOW #
+    ##########
+
+    def switch_to_frame(self, name):
+        self.wait.until()
+        return self.webdriver.switch_to.frame()
+
+
+    def viewport(self, width: int, height: int, orientation: str = 'portrait') -> 'Pylenium':
+        """ Control the size and orientation of the browser window.
+        """

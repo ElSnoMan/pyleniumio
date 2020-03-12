@@ -10,6 +10,7 @@ autopep8 = "*"
 selenium = "*"
 pytest = "*"
 pytest-xdist = "*"
+pydantic = "*"
 
 [requires]
 python_version = "3.7"

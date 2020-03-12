@@ -1,3 +1,11 @@
 {
-  "wait_time": 10
+  "driver": {
+    "wait_time": 10
+  },
+
+  "viewport": {
+    "width": 1280,
+    "height": 720,
+    "orientation": "portrait"
+  }
 }

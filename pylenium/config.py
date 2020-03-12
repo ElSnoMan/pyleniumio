@@ -1,4 +1,16 @@
+from pydantic import BaseModel
 
-class PyleniumConfig:
-    def __init__(self, wait_time):
-        self.wait_time = wait_time
+
+class DriverConfig(BaseModel):
+    wait_time: int
+
+
+class ViewportConfig(BaseModel):
+    width: int
+    height: int
+    orientation: str
+
+
+class PyleniumConfig(BaseModel):
+    driver: DriverConfig
+    viewport: ViewportConfig

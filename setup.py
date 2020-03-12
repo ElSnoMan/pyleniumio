@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pyleniumio',
-    version='1.0.1',
+    version='1.1.0',
     packages=[
         'pylenium'
     ],
@@ -14,6 +14,6 @@ setup(
     description='Cypress-like bindings for Selenium with Python',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    install_requires=['selenium', 'pytest', 'pytest-xdist'],
+    install_requires=['selenium', 'pytest', 'pytest-xdist', 'pydantic'],
     data_files=[('../', ['pylenium/conftest.py', 'pylenium/pylenium.json'])]
 )
