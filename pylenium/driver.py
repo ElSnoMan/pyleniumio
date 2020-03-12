@@ -1,3 +1,5 @@
+from typing import List
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -5,6 +7,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from pylenium.config import PyleniumConfig
 from pylenium.element import Element, Elements
+from pylenium.switch_to import SwitchTo
 
 
 class Pylenium:
@@ -18,11 +21,20 @@ class Pylenium:
         self.config = config
         self._webdriver = webdriver.Chrome()
         self.wait = WebDriverWait(self._webdriver, timeout=config.driver.wait_time)
+        if config.viewport.maximize:
+            self.maximize_window()
+        else:
+            self.viewport(config.viewport.width, config.viewport.height, config.viewport.orientation)
 
     @property
     def webdriver(self) -> WebDriver:
         """ The current instance of Selenium's `WebDriver` API. """
         return self._webdriver
+
+    @property
+    def switch_to(self) -> SwitchTo:
+        """ Switch between contexts like Windows or Frames. """
+        return SwitchTo(self)
 
     @property
     def title(self) -> str:
@@ -187,11 +199,38 @@ class Pylenium:
     # WINDOW #
     ##########
 
-    def switch_to_frame(self, name):
-        self.wait.until()
-        return self.webdriver.switch_to.frame()
+    @property
+    def window_handles(self) -> List[str]:
+        """ Returns the handles of all Windows in the current session. """
+        return self.webdriver.window_handles
 
+    @property
+    def window_size(self) -> dict:
+        """ Gets the width and height of the current Window. """
+        return self.webdriver.get_window_size()
 
-    def viewport(self, width: int, height: int, orientation: str = 'portrait') -> 'Pylenium':
-        """ Control the size and orientation of the browser window.
+    def maximize_window(self) -> 'Pylenium':
+        """ Maximizes the current Window. """
+        self.webdriver.maximize_window()
+        return self
+
+    def viewport(self, width: int, height: int,  orientation: str = 'portrait') -> 'Pylenium':
+        """ Control the size and orientation of the current context's browser window.
+
+        Args:
+            width: The width in pixels
+            height: The height in pixels
+            orientation: default is 'portrait'. Pass 'landscape' to reverse the width/height.
+
+        Examples:
+            py.viewport(1280, 800) # macbook-13 size
+            py.viewport(1440, 900) # macbook-15 size
+            py.viewport(375, 667)  # iPhone X size
         """
+        if orientation == 'portrait':
+            self.webdriver.set_window_size(width, height)
+        elif orientation == 'landscape':
+            self.webdriver.set_window_size(height, width)
+        else:
+            raise ValueError(f'Orientation must be `portrait` or `landscape`.')
+        return self

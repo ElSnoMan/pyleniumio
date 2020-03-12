@@ -51,7 +51,7 @@ def driver(py_factory):
     # setup config
     with open('../pylenium/pylenium.json') as file:
         _json = json.load(file)
-    config =  PyleniumConfig(**_json)
+    config = PyleniumConfig(**_json)
 
     # init driver
     py = py_factory(config)
