@@ -20,7 +20,7 @@ Pylenium looks to bring more Cypress-like bindings for Selenium and Python, so b
 
 2. Create a `test_google.py` file
 
-3. Define a single **pytest fixture** for works as your `BeforeEac`h and `AfterEach`
+3. Define a single **pytest fixture** which is your `BeforeEach` and `AfterEach`
 
 ```python
 import pytest

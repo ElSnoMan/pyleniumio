@@ -1,24 +1,13 @@
 """ Use @pytest.fixtures when writing UI or end-to-end tests. """
 
+
 import pytest
 from selenium.webdriver.common.keys import Keys
-from pylenium import Pylenium, py as py_
-
-
-def test_using_py_singleton():
-    """ Using the `py` singleton is NOT recommended in tests.
-
-    If the raises any error or the assert fails, the rest of the test won't be run.
-    This means `py.quit()` is not called and the browser is never quit correctly.
-    """
-    py_.visit('https://google.com')
-    py_.get('[name="q"]').type('puppies', Keys.ENTER)
-    assert 'puppies' in py_.title
-    py_.quit()
+from pylenium import Pylenium
 
 
 @pytest.fixture
-def py():
+def py_():
     # Code before `yield` is executed Before Each test.
     # By default, fixtures are mapped to each test.
     # You can change the scope by using:
@@ -34,7 +23,7 @@ def py():
     _py.quit()
 
 
-def test_using_fixture(py):
+def test_using_fixture(py_):
     """ You pass in the name of the fixture as seen on the line above.
 
     This is the RECOMMENDED option when writing automated tests.

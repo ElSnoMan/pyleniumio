@@ -5,9 +5,9 @@ from pylenium import Pylenium
 @pytest.fixture(scope='function')
 def py():
     """ Default Fixture. """
-    pylenium = Pylenium()
-    yield pylenium
-    pylenium.quit()
+    py = Pylenium()
+    yield py
+    py.quit()
 
 
 @pytest.fixture(scope='session')
