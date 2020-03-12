@@ -30,3 +30,9 @@ def test_cookies(py):
 
     py.delete_cookie('foo')
     assert py.get_cookie('foo') is None
+
+
+def test_viewport(py):
+    py.visit('https://google.com')
+    py.viewport(1280, 800)
+    assert {'width': 1280, 'height': 800} == py.window_size

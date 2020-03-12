@@ -22,7 +22,7 @@ class Elements(List['Element']):
     def first(self) -> 'Element':
         """ Gets the first element in the list.
 
-        ### Raises
+        Raises:
             `IndexError` if the list is empty.
         """
         if self.length > 0:
@@ -33,7 +33,7 @@ class Elements(List['Element']):
     def last(self) -> 'Element':
         """ Gets the last element in the list.
 
-        ### Raises
+        Raises:
             `IndexError` if the list is empty.
         """
         if self.length > 0:
@@ -47,10 +47,10 @@ class Elements(List['Element']):
     def check(self, allow_selected=False) -> 'Elements':
         """ Check all checkboxes or radio buttons in this list.
 
-        ### Args
-            `allow_selected`: Do not raise error if any elements are already selected.
+        Args:
+            allow_selected: Do not raise error if any elements are already selected.
 
-        ### Raises
+        Raises:
             `ValueError` if any elements are already selected.
             `ValueError` if any elements are not checkboxes or radio buttons.
         """
@@ -61,10 +61,10 @@ class Elements(List['Element']):
     def uncheck(self, allow_deselected=False) -> 'Elements':
         """ Check all checkboxes or radio buttons in this list.
 
-        ### Args
-            `allow_deselected`: Do not raise error if any elements are already deselected.
+        Args:
+            allow_deselected: Do not raise error if any elements are already deselected.
 
-        ### Raises
+        Raises
             `ValueError` if any elements are already selected.
             `ValueError` if any elements are not checkboxes or radio buttons.
         """
@@ -120,10 +120,10 @@ class Element:
             * If the name does not exist, then return None
             * All other values are returned as strings
 
-        ### Args
-            `attribute`: The name of the element's attribute.
+        Args:
+            attribute: The name of the element's attribute.
 
-        ### Returns
+        Returns:
             The value of the attribute. If the attribute does not exist, returns None
         """
         value = self.webelement.get_attribute(attribute)
@@ -140,7 +140,7 @@ class Element:
     def is_checked(self) -> bool:
         """ Check that this checkbox or radio button is selected.
 
-        ### Raises
+        Raises:
             `ValueError` if element is not a checkbox or radio button
         """
         type_ = self.webelement.get_attribute('type')
@@ -151,10 +151,10 @@ class Element:
     def is_displayed(self) -> bool:
         """ Check that this element is displayed.
 
-        ### Raises
+        Raises:
             `NoSuchElementException` if the element is not in the DOM
 
-        ### Returns
+        Returns:
             True if element is visible to the user, else False
         """
         return self.webelement.is_displayed()
@@ -165,14 +165,14 @@ class Element:
     def check(self, allow_selected=False) -> 'Element':
         """ Check this checkbox or radio button.
 
-        ### Args
-            `allow_selected`: Do not raise error if element is already selected.
+        Args:
+            allow_selected: Do not raise error if element is already selected.
 
-        ### Raises
+        Raises:
             `ValueError` if element is already selected.
             `ValueError` if element is not a checkbox or radio button
 
-        ### Returns
+        Returns:
             This element so you can chain commands.
         """
         type_ = self.webelement.get_attribute('type')
@@ -190,14 +190,14 @@ class Element:
     def uncheck(self, allow_deselected=False) -> 'Element':
         """ Uncheck this checkbox or radio button.
 
-        ### Args
-            `allow_deselected`: Do not raise error if element is already deselected.
+        Args:
+            allow_deselected: Do not raise error if element is already deselected.
 
-        ### Raises
+        Raises:
             `ValueError` if element is already deselected.
             `ValueError` if element is not a checkbox or radio button
 
-        ### Returns
+        Returns:
             This element so you can chain commands.
         """
         type_ = self.webelement.get_attribute('type')
@@ -217,7 +217,7 @@ class Element:
 
             * Only works on elements that can accept text entry.
 
-        ### Returns
+        Returns:
             This element so you can chain another command if needed.
         """
         self.webelement.clear()
@@ -230,13 +230,13 @@ class Element:
     def deselect(self, value) -> 'Element':
         """ Deselects an `<option>` within a multi `<select>` element.
 
-        ### Args
-            `value`: The value or text content of the `<option>` to be deselected.
+        Args:
+            value: The value or text content of the `<option>` to be deselected.
 
-        ### Raises
+        Raises:
             `ValueError` if this element is not a `<select>`
 
-        ### Returns
+        Returns:
             This element so you can chain another command if needed.
         """
         if self.tag_name != 'select':
@@ -256,7 +256,7 @@ class Element:
     def double_click(self) -> 'Element':
         """ Double clicks the element.
 
-        ### Returns
+        Returns:
             This element so you can chain another command if needed.
         """
         ActionChains(self.driver.current).double_click(self.webelement)
@@ -265,7 +265,7 @@ class Element:
     def hover(self) -> 'Element':
         """ Hovers the element.
 
-        ### Returns
+        Returns:
             This element so you can chain another command if needed.
         """
         ActionChains(self.driver.current).move_to_element(self.webelement)
@@ -274,13 +274,13 @@ class Element:
     def select(self, value) -> 'Element':
         """ Selects an `<option>` within a `<select>` element.
 
-        ### Args
-            `value`: The value or text content of the `<option>` to be selected.
+        Args:
+            value: The value or text content of the `<option>` to be selected.
 
-        ### Raises
+        Raises:
             `ValueError` if this element is not a `<select>`.
 
-        ### Returns
+        Returns:
             This element so you can chain another command if needed.
         """
         if self.tag_name != 'select':
@@ -295,13 +295,13 @@ class Element:
     def select_many(self, values: list) -> 'Element':
         """ Selects multiple `<options>` within a `<select>` element.
 
-        ### Args
-            `values`: The list of values or text contents of the `<option>` to be selected.
+        Args:
+            values: The list of values or text contents of the `<option>` to be selected.
 
-        ### Raises
+        Raises:
             `ValueError` if this element is not a `<select>`.
 
-        ### Returns
+        Returns:
             This element so you can chain another command if needed.
         """
         if self.tag_name != 'select':
@@ -338,7 +338,7 @@ class Element:
     def contains(self, text) -> 'Element':
         """ Gets the DOM element containing the `text`.
 
-        ### Returns
+        Returns:
             The first element that is found, even if multiple elements match the query.
         """
         element = self.driver.wait.until(
@@ -350,7 +350,7 @@ class Element:
     def get(self, css) -> 'Element':
         """ Gets the DOM element that matches the `css` selector in this element's context.
 
-        ### Returns
+        Returns:
             The first element that is found, even if multiple elements match the query.
         """
         element = self.driver.wait.until(
@@ -362,11 +362,11 @@ class Element:
     def find(self, css, at_least_one=True) -> Elements:
         """ Finds all DOM elements that match the `css` selector in this element's context.
 
-        ### Args
-            `css`: The selector
-            `at_least_one`: True if you want to make sure at least one element is found. False can return an empty list.
+        Args:
+            css: The selector
+            at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
 
-        ### Returns:
+        Returns:
             A list of the found elements.
         """
         if at_least_one:
