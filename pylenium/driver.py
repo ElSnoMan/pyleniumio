@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
 
+from pylenium.config import PyleniumConfig
 from pylenium.element import Element, Elements
 
 
@@ -13,9 +14,10 @@ class Pylenium:
         * Chrome is the default browser
         * driver executable must be in PATH
     """
-    def __init__(self, wait_time: int = 10):
+    def __init__(self, config: PyleniumConfig):
+        self.config = config
         self._webdriver = webdriver.Chrome()
-        self.wait = WebDriverWait(self._webdriver, timeout=wait_time)
+        self.wait = WebDriverWait(self._webdriver, timeout=config.wait_time)
 
     @property
     def webdriver(self) -> WebDriver:
