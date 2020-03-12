@@ -7,7 +7,7 @@ from pylenium.config import PyleniumConfig
 @pytest.fixture
 def py_config():
     """ Setup PyleniumConfig. """
-    with open('../pylenium/config/pylenium.json') as file:
+    with open('../pylenium/pylenium.json') as file:
         _json = json.load(file)
     return PyleniumConfig(**_json)
 
@@ -33,7 +33,7 @@ def py_factory():
 def driver(py_factory):
     """ This Project's integration testing fixture. """
     # setup config
-    with open('../pylenium/config/pylenium.json') as file:
+    with open('../pylenium/pylenium.json') as file:
         _json = json.load(file)
     config =  PyleniumConfig(**_json)
 
