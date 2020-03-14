@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
@@ -378,6 +378,30 @@ class Element:
             elements = self.webelement.find_elements(By.CSS_SELECTOR, css)
         return Elements(self.driver, elements)
 
+    def xpath(self, xpath: str, at_least_one=True) -> Union['Element', Elements]:
+        """ Finds all DOM elements that match the `xpath` selector.
+
+        Args:
+            xpath: The selector to use.
+            at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
+
+        Returns:
+            A list of the found elements. If only one is found, return that as Element.
+        """
+        if at_least_one:
+            elements = self.driver.wait.until(
+                lambda _: self.webelement.find_elements(By.XPATH, xpath),
+                f'Could not find any elements with the CSS ``{xpath}``'
+            )
+        else:
+            elements = self.webelement.find_elements(By.CSS_SELECTOR, xpath)
+
+        if len(elements) == 1:
+            # If only one is found, return the single Element
+            return Element(self, elements[0])
+
+        return Elements(self, elements)
+
     def children(self) -> Elements:
         """ Gets the Child elements. """
         elements = self.driver.execute_script('return arguments[0].children;', self.webelement)
@@ -409,3 +433,18 @@ class Element:
         '''
         elements = self.driver.execute_script(js, self.webelement)
         return Elements(self.driver, elements)
+
+    # UTILITIES #
+    #############
+
+    def screenshot(self, filename) -> 'Element':
+        """ Take a screenshot of the current element.
+
+        Args:
+            filename: the filepath including the filename and extension (like `.png`)
+
+        Examples:
+            py.get('#save-button').screenshot('elements/save-button.png')
+        """
+        self.webelement.screenshot(filename)
+        return self
