@@ -9,9 +9,9 @@ from selenium.webdriver.support.select import Select
 
 class Elements(List['Element']):
     """ Represents a list of DOM elements. """
-    def __init__(self, driver, web_elements):
-        self._list = [Element(driver, element) for element in web_elements]
-        self.driver = driver
+    def __init__(self, py, web_elements):
+        self._list = [Element(py, element) for element in web_elements]
+        self.py = py
         super().__init__(self._list)
 
     @property
@@ -54,6 +54,7 @@ class Elements(List['Element']):
             `ValueError` if any elements are already selected.
             `ValueError` if any elements are not checkboxes or radio buttons.
         """
+        self.py.log.action('elements.check() - Check all checkboxes or radio buttons in this list', True)
         for element in self._list:
             element.check(allow_selected)
         return self
@@ -68,6 +69,7 @@ class Elements(List['Element']):
             `ValueError` if any elements are already selected.
             `ValueError` if any elements are not checkboxes or radio buttons.
         """
+        self.py.log.action('elements.uncheck() - Uncheck all checkboxes or radio buttons in this list', True)
         for element in self._list:
             element.uncheck(allow_deselected)
         return self
@@ -86,8 +88,8 @@ class Elements(List['Element']):
 
 class Element:
     """ Represents a DOM element. """
-    def __init__(self, driver, web_element: WebElement):
-        self._driver = driver
+    def __init__(self, py, web_element: WebElement):
+        self._py = py
         self._webelement = web_element
 
     @property
@@ -96,18 +98,20 @@ class Element:
         return self._webelement
 
     @property
-    def driver(self):
+    def py(self):
         """ The current instance of `py` that found this element. """
-        return self._driver
+        return self._py
 
     @property
     def tag_name(self) -> str:
         """ Gets the tag name of this element. """
+        self.py.log.info('.tag_name - Get the tag name of this element', True)
         return self.webelement.tag_name
 
     @property
     def text(self) -> str:
         """ Gets the InnerText of this element. """
+        self.py.log.info('.text - Get the text in this element', True)
         return self.webelement.text
 
     # METHODS #
@@ -126,6 +130,7 @@ class Element:
         Returns:
             The value of the attribute. If the attribute does not exist, returns None
         """
+        self.py.log.action(f'.get_attribute() - Get the {attribute} value of this element', True)
         value = self.webelement.get_attribute(attribute)
         if value == 'true':
             return True
@@ -146,7 +151,9 @@ class Element:
         type_ = self.webelement.get_attribute('type')
         if type_ != 'checkbox' or type_ == 'radio':
             raise ValueError('Element is not a checkbox or radio button.')
-        return self.driver.execute_script('return arguments[0].checked;', self.webelement)
+
+        self.py.log.info(f'Check if this checkbox or radio button element is checked', True)
+        return self.py.execute_script('return arguments[0].checked;', self.webelement)
 
     def is_displayed(self) -> bool:
         """ Check that this element is displayed.
@@ -157,6 +164,7 @@ class Element:
         Returns:
             True if element is visible to the user, else False
         """
+        self.py.log.info('Check if this element is displayed', True)
         return self.webelement.is_displayed()
 
     # ACTIONS #
@@ -175,9 +183,10 @@ class Element:
         Returns:
             This element so you can chain commands.
         """
+        self.py.log.action('.check() - Select this checkbox or radio button', True)
         type_ = self.webelement.get_attribute('type')
         if type_ == 'checkbox' or type_ == 'radio':
-            checked = self.driver.execute_script('return arguments[0].checked;', self.webelement)
+            checked = self.py.webdriver.execute_script('return arguments[0].checked;', self.webelement)
             if not checked:
                 self.webelement.click()
                 return self
@@ -200,9 +209,10 @@ class Element:
         Returns:
             This element so you can chain commands.
         """
+        self.py.log.action('.uncheck() - Deselect this checkbox or radio button', True)
         type_ = self.webelement.get_attribute('type')
         if type_ == 'checkbox' or type_ == 'radio':
-            checked = self.driver.execute_script('return arguments[0].checked;', self.webelement)
+            checked = self.py.webdriver.execute_script('return arguments[0].checked;', self.webelement)
             if checked:
                 self.webelement.click()
                 return self
@@ -220,11 +230,13 @@ class Element:
         Returns:
             This element so you can chain another command if needed.
         """
+        self.py.log.action('.clear() - Clear the input of this element', True)
         self.webelement.clear()
         return self
 
     def click(self):
         """ Clicks the element. """
+        self.py.log.action('.click() - Click this element', True)
         self.webelement.click()
 
     def deselect(self, value) -> 'Element':
@@ -239,7 +251,8 @@ class Element:
         Returns:
             This element so you can chain another command if needed.
         """
-        if self.tag_name != 'select':
+        self.py.log.action('.deselect() - Deselect this element', True)
+        if self.webelement.tag_name != 'select':
             raise ValueError(f'Can only perform Deselect on <select> elements. Tag name: {self.webelement.tag_name}')
 
         select = Select(self.webelement)
@@ -259,7 +272,8 @@ class Element:
         Returns:
             This element so you can chain another command if needed.
         """
-        ActionChains(self.driver.current).double_click(self.webelement)
+        self.py.log.action('.double_click() - Double click this element', True)
+        ActionChains(self.py.current).double_click(self.webelement)
         return self
 
     def hover(self) -> 'Element':
@@ -268,7 +282,8 @@ class Element:
         Returns:
             This element so you can chain another command if needed.
         """
-        ActionChains(self.driver.current).move_to_element(self.webelement)
+        self.py.log.action('.hover() - Hovers this element', True)
+        ActionChains(self.py.current).move_to_element(self.webelement)
         return self
 
     def select(self, value) -> 'Element':
@@ -283,8 +298,9 @@ class Element:
         Returns:
             This element so you can chain another command if needed.
         """
-        if self.tag_name != 'select':
-            raise ValueError(f'Can only perform Select on <select> elements. Current tag name: {self.tag_name}')
+        self.py.log.action('.select() - Select an option in this element', True)
+        if self.webelement.tag_name != 'select':
+            raise ValueError(f'Can only perform Select on <select> elements. Current tag name: {self.webelement.tag_name}')
         try:
             Select(self.webelement).select_by_visible_text(value)
         except NoSuchElementException:
@@ -304,8 +320,9 @@ class Element:
         Returns:
             This element so you can chain another command if needed.
         """
-        if self.tag_name != 'select':
-            raise ValueError(f'Can only perform Select on <select> elements. Current tag name: {self.tag_name}')
+        self.py.log.action('.select_many() - Select many options in this element', True)
+        if self.webelement.tag_name != 'select':
+            raise ValueError(f'Can only perform Select on <select> elements. Current tag name: {self.webelement.tag_name}')
 
         select = Select(self.webelement)
         if not select.is_multiple:
@@ -325,10 +342,12 @@ class Element:
 
             * Meant for <form> elements. May not have an effect on other types.
         """
+        self.py.log.action('.submit() - Submit the form', True)
         self.webelement.submit()
 
     def type(self, *args) -> 'Element':
         """ Simulate a user typing keys into the input. """
+        self.py.log.action('.type() - Type keys into this element', True)
         self.webelement.send_keys(args)
         return self
 
@@ -341,11 +360,12 @@ class Element:
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
-        element = self.driver.wait.until(
+        self.py.log.step(f'.contains() - Find the element that contains text: ``{text}``', True)
+        element = self.py.wait.until(
             lambda _: self.webelement.find_element(By.XPATH, f'//*[contains(text(), "{text}")]'),
             f'Could not find element with the text ``{text}``'
         )
-        return Element(self.driver, element)
+        return Element(self.py, element)
 
     def get(self, css) -> 'Element':
         """ Gets the DOM element that matches the `css` selector in this element's context.
@@ -353,11 +373,12 @@ class Element:
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
-        element = self.driver.wait.until(
+        self.py.log.step(f'.get() - Find the element that has css: ``{css}``', True)
+        element = self.py.wait.until(
             lambda _: self.webelement.find_element(By.CSS_SELECTOR, css),
             f'Could not find element with the CSS ``{css}``'
         )
-        return Element(self._driver, element)
+        return Element(self.py, element)
 
     def find(self, css, at_least_one=True) -> Elements:
         """ Finds all DOM elements that match the `css` selector in this element's context.
@@ -369,14 +390,15 @@ class Element:
         Returns:
             A list of the found elements.
         """
+        self.py.log.step(f'.find() - Find the elements with css: ``{css}``', True)
         if at_least_one:
-            elements = self.driver.wait.until(
+            elements = self.py.wait.until(
                 lambda _: self.webelement.find_elements(By.CSS_SELECTOR, css),
                 f'Could not find any elements with CSS ``{css}``'
             )
         else:
             elements = self.webelement.find_elements(By.CSS_SELECTOR, css)
-        return Elements(self.driver, elements)
+        return Elements(self.py, elements)
 
     def xpath(self, xpath: str, at_least_one=True) -> Union['Element', Elements]:
         """ Finds all DOM elements that match the `xpath` selector.
@@ -388,8 +410,9 @@ class Element:
         Returns:
             A list of the found elements. If only one is found, return that as Element.
         """
+        self.py.log.step(f'.xpath() - Find the elements with xpath: ``{xpath}``', True)
         if at_least_one:
-            elements = self.driver.wait.until(
+            elements = self.py.wait.until(
                 lambda _: self.webelement.find_elements(By.XPATH, xpath),
                 f'Could not find any elements with the CSS ``{xpath}``'
             )
@@ -404,20 +427,23 @@ class Element:
 
     def children(self) -> Elements:
         """ Gets the Child elements. """
-        elements = self.driver.execute_script('return arguments[0].children;', self.webelement)
-        return Elements(self.driver, elements)
+        self.py.log.info('.children() - Get the children of this element', True)
+        elements = self.py.webdriver.execute_script('return arguments[0].children;', self.webelement)
+        return Elements(self.py, elements)
 
     def parent(self) -> 'Element':
         """ Gets the Parent element. """
+        self.py.log.info('.parent() - Get the parent of this element', True)
         js = '''
         elem = arguments[0];
         return elem.parentNode;
         '''
-        element = self.driver.execute_script(js, self.webelement)
-        return Element(self.driver, element)
+        element = self.py.webdriver.execute_script(js, self.webelement)
+        return Element(self.py, element)
 
     def siblings(self) -> Elements:
         """ Gets the Sibling elements. """
+        self.py.log.info('.siblings() - Get the siblings of this element', True)
         js = '''
         elem = arguments[0];
         var siblings = [];
@@ -431,8 +457,8 @@ class Element:
         }
         return siblings;
         '''
-        elements = self.driver.execute_script(js, self.webelement)
-        return Elements(self.driver, elements)
+        elements = self.py.webdriver.execute_script(js, self.webelement)
+        return Elements(self.py, elements)
 
     # UTILITIES #
     #############
@@ -446,5 +472,6 @@ class Element:
         Examples:
             py.get('#save-button').screenshot('elements/save-button.png')
         """
+        self.py.log.info(f'.screenshot() - Take a screenshot and save to: {filename}', True)
         self.webelement.screenshot(filename)
         return self

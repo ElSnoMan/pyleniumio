@@ -1,4 +1,8 @@
 from pydantic import BaseModel
+from pylenium.logging import Logger
+
+# PYLENIUM CONFIG #
+###################
 
 
 class DriverConfig(BaseModel):
@@ -15,3 +19,15 @@ class ViewportConfig(BaseModel):
 class PyleniumConfig(BaseModel):
     driver: DriverConfig
     viewport: ViewportConfig
+
+
+# MODELS #
+##########
+
+class TestCase(BaseModel):
+    name: str
+    file_path: str
+    logger: Logger
+
+    class Config:
+        arbitrary_types_allowed = True
