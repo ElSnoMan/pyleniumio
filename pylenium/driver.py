@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -30,11 +30,6 @@ class Pylenium:
     def webdriver(self) -> WebDriver:
         """ The current instance of Selenium's `WebDriver` API. """
         return self._webdriver
-
-    @property
-    def switch_to(self) -> SwitchTo:
-        """ Switch between contexts like Windows or Frames. """
-        return SwitchTo(self)
 
     @property
     def title(self) -> str:
@@ -129,7 +124,45 @@ class Pylenium:
             elements = self.webdriver.find_elements(By.CSS_SELECTOR, css)
         return Elements(self, elements)
 
-    # Browser #
+    def xpath(self, xpath: str, at_least_one=True) -> Union[Element, Elements]:
+        """ Finds all DOM elements that match the `xpath` selector.
+
+        Args:
+            xpath: The selector to use.
+            at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
+
+        Returns:
+            A list of the found elements. If only one is found, return that as Element.
+        """
+        if at_least_one:
+            elements = self.wait.until(
+                lambda _: self.webdriver.find_elements(By.XPATH, xpath),
+                f'Could not find any elements with the CSS ``{xpath}``'
+            )
+        else:
+            elements = self.webdriver.find_elements(By.CSS_SELECTOR, xpath)
+
+        if len(elements) == 1:
+            # If only one is found, return the single Element
+            return Element(self, elements[0])
+
+        return Elements(self, elements)
+
+    # UTILITIES #
+    #############
+
+    def screenshot(self, filename: str):
+        """ Take a screenshot of the current Window.
+
+        Args:
+            filename: the filepath including the filename and extension (like `.png`)
+
+        Examples:
+            py.screenshot('screenshots/home_page.png')
+        """
+        self.webdriver.save_screenshot(filename)
+
+    # BROWSER #
     ###########
 
     def delete_cookie(self, name):
@@ -198,6 +231,11 @@ class Pylenium:
 
     # WINDOW #
     ##########
+
+    @property
+    def switch_to(self) -> SwitchTo:
+        """ Switch between contexts like Windows or Frames. """
+        return SwitchTo(self)
 
     @property
     def window_handles(self) -> List[str]:
