@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -11,19 +11,65 @@ from pylenium.logging import Logger
 from pylenium.switch_to import SwitchTo
 
 
+class WebDriverFactory:
+    """ Factory to build WebDrivers. """
+    def __init__(self, config: Optional[PyleniumConfig]):
+        self.config = config
+
+    def build_from_config(self) -> WebDriver:
+        """ Build a WebDriver using pylenium.json. """
+        if self.config.driver.remote_url:
+            return self.build_remote(
+                browser=self.config.driver.browser,
+                remote_url=self.config.driver.remote_url
+            )
+        else:
+            return self.build_chrome()
+
+    def build_chrome(self) -> WebDriver:
+        """ Build a ChromeDriver. """
+        return webdriver.Chrome()
+
+    def build_remote(self, browser: str, remote_url: str) -> WebDriver:
+        """ Build a RemoteDriver connected to a Grid.
+
+        Args:
+            browser: Name of the browser to connect to.
+            remote_url: The URL to connect to the Grid.
+
+        Returns:
+            The instance of WebDriver once the connection is successful
+        """
+        if browser == 'firefox':
+            caps = webdriver.DesiredCapabilities.FIREFOX
+        elif browser == 'edge':
+            caps = webdriver.DesiredCapabilities.EDGE
+        elif browser == 'ie':
+            caps = webdriver.DesiredCapabilities.INTERNETEXPLORER
+        elif browser == 'safari':
+            caps = webdriver.DesiredCapabilities.SAFARI
+        else:  # default to chrome
+            caps = webdriver.DesiredCapabilities.CHROME
+
+        return webdriver.Remote(
+            command_executor=remote_url,
+            desired_capabilities=caps
+        )
+
+
 class Pylenium:
     """ The Pylenium API.
 
     ## V1
-        * Chrome is the default browser
-        * driver executable must be in PATH
+        * Chrome is the default local browser
+        * chromedriver executable must be in PATH
     """
     def __init__(self, config: PyleniumConfig, logger: Logger):
         self.config = config
         self.log = logger
 
         # Instantiate WebDriver
-        self._webdriver = webdriver.Chrome()
+        self._webdriver = WebDriverFactory(config).build_from_config()
         caps = self._webdriver.capabilities
         self.log.write(f'browserName: {caps["browserName"]}, browserVersion: {caps["browserVersion"]}, platformName: {caps["platformName"]}, session_id: {self._webdriver.session_id}')
 

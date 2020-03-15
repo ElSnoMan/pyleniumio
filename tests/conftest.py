@@ -28,38 +28,50 @@ from pylenium.config import PyleniumConfig, TestCase
 from pylenium.logging import Logger
 
 
-@pytest.fixture(scope='session')
-def test_context_filepath() -> str:
-    """ The filepath from the context you executed the tests from.
-
-    * If you run the test(s) from the CLI from your actual Workspace Root, then your context will be the Workspace Root.
-
-    * If you run the test(s) with the `Play` button in the UI, the context is the directory where that file lives.
+def make_dir(filepath) -> bool:
+    """ Make a directory.
 
     Returns:
-        The Test Run's context (aka directory) as a filepath (str).
+        True if successful, False if not.
     """
-    return os.path.dirname(os.path.abspath(__file__))
+    try:
+        os.mkdir(filepath)
+        return True
+    except FileExistsError:
+        return False
 
 
-@pytest.fixture(scope='session')
-def test_run(test_context_filepath) -> str:
+@pytest.fixture(scope='session', autouse=True)
+def project_root(request) -> str:
+    """ The Project (or Workspace) root as a filepath.
+
+    * This conftest.py file should be in the Project Root if not already.
+    """
+    session = request.node
+    return session.fspath.strpath
+
+
+@pytest.fixture(scope='session', autouse=True)
+def test_run(project_root, request) -> str:
     """ Creates the `/test_results` directory to store the results of the Test Run.
-
-    Args:
-        test_context_filepath: It will base the filepath from the fixture.
 
     Returns:
         The `/test_results` directory as a filepath (str).
     """
-    test_results_dir = f'{test_context_filepath}/test_results'
+    session = request.node
+    test_results_dir = f'{project_root}/test_results'
 
     if os.path.exists(test_results_dir):
         # delete /test_results from previous Test Run
-        shutil.rmtree(test_results_dir)
+        shutil.rmtree(test_results_dir, ignore_errors=True)
     if not os.path.exists(test_results_dir):
         # create /test_results for this Test Run
-        os.mkdir(test_results_dir)
+        make_dir(test_results_dir)
+
+    for test in session.items:
+        # make the test_result directory for each test
+        make_dir(f'{test_results_dir}/{test.name}')
+
     return test_results_dir
 
 
@@ -67,21 +79,16 @@ def test_run(test_context_filepath) -> str:
 def test_case(test_run, request) -> TestCase:
     """ Manages data pertaining to the currently running Test Function or Case.
 
-    * Creates the `/{test_name}` directory to store the artifacts of the Test Function or Case.
-    * Creates the test-specific logger.
+        * Creates the test-specific logger.
 
     Args:
-        test_run: It will base the filepath from the fixture.
+        test_run: The Test Run (or Session) this test is connected to.
 
     Returns:
-        dict with  `/{test_name}` directory as a filepath (str).
+        An instance of TestCase.
     """
     test_name = request.node.name
     test_result_path = f'{test_run}/{test_name}'
-
-    if not os.path.exists(test_result_path):
-        os.mkdir(test_result_path)
-
     logger = Logger(test_name, test_result_path)
 
     test = {
@@ -102,11 +109,23 @@ def pytest_runtest_makereport(item, call):
 
 
 @pytest.fixture('function')
-def py_config(test_context_filepath) -> PyleniumConfig:
-    """ Initialize a PyleniumConfig for each test using pylenium.json """
-    with open(f'{test_context_filepath}/pylenium.json') as file:
+def py_config(project_root, request) -> PyleniumConfig:
+    """ Initialize a PyleniumConfig for each test
+
+    This starts by deserializing pylenium.json into PyleniumConfig.
+    Then any CLI arguments override their respective key/values.
+    """
+    # Deserialize pylenium.json
+    with open(f'{project_root}/pylenium/pylenium.json') as file:
         _json = json.load(file)
-    return PyleniumConfig(**_json)
+    config = PyleniumConfig(**_json)
+
+    # Override with any CLI args/options
+    cli_remote_url = request.config.getoption('--remote_url')
+    if cli_remote_url:
+        config.driver.remote_url = cli_remote_url
+
+    return config
 
 
 @pytest.fixture(scope='function')
@@ -126,6 +145,12 @@ def py(test_case, py_config, request):
         # if the test failed, execute code in this block
         py.screenshot(f'{test_case.file_path}/test_failed.png')
     py.quit()
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        '--remote_url', action='store', default='', help='Grid URL to connect tests to.'
+    )
 
 
 @pytest.fixture(scope='class')

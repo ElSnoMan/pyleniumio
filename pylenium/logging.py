@@ -1,3 +1,5 @@
+import os
+import time
 from datetime import datetime
 
 
@@ -13,12 +15,22 @@ class Logger:
             file.write(f'Starting log for {self.test_name}')
             file.write(f'\ntimestamp (UTC): {datetime.utcnow().ctime()}')
 
+    def _wait_for_log(self):
+        retries = 0
+        while retries < 3:
+            if not os.path.exists(self.filepath):
+                time.sleep(1)
+                retries += 1
+            else:
+                break
+
     def write(self, string):
         """ Log an entry without a timestamp.
 
         Args:
             string: The message to log
         """
+        self._wait_for_log()
         with open(self.filepath, 'a') as file:
             file.write(f'\n{string}')
 
@@ -28,6 +40,7 @@ class Logger:
         Args:
             string: The message to log
         """
+        self._wait_for_log()
         with open(self.filepath, 'a') as file:
             file.write(f'\n{datetime.utcnow().isoformat()} | {string}')
 
