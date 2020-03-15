@@ -1,4 +1,4 @@
-# Welcome to Pylenium.io
+# Welcome to the Pylenium.io Docs
 
 ## The mission is simple
 
@@ -23,7 +23,7 @@ What if we tried to get the best from both worlds and combine it with an amazing
 ## Quick Start
 
 {% hint style="info" %}
-You must be using a **Virtual Environment** in your Project
+You must be using a [**Virtual Environment**](https://app.gitbook.com/@elsnoman/s/pylenium/getting-started/virtual-environments) in your Project
 {% endhint %}
 
 ### Install the **pyleniumio** package
