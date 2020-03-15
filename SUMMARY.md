@@ -1,4 +1,4 @@
 # Table of contents
 
-* [Welcome to Pylenium.io](README.md)
+* [Welcome to the Pylenium.io Docs](README.md)
 
