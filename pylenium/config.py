@@ -6,6 +6,8 @@ from pylenium.logging import Logger
 
 
 class DriverConfig(BaseModel):
+    browser: str
+    remote_url: str
     wait_time: int = 10
 
 
