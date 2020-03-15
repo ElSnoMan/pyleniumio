@@ -1,67 +1,101 @@
-# Welcome to Pylenium
+# Welcome to Pylenium.io
 
-The mission here is simple:
+## The mission is simple
 
-> Make the experience of Selenium more like Cypress.
+> Make the Selenium experience more like Cypress
 
-I teach courses and do trainings for both **Selenium** and **Cypress**, but Selenium, out of the box, _feels_ clunky.
+I teach courses and do trainings for both **Selenium** and **Cypress**, but Selenium, out of the box, _feels_ clunky. When you start at a new place, you almost always need to "setup" the framework from scratch all over again. Instead of getting right to creating meaningful tests, you end up spending most of your time building a custom framework, maintaining it, and having to teach others to use it.
 
-Cypress has done an amazing job of making the testing experience more enjoyable - especially for beginners.
+Also, many people blame Selenium for bad or flaky tests. This usually tells me that they have yet to experience someone that truly knows how to make Selenium amazing! This also tells me that they are not aware of the usual root causes that make Test Automation fail:
 
-**Pylenium** looks to bring more Cypress-like bindings for Selenium and Python, so behaviors and names will be the same or similar.
+* Poor programming skills, test design and practices
+* Flaky applications
+* Complex frameworks
 
-## Get Started
+What if we tried to get the best from both worlds and combine it with an amazing language?
 
-1. Install Pylenium into your Project
+**Selenium** has done an amazing job of providing W3C bindings to many languages and makes scaling a breeze.
 
-    ```bash
-    $ pip install pyleniumio
-    ```
+**Cypress** has done an amazing job of making the testing experience more enjoyable - especially for beginners.
 
-    * `conftest.py` is created at the Workspace Root
-    * `pylenium.json` is created at the Workspace Root
-    * Pylenium uses `pytest` as the testing framework
+**Pylenium** looks to bring more Cypress-like bindings and techniques to Selenium \(like automatic waits\) and still leverage Selenium's power along with the ease-of-use and power of **Python**.
 
-2. Create a `test_google.py` file
+## Quick Start
 
-3. Install the chromedriver (in detail below)
+{% hint style="info" %}
+You must be using a **Virtual Environment** in your Project
+{% endhint %}
 
-4. Write the following test in your new test file
+### Install the **pyleniumio** package
 
+```
+$ pip install pyleniumio
+```
+
+This will also create two files at your Workspace Root \(aka the directory outside your Virtual Environment\)
+
+* `conftest.py`   - Ready-to-use fixtures to start writing tests immediately
+* `pylenium.json` - Pylenium config settings
+
+{% hint style="info" %}
+ Pylenium uses **pytest** as the Test Framework
+{% endhint %}
+
+### Write a test
+
+Create a directory called `tests` and then a test file called `test_google.py`
+
+Define a new test called `test_google_search`
+
+{% code title="test\_google.py" %}
+```python
+def test_google_search(py)
+```
+{% endcode %}
+
+With **pytest,** you only need to pass in `py` to start using **Pylenium**!
+
+Now we can use **Pylenium Commands** to interact with the browser.
+
+{% code title="test\_google.py" %}
 ```python
 def test_google_search(py):
     py.visit('https://google.com')
-    py.get('[name="q"]').type('puppies')
-    py.get('[name="btnK"]').submit()
+    py.get("[name='q']").type('puppies')
+    py.get("[name='btnK']").submit()
     assert 'puppies' in py.title
 ```
+{% endcode %}
 
-### Install Chromedriver
+### Install chromedriver
 
-Everyone handles the install of their drivers differently.
+Everyone handles the install of their **drivers** differently.
 
-> As of right now, Pylenium expects your chromedriver to be on your PATH.
+{% hint style="info" %}
+Pylenium expects your driver to be on your **PATH**
+{% endhint %}
 
-The easiest way to do this is with `WebDriver Manager`.
+The easiest way to do this is with `WebDriver Manager`
 
-1. Install the manager
+Install the manager with Node:
 
-    ```bash
-    $ npm install -g webdriver-manager
-    ```
+```bash
+$ npm install -g webdriver-manager
+```
 
-2. Then download the `chromedriver` executable
+Then download the chromedriver executable:
 
-    ```bash
-    $ webdriver-manager update
-    ```
+```bash
+$ webdriver-manager update
+```
 
 ### Run the Test
 
-This depends on your IDE, environment and configurations, but you can easily do it from the CLI using:
+This will depend on your IDE, but you can always run tests from the CLI:
 
 ```bash
-$ python -m pytest 
+$ python -m pytest tests/test_google.py
 ```
 
-YOU'RE ALL SET
+You're all set! You should see the browser open and complete the commands we had in the test :\)
+
