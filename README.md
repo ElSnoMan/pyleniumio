@@ -22,7 +22,7 @@ What if we tried to get the best from both worlds and combine it with an amazing
 
 ## Quick Start
 
-{% hint style="info" %}
+{% hint style="warning" %}
 You must be using a [**Virtual Environment**](getting-started/virtual-environments.md) in your Project
 {% endhint %}
 
@@ -71,7 +71,7 @@ def test_google_search(py):
 
 Everyone handles the install of their **drivers** differently.
 
-{% hint style="info" %}
+{% hint style="warning" %}
 Pylenium expects your driver to be on your **PATH**
 {% endhint %}
 
