@@ -15,5 +15,5 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     install_requires=['selenium', 'pytest', 'pytest-xdist', 'pydantic'],
-    data_files=[('../', ['pylenium/conftest.py', 'pylenium/pylenium.json'])]
+    data_files=[('../', ['conftest.py', 'pylenium.json'])]
 )

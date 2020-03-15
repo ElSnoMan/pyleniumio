@@ -42,13 +42,12 @@ def make_dir(filepath) -> bool:
 
 
 @pytest.fixture(scope='session', autouse=True)
-def project_root(request) -> str:
+def project_root() -> str:
     """ The Project (or Workspace) root as a filepath.
 
     * This conftest.py file should be in the Project Root if not already.
     """
-    session = request.node
-    return session.fspath.strpath
+    return os.path.dirname(os.path.abspath(__file__))
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -116,9 +115,13 @@ def py_config(project_root, request) -> PyleniumConfig:
     Then any CLI arguments override their respective key/values.
     """
     # Deserialize pylenium.json
-    with open(f'{project_root}/pylenium/pylenium.json') as file:
-        _json = json.load(file)
-    config = PyleniumConfig(**_json)
+    try:
+        with open(f'{project_root}/pylenium.json') as file:
+            _json = json.load(file)
+        config = PyleniumConfig(**_json)
+    except BaseException:
+        raise FileNotFoundError("Could not find pylenium.json in Project Root."
+                                " Make sure Pylenium's pylenium.json and conftest.py are at the top-level directory.")
 
     # Override with any CLI args/options
     cli_remote_url = request.config.getoption('--remote_url')
