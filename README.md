@@ -1,4 +1,4 @@
-# Welcome to the Pylenium.io Docs
+# Welcome to Pylenium.io
 
 ## The mission is simple
 
