@@ -1,4 +1,4 @@
-# Welcome to the Pylenium.io Docs
+# Welcome to the Pylenium.io Repo
 
 ## The mission is simple
 
@@ -20,82 +20,7 @@ What if we tried to get the best from both worlds and combine it with an amazing
 
 **Pylenium** looks to bring more Cypress-like bindings and techniques to Selenium \(like automatic waits\) and still leverage Selenium's power along with the ease-of-use and power of **Python**.
 
-## Quick Start
+## Visit the Docs
 
-{% hint style="warning" %}
-You must be using a [**Virtual Environment**](getting-started/virtual-environments.md) in your Project
-{% endhint %}
-
-### Install the **pyleniumio** package
-
-```
-$ pip install pyleniumio
-```
-
-This will also create two files at your Workspace Root \(aka the directory outside your Virtual Environment\)
-
-* `conftest.py`   - Ready-to-use fixtures to start writing tests immediately
-* `pylenium.json` - Pylenium config settings
-
-{% hint style="info" %}
- Pylenium uses **pytest** as the Test Framework
-{% endhint %}
-
-### Write a test
-
-Create a directory called `tests` and then a test file called `test_google.py`
-
-Define a new test called `test_google_search`
-
-{% code title="test\_google.py" %}
-```python
-def test_google_search(py)
-```
-{% endcode %}
-
-With **pytest,** you only need to pass in `py` to start using **Pylenium**!
-
-Now we can use **Pylenium Commands** to interact with the browser.
-
-{% code title="test\_google.py" %}
-```python
-def test_google_search(py):
-    py.visit('https://google.com')
-    py.get("[name='q']").type('puppies')
-    py.get("[name='btnK']").submit()
-    assert 'puppies' in py.title
-```
-{% endcode %}
-
-### Install chromedriver
-
-Everyone handles the install of their **drivers** differently.
-
-{% hint style="warning" %}
-Pylenium expects your driver to be on your **PATH**
-{% endhint %}
-
-The easiest way to do this is with `WebDriver Manager`
-
-Install the manager with Node:
-
-```bash
-$ npm install -g webdriver-manager
-```
-
-Then download the chromedriver executable:
-
-```bash
-$ webdriver-manager update
-```
-
-### Run the Test
-
-This will depend on your IDE, but you can always run tests from the CLI:
-
-```bash
-$ python -m pytest tests/test_google.py
-```
-
-You're all set! You should see the browser open and complete the commands we had in the test :\)
-
+The gitbook docs have everything you need to know about Pylenium
+Check it out! https://elsnoman.gitbook.io/pylenium/
