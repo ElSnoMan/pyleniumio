@@ -273,7 +273,7 @@ class Element:
             This element so you can chain another command if needed.
         """
         self.py.log.action('.double_click() - Double click this element', True)
-        ActionChains(self.py.webdriver).double_click(self.webelement)
+        ActionChains(self.py.webdriver).double_click(self.webelement).perform()
         return self
 
     def hover(self) -> 'Element':
@@ -283,7 +283,7 @@ class Element:
             This element so you can chain another command if needed.
         """
         self.py.log.action('.hover() - Hovers this element', True)
-        ActionChains(self.py.webdriver).move_to_element(self.webelement)
+        ActionChains(self.py.webdriver).move_to_element(self.webelement).perform()
         return self
 
     def select(self, value) -> 'Element':
