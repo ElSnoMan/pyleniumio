@@ -74,39 +74,6 @@ def test_run(project_root, request) -> str:
     return test_results_dir
 
 
-@pytest.fixture(scope='function')
-def test_case(test_run, request) -> TestCase:
-    """ Manages data pertaining to the currently running Test Function or Case.
-
-        * Creates the test-specific logger.
-
-    Args:
-        test_run: The Test Run (or Session) this test is connected to.
-
-    Returns:
-        An instance of TestCase.
-    """
-    test_name = request.node.name
-    test_result_path = f'{test_run}/{test_name}'
-    logger = Logger(test_name, test_result_path)
-
-    test = {
-        'name': test_name,
-        'file_path': test_result_path,
-        'logger': logger
-    }
-    return TestCase(**test)
-
-
-@pytest.hookimpl(hookwrapper=True, tryfirst=True)
-def pytest_runtest_makereport(item, call):
-    """ Yield each test's outcome so we can handle it in other fixtures. """
-    outcome = yield
-    rep = outcome.get_result()
-    setattr(item, "rep_" + rep.when, rep)
-    return rep
-
-
 @pytest.fixture('function')
 def py_config(project_root, request) -> PyleniumConfig:
     """ Initialize a PyleniumConfig for each test
@@ -128,7 +95,40 @@ def py_config(project_root, request) -> PyleniumConfig:
     if cli_remote_url:
         config.driver.remote_url = cli_remote_url
 
+    cli_pylog_level = request.config.getoption('--pylog_level')
+    if cli_pylog_level:
+        config.logging.pylog_level = cli_pylog_level
+
+    cli_screenshots_on = request.config.getoption('--screenshots_on')
+    if cli_screenshots_on:
+        shots_on = True if cli_screenshots_on.lower() == 'true' else False
+        config.logging.screenshots_on = shots_on
+
     return config
+
+
+@pytest.fixture(scope='function')
+def test_case(test_run, py_config, request) -> TestCase:
+    """ Manages data pertaining to the currently running Test Function or Case.
+
+        * Creates the test-specific logger.
+
+    Args:
+        test_run: The Test Run (or Session) this test is connected to.
+
+    Returns:
+        An instance of TestCase.
+    """
+    test_name = request.node.name
+    test_result_path = f'{test_run}/{test_name}'
+    logger = Logger(test_name, test_result_path, py_config.logging.pylog_level)
+
+    test = {
+        'name': test_name,
+        'file_path': test_result_path,
+        'logger': logger
+    }
+    return TestCase(**test)
 
 
 @pytest.fixture(scope='function')
@@ -146,13 +146,29 @@ def py(test_case, py_config, request):
     yield py
     if request.node.rep_call.failed:
         # if the test failed, execute code in this block
-        py.screenshot(f'{test_case.file_path}/test_failed.png')
+        if py_config.logging.screenshots_on:
+            py.screenshot(f'{test_case.file_path}/test_failed.png')
     py.quit()
+
+
+@pytest.hookimpl(hookwrapper=True, tryfirst=True)
+def pytest_runtest_makereport(item, call):
+    """ Yield each test's outcome so we can handle it in other fixtures. """
+    outcome = yield
+    rep = outcome.get_result()
+    setattr(item, "rep_" + rep.when, rep)
+    return rep
 
 
 def pytest_addoption(parser):
     parser.addoption(
         '--remote_url', action='store', default='', help='Grid URL to connect tests to.'
+    )
+    parser.addoption(
+        '--screenshots_on', action='store', default='', help="Should screenshots be saved? true or false"
+    )
+    parser.addoption(
+        '--pylog_level', action='store', default='', help="Set the pylog_level: 'off' | 'info' | 'debug'"
     )
 
 

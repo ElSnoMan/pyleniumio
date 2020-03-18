@@ -110,7 +110,7 @@ class Pylenium:
         self.webdriver.get(url)
         return self
 
-    def go(self, direction: str, number: int = 1):
+    def go(self, direction: str, number: int = 1) -> 'Pylenium':
         """ Navigate forward or back.
 
         This command executes `window.history.go(number)`
@@ -122,6 +122,9 @@ class Pylenium:
         Examples:
             `py.go('back', 2)` will go back 2 pages in history.
             `py.go('forward')` will go forward 1 page in history.
+
+        Returns:
+            The current instance of Pylenium so you can chain commands.
         """
         self.log.step(f'py.go() - Go {direction} {number} in browser history')
         if direction == 'back':
@@ -130,6 +133,7 @@ class Pylenium:
             self.execute_script(f'window.history.go(arguments[0])', number)
         else:
             raise ValueError(f'direction was invalid. Must be `forward` or `back` but was {direction}')
+        return self
 
     def reload(self) -> 'Pylenium':
         """ Refreshes the current window. """

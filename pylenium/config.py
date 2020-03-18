@@ -6,20 +6,26 @@ from pylenium.logging import Logger
 
 
 class DriverConfig(BaseModel):
-    browser: str
-    remote_url: str
+    browser: str = 'chrome'
+    remote_url: str = ''
     wait_time: int = 10
+
+
+class LoggingConfig(BaseModel):
+    pylog_level: str = 'info'
+    screenshots_on: bool = True
 
 
 class ViewportConfig(BaseModel):
     maximize: bool = True
-    width: int
-    height: int
-    orientation: str
+    width: int = 1440
+    height: int = 900
+    orientation: str = 'portrait'
 
 
 class PyleniumConfig(BaseModel):
     driver: DriverConfig
+    logging: LoggingConfig
     viewport: ViewportConfig
 
 

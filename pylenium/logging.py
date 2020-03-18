@@ -3,8 +3,16 @@ import time
 from datetime import datetime
 
 
+log_levels = [
+    'off',  # turn off all logging
+    'info',  # (default) INFO, STEP, ACTION
+    'debug'  # info + DEBUG, WARNING, ERROR
+]
+
+
 class Logger:
-    def __init__(self, test_name, file_path):
+    def __init__(self, test_name, file_path, pylog_level='info'):
+        self.pylog_level = pylog_level
         self.test_name = test_name
         self.filepath = f'{file_path}/test_log.txt'
         self._start_log()
@@ -14,6 +22,7 @@ class Logger:
         with open(self.filepath, 'w') as file:
             file.write(f'Starting log for {self.test_name}')
             file.write(f'\ntimestamp (UTC): {datetime.utcnow().ctime()}')
+            file.write(f'\npylog_level set to {self.pylog_level.upper()}')
 
     def _wait_for_log(self):
         retries = 0
@@ -47,10 +56,15 @@ class Logger:
     def info(self, string, is_subinfo=False):
         """ Logs an INFO entry.
 
+        Ignore when log_level is 'off'
+
         Args:
             string: The message to log
             is_subinfo: Should the entry be indented?
         """
+        if self.pylog_level == 'off':
+            return
+
         if is_subinfo:
             message = f'    [INFO]: {string}'
         else:
@@ -60,10 +74,15 @@ class Logger:
     def step(self, string, is_substep=False):
         """ Logs a STEP entry.
 
+        Ignore when log_level is 'off'
+
         Args:
             string: The message to log
             is_substep: Should the entry be indented?
         """
+        if self.pylog_level == 'off':
+            return
+
         if is_substep:
             message = f'    [STEP]: {string}'
         else:
@@ -73,10 +92,15 @@ class Logger:
     def action(self, string, is_subaction=False):
         """ Logs an ACTION entry.
 
+        Ignore when log_level is 'off'
+
         Args:
             string: The message to log
             is_subaction: Should the entry be indented?
         """
+        if self.pylog_level == 'off':
+            return
+
         if is_subaction:
             message = f'    [ACTION]: {string}'
         else:
@@ -84,21 +108,51 @@ class Logger:
         self.write_with_timestamp(message)
 
     def debug(self, string):
-        """ Logs a DEBUG entry. """
+        """ Logs a DEBUG entry.
+
+        Ignore when log_level is 'off' or 'info'
+        """
+        if self.pylog_level == 'off' or self.pylog_level == 'info':
+            return
+
         self.write_with_timestamp(f'~~~ DEBUG ~~~ :: {string}')
 
     def warning(self, string):
-        """ Logs a WARNING entry. """
+        """ Logs a WARNING entry.
+
+        Ignore when log_level is 'off' or 'info'
+        """
+        if self.pylog_level == 'off' or self.pylog_level == 'info':
+            return
+
         self.write_with_timestamp(f':: warning :: {string}')
 
     def error(self, string):
-        """ Logs an ERROR entry. """
+        """ Logs an ERROR entry.
+
+        Ignore when log_level is 'off' or 'info'
+        """
+        if self.pylog_level == 'off' or self.pylog_level == 'info':
+            return
+
         self.write_with_timestamp(f':: error :: {string}')
 
     def passed(self, string):
-        """ Logs a PASSED entry. """
+        """ Logs a PASSED entry.
+
+        Ignore when log_level is 'off'
+        """
+        if self.pylog_level == 'off':
+            return
+
         self.write_with_timestamp(f'** [PASSED] ** {string}')
 
     def failed(self, string):
-        """ Logs a FAILED entry. """
+        """ Logs a FAILED entry.
+
+        Ignore when log_level is 'off'
+        """
+        if self.pylog_level == 'off':
+            return
+
         self.write_with_timestamp(f'!! [FAILED] !! {string}')

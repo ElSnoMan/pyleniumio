@@ -234,10 +234,15 @@ class Element:
         self.webelement.clear()
         return self
 
-    def click(self):
-        """ Clicks the element. """
+    def click(self) -> 'Pylenium':
+        """ Clicks the element.
+
+        Returns:
+            The current instance of Pylenium so you can chain commands.
+        """
         self.py.log.action('.click() - Click this element', True)
         self.webelement.click()
+        return self.py
 
     def deselect(self, value) -> 'Element':
         """ Deselects an `<option>` within a multi `<select>` element.
