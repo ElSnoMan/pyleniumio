@@ -48,7 +48,8 @@ class WebDriverFactory:
         if self.config.driver.remote_url:
             return self.build_remote(
                 browser=self.config.driver.browser,
-                remote_url=self.config.driver.remote_url
+                remote_url=self.config.driver.remote_url,
+                browser_options=self.config.driver.options
             )
         if self.config.driver.browser == 'chrome':
             return self.build_chrome(self.config.driver.options)
