@@ -16,53 +16,103 @@ class WebDriverFactory:
     def __init__(self, config: Optional[PyleniumConfig]):
         self.config = config
 
+    def _build_options(self, browser, browser_options: List[str]):
+        """ Build the Options object for Chrome or Firefox..
+
+        Args:
+            browser: The name of the browser.
+            browser_options: The list of options/arguments to include.
+
+        Raises:
+            ValueError if browser is not 'chrome' or 'firefox'
+
+        Examples:
+            driver = WebDriverFactory().build_chrome(['headless', 'incognito'])
+        """
+        if browser == 'chrome':
+            options = webdriver.ChromeOptions()
+        elif browser == 'firefox':
+            options = webdriver.FirefoxOptions()
+        else:
+            options = None
+
+        if options:
+            for option in browser_options:
+                options.add_argument(f'--{option}')
+            return options
+        else:
+            raise ValueError(f'{browser} is not currently supported. Try "chrome" or "firefox" instead.')
+
     def build_from_config(self) -> WebDriver:
-        """ Build a WebDriver using pylenium.json. """
+        """ Build a WebDriver using pylenium.json and CLI args. """
         if self.config.driver.remote_url:
             return self.build_remote(
                 browser=self.config.driver.browser,
                 remote_url=self.config.driver.remote_url
             )
-        else:
-            return self.build_chrome()
+        if self.config.driver.browser == 'chrome':
+            return self.build_chrome(self.config.driver.options)
+        elif self.config.driver.browser == 'firefox':
+            return self.build_firefox(self.config.driver.options)
 
-    def build_chrome(self) -> WebDriver:
-        """ Build a ChromeDriver. """
-        return webdriver.Chrome()
+    def build_chrome(self, browser_options: List[str]) -> WebDriver:
+        """ Build a ChromeDriver.
 
-    def build_remote(self, browser: str, remote_url: str) -> WebDriver:
+        Args:
+            browser_options: The list of options/arguments to include.
+
+        Examples:
+            driver = WebDriverFactory().build_chrome(['headless', 'incognito'])
+        """
+        options = self._build_options('chrome', browser_options)
+        return webdriver.Chrome(options=options)
+
+    def build_firefox(self, browser_options: List[str]) -> WebDriver:
+        """ Build a FirefoxDriver.
+
+        Args:
+            browser_options: The list of options/arguments to include.
+
+        Examples:
+            driver = WebDriverFactory().build_firefox(['headless', 'incognito'])
+        """
+        options = self._build_options('firefox', browser_options)
+        return webdriver.Firefox(options=options)
+
+    def build_remote(self, browser: str, remote_url: str, browser_options: List[str]) -> WebDriver:
         """ Build a RemoteDriver connected to a Grid.
 
         Args:
             browser: Name of the browser to connect to.
             remote_url: The URL to connect to the Grid.
+            browser_options: The list of options/arguments to include.
 
         Returns:
             The instance of WebDriver once the connection is successful
         """
-        if browser == 'firefox':
-            caps = webdriver.DesiredCapabilities.FIREFOX
-        elif browser == 'edge':
-            caps = webdriver.DesiredCapabilities.EDGE
-        elif browser == 'ie':
-            caps = webdriver.DesiredCapabilities.INTERNETEXPLORER
-        elif browser == 'safari':
-            caps = webdriver.DesiredCapabilities.SAFARI
-        else:  # default to chrome
-            caps = webdriver.DesiredCapabilities.CHROME
+        if browser == 'chrome':
+            caps = webdriver.DesiredCapabilities.CHROME.copy()
+        elif browser == 'firefox':
+            caps = webdriver.DesiredCapabilities.FIREFOX.copy()
+        else:
+            caps = None
+
+        options = self._build_options(browser, browser_options)
 
         return webdriver.Remote(
             command_executor=remote_url,
-            desired_capabilities=caps
+            desired_capabilities=caps,
+            options=options
         )
 
 
 class Pylenium:
     """ The Pylenium API.
 
-    ## V1
+    V1
         * Chrome is the default local browser
-        * chromedriver executable must be in PATH
+        * Firefox is also supported
+        * driver executable must be in PATH
     """
     def __init__(self, config: PyleniumConfig, logger: Logger):
         self.config = config

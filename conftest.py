@@ -91,10 +91,16 @@ def py_config(project_root, request) -> PyleniumConfig:
                                 " Make sure Pylenium's pylenium.json and conftest.py are at the top-level directory.")
 
     # Override with any CLI args/options
+    # Driver Settings
     cli_remote_url = request.config.getoption('--remote_url')
     if cli_remote_url:
         config.driver.remote_url = cli_remote_url
 
+    cli_browser_options = request.config.getoption('--options')
+    if cli_browser_options:
+        config.driver.options = [option.strip() for option in cli_browser_options.split(',')]
+
+    # Logging Settings
     cli_pylog_level = request.config.getoption('--pylog_level')
     if cli_pylog_level:
         config.logging.pylog_level = cli_pylog_level
@@ -169,6 +175,10 @@ def pytest_addoption(parser):
     )
     parser.addoption(
         '--pylog_level', action='store', default='', help="Set the pylog_level: 'off' | 'info' | 'debug'"
+    )
+    parser.addoption(
+        '--options', action='store',
+        default='', help='Comma-separated list of Browser Options. Ex. "headless, incognito"'
     )
 
 

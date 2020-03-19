@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel
 from pylenium.logging import Logger
 
@@ -9,6 +11,7 @@ class DriverConfig(BaseModel):
     browser: str = 'chrome'
     remote_url: str = ''
     wait_time: int = 10
+    options: List[str]
 
 
 class LoggingConfig(BaseModel):

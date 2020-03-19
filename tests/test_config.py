@@ -6,6 +6,7 @@ def test_py_config_defaults(py_config):
     assert py_config.driver.browser == 'chrome'
     assert py_config.driver.remote_url == ''
     assert py_config.driver.wait_time == 10
+    assert py_config.driver.options == []
 
     # logging settings
     assert py_config.logging.screenshots_on is True
