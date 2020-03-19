@@ -23,6 +23,9 @@ import os
 import shutil
 
 import pytest
+import requests
+from faker import Faker
+
 from pylenium import Pylenium
 from pylenium.config import PyleniumConfig, TestCase
 from pylenium.logging import Logger
@@ -39,6 +42,18 @@ def make_dir(filepath) -> bool:
         return True
     except FileExistsError:
         return False
+
+
+@pytest.fixture(scope='function')
+def fake() -> Faker:
+    """ A basic instance of Faker to make test data."""
+    return Faker()
+
+
+@pytest.fixture(scope='function')
+def api():
+    """ A basic instance of Requests to make HTTP API calls. """
+    return requests
 
 
 @pytest.fixture(scope='session', autouse=True)

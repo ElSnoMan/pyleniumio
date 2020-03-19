@@ -22,7 +22,7 @@ class Logger:
         with open(self.filepath, 'w') as file:
             file.write(f'Starting log for {self.test_name}')
             file.write(f'\ntimestamp (UTC): {datetime.utcnow().ctime()}')
-            file.write(f'\npylog_level set to {self.pylog_level.upper()}')
+            file.write(f'\npylog_level: {self.pylog_level.upper()}')
 
     def _wait_for_log(self):
         retries = 0
