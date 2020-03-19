@@ -11,6 +11,8 @@ selenium = "*"
 pytest = "*"
 pytest-xdist = "*"
 pydantic = "*"
+faker = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"

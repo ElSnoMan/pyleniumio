@@ -1,5 +1,7 @@
 from typing import List, Union, Optional
 
+import requests
+from faker import Faker
 from selenium import webdriver
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.common.by import By
@@ -119,6 +121,8 @@ class Pylenium:
     def __init__(self, config: PyleniumConfig, logger: Logger):
         self.config = config
         self.log = logger
+        self.fake = Faker()
+        self.request = requests
 
         # Instantiate WebDriver
         self._webdriver = WebDriverFactory(config).build_from_config()
