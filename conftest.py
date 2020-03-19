@@ -168,10 +168,13 @@ def pytest_runtest_makereport(item, call):
 
 def pytest_addoption(parser):
     parser.addoption(
+        '--browser', action='store', default='', help='The lowercase browser name: chrome | firefox'
+    )
+    parser.addoption(
         '--remote_url', action='store', default='', help='Grid URL to connect tests to.'
     )
     parser.addoption(
-        '--screenshots_on', action='store', default='', help="Should screenshots be saved? true or false"
+        '--screenshots_on', action='store', default='', help="Should screenshots be saved? true | false"
     )
     parser.addoption(
         '--pylog_level', action='store', default='', help="Set the pylog_level: 'off' | 'info' | 'debug'"
