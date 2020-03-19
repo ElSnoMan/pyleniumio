@@ -49,3 +49,9 @@ def test_find_single_element_with_xpath(py):
 def test_find_elements_with_xpath(py):
     py.visit('https://deckshop.pro')
     assert py.xpath('//a[@class="nav-link"]').length > 1
+
+
+def test_hover_and_click_to_page_transition(py):
+    py.visit('https://qap.dev')
+    py.get('a[href="/about"]').hover().get('a[href="/leadership"][class*=Header]').click()
+    assert py.contains('Carlos Kidman').text == 'Carlos Kidman'

@@ -181,7 +181,7 @@ class Element:
             `ValueError` if element is not a checkbox or radio button
 
         Returns:
-            This element so you can chain commands.
+            This element so you can chain another command.
         """
         self.py.log.action('.check() - Select this checkbox or radio button', True)
         type_ = self.webelement.get_attribute('type')
@@ -207,7 +207,7 @@ class Element:
             `ValueError` if element is not a checkbox or radio button
 
         Returns:
-            This element so you can chain commands.
+            This element so you can chain another command.
         """
         self.py.log.action('.uncheck() - Deselect this checkbox or radio button', True)
         type_ = self.webelement.get_attribute('type')
@@ -228,7 +228,7 @@ class Element:
             * Only works on elements that can accept text entry.
 
         Returns:
-            This element so you can chain another command if needed.
+            This element so you can chain another command.
         """
         self.py.log.action('.clear() - Clear the input of this element', True)
         self.webelement.clear()
@@ -238,13 +238,13 @@ class Element:
         """ Clicks the element.
 
         Returns:
-            The current instance of Pylenium so you can chain commands.
+            The current instance of Pylenium so you can chain another command.
         """
         self.py.log.action('.click() - Click this element', True)
         self.webelement.click()
         return self.py
 
-    def deselect(self, value) -> 'Element':
+    def deselect(self, value) -> 'Pylenium':
         """ Deselects an `<option>` within a multi `<select>` element.
 
         Args:
@@ -254,7 +254,7 @@ class Element:
             `ValueError` if this element is not a `<select>`
 
         Returns:
-            This element so you can chain another command if needed.
+            The current instance of Pylenium so you can chain another command.
         """
         self.py.log.action('.deselect() - Deselect this element', True)
         if self.webelement.tag_name != 'select':
@@ -269,27 +269,27 @@ class Element:
         except NoSuchElementException:
             select.deselect_by_value(value)
         finally:
-            return self
+            return self.py
 
-    def double_click(self) -> 'Element':
+    def double_click(self) -> 'Pylenium':
         """ Double clicks the element.
 
         Returns:
-            This element so you can chain another command if needed.
+            The current instance of Pylenium so you can chain another command.
         """
         self.py.log.action('.double_click() - Double click this element', True)
         ActionChains(self.py.webdriver).double_click(self.webelement).perform()
-        return self
+        return self.py
 
-    def hover(self) -> 'Element':
+    def hover(self) -> 'Pylenium':
         """ Hovers the element.
 
         Returns:
-            This element so you can chain another command if needed.
+            The current instance of Pylenium so you can chain another command.
         """
         self.py.log.action('.hover() - Hovers this element', True)
         ActionChains(self.py.webdriver).move_to_element(self.webelement).perform()
-        return self
+        return self.py
 
     def select(self, value) -> 'Element':
         """ Selects an `<option>` within a `<select>` element.
@@ -313,7 +313,7 @@ class Element:
         finally:
             return self
 
-    def select_many(self, values: list) -> 'Element':
+    def select_many(self, values: list) -> 'Pylenium':
         """ Selects multiple `<options>` within a `<select>` element.
 
         Args:
@@ -323,7 +323,7 @@ class Element:
             `ValueError` if this element is not a `<select>`.
 
         Returns:
-            This element so you can chain another command if needed.
+            The current instance of Pylenium so you can chain another command.
         """
         self.py.log.action('.select_many() - Select many options in this element', True)
         if self.webelement.tag_name != 'select':
@@ -340,18 +340,26 @@ class Element:
             for val in values:
                 select.select_by_value(val)
         finally:
-            return self
+            return self.py
 
-    def submit(self):
+    def submit(self) -> 'Pylenium':
         """ Submits the form.
 
             * Meant for <form> elements. May not have an effect on other types.
+
+        Returns:
+            The current instance of Pylenium so you can chain another command.
         """
         self.py.log.action('.submit() - Submit the form', True)
         self.webelement.submit()
+        return self.py
 
     def type(self, *args) -> 'Element':
-        """ Simulate a user typing keys into the input. """
+        """ Simulate a user typing keys into the input.
+
+        Returns:
+            This element so you can chain another command.
+        """
         self.py.log.action('.type() - Type keys into this element', True)
         self.webelement.send_keys(args)
         return self

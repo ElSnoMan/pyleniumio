@@ -1,6 +1,7 @@
 from typing import List, Union, Optional
 
 from selenium import webdriver
+from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -125,7 +126,9 @@ class Pylenium:
         self.log.write(f'browserName: {caps["browserName"]}, browserVersion: {caps["browserVersion"]}, platformName: {caps["platformName"]}, session_id: {self._webdriver.session_id}')
 
         # Initial Browser Setup
-        self.wait = WebDriverWait(self._webdriver, timeout=config.driver.wait_time)
+        self.wait = WebDriverWait(self._webdriver, timeout=config.driver.wait_time,
+                                  ignored_exceptions=[ElementNotInteractableException])
+
         if config.viewport.maximize:
             self.maximize_window()
         else:
