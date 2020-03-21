@@ -1,113 +1,17 @@
-from typing import List, Union, Optional
+from typing import List, Union
 
 import requests
 from faker import Faker
-from selenium import webdriver
-from selenium.common.exceptions import ElementNotInteractableException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support.wait import WebDriverWait
 
+from pylenium import webdriver_factory
 from pylenium.config import PyleniumConfig
 from pylenium.element import Element, Elements
 from pylenium.logging import Logger
 from pylenium.switch_to import SwitchTo
-
-
-class WebDriverFactory:
-    """ Factory to build WebDrivers. """
-    def __init__(self, config: Optional[PyleniumConfig]):
-        self.config = config
-
-    def _build_options(self, browser, browser_options: List[str]):
-        """ Build the Options object for Chrome or Firefox..
-
-        Args:
-            browser: The name of the browser.
-            browser_options: The list of options/arguments to include.
-
-        Raises:
-            ValueError if browser is not 'chrome' or 'firefox'
-
-        Examples:
-            driver = WebDriverFactory().build_chrome(['headless', 'incognito'])
-        """
-        if browser == 'chrome':
-            options = webdriver.ChromeOptions()
-        elif browser == 'firefox':
-            options = webdriver.FirefoxOptions()
-        else:
-            options = None
-
-        if options:
-            for option in browser_options:
-                options.add_argument(f'--{option}')
-            return options
-        else:
-            raise ValueError(f'{browser} is not currently supported. Try "chrome" or "firefox" instead.')
-
-    def build_from_config(self) -> WebDriver:
-        """ Build a WebDriver using pylenium.json and CLI args. """
-        if self.config.driver.remote_url:
-            return self.build_remote(
-                browser=self.config.driver.browser,
-                remote_url=self.config.driver.remote_url,
-                browser_options=self.config.driver.options
-            )
-        if self.config.driver.browser == 'chrome':
-            return self.build_chrome(self.config.driver.options)
-        elif self.config.driver.browser == 'firefox':
-            return self.build_firefox(self.config.driver.options)
-
-    def build_chrome(self, browser_options: List[str]) -> WebDriver:
-        """ Build a ChromeDriver.
-
-        Args:
-            browser_options: The list of options/arguments to include.
-
-        Examples:
-            driver = WebDriverFactory().build_chrome(['headless', 'incognito'])
-        """
-        options = self._build_options('chrome', browser_options)
-        return webdriver.Chrome(options=options)
-
-    def build_firefox(self, browser_options: List[str]) -> WebDriver:
-        """ Build a FirefoxDriver.
-
-        Args:
-            browser_options: The list of options/arguments to include.
-
-        Examples:
-            driver = WebDriverFactory().build_firefox(['headless', 'incognito'])
-        """
-        options = self._build_options('firefox', browser_options)
-        return webdriver.Firefox(options=options)
-
-    def build_remote(self, browser: str, remote_url: str, browser_options: List[str]) -> WebDriver:
-        """ Build a RemoteDriver connected to a Grid.
-
-        Args:
-            browser: Name of the browser to connect to.
-            remote_url: The URL to connect to the Grid.
-            browser_options: The list of options/arguments to include.
-
-        Returns:
-            The instance of WebDriver once the connection is successful
-        """
-        if browser == 'chrome':
-            caps = webdriver.DesiredCapabilities.CHROME.copy()
-        elif browser == 'firefox':
-            caps = webdriver.DesiredCapabilities.FIREFOX.copy()
-        else:
-            caps = None
-
-        options = self._build_options(browser, browser_options)
-
-        return webdriver.Remote(
-            command_executor=remote_url,
-            desired_capabilities=caps,
-            options=options
-        )
+from pylenium.wait import PyleniumWait
 
 
 class Pylenium:
@@ -125,14 +29,19 @@ class Pylenium:
         self.request = requests
 
         # Instantiate WebDriver
-        self._webdriver = WebDriverFactory(config).build_from_config()
+        self._webdriver = webdriver_factory.build_from_config(config)
         caps = self._webdriver.capabilities
-        self.log.write(f'browserName: {caps["browserName"]}, browserVersion: {caps["browserVersion"]}, platformName: {caps["platformName"]}, session_id: {self._webdriver.session_id}')
+        try:
+            self.log.write(f'browserName: {caps["browserName"]}, browserVersion: {caps["browserVersion"]}, '
+                           f'platformName: {caps["platformName"]}, session_id: {self._webdriver.session_id}')
+        except:
+            self.log.warning(f'webdriver.capabilities did not have a key that Pylenium was expecting. '
+                             f'Is your driver executable the right version?')
+
+        # Default instance of PyleniumWait
+        self._wait = PyleniumWait(self, self._webdriver, self.config.driver.wait_time, ignored_exceptions=None)
 
         # Initial Browser Setup
-        self.wait = WebDriverWait(self._webdriver, timeout=config.driver.wait_time,
-                                  ignored_exceptions=[ElementNotInteractableException])
-
         if config.viewport.maximize:
             self.maximize_window()
         else:
@@ -164,7 +73,7 @@ class Pylenium:
         Returns:
             `py` so you can chain another command if needed.
         """
-        self.log.step(f'py.visit() - Visit URL: {url}')
+        self.log.step(f'py.visit() - Visit URL: ``{url}``')
         self.webdriver.get(url)
         return self
 
@@ -194,53 +103,62 @@ class Pylenium:
         return self
 
     def reload(self) -> 'Pylenium':
-        """ Refreshes the current window. """
-        self.log.step('py.reload() - Refresh the current page')
+        """ Reloads the current window. """
+        self.log.step('py.reload() - Reload the current page')
         self.webdriver.refresh()
         return self
 
     # FIND ELEMENTS #
     #################
 
-    def contains(self, text: str) -> Element:
+    def contains(self, text: str, timeout: int = 0) -> Element:
         """ Get the DOM element containing the `text`.
+
+        Args:
+            text: The text for the element to contain.
+            timeout: The number of seconds to wait for this to succeed. Overrides the default wait_time.
 
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
         self.log.step(f'py.contains() - Find the element with text: ``{text}``')
-        element = self.wait.until(
+        element = self.wait(timeout).until(
             lambda _: self._webdriver.find_element(By.XPATH, f'//*[contains(text(), "{text}")]'),
             f'Could not find element with the text ``{text}``'
         )
         return Element(self, element)
 
-    def get(self, css: str) -> Element:
+    def get(self, css: str, timeout: int = 0) -> Element:
         """ Get the DOM element that matches the `css` selector.
+
+        Args:
+            css: The selector to use.
+            timeout: The number of seconds to wait for this to succeed. Overrides the default wait_time.
 
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
         self.log.step(f'py.get() - Find the element with css: ``{css}``')
-        element = self.wait.until(
+        element = self.wait(timeout).until(
             lambda _: self._webdriver.find_element(By.CSS_SELECTOR, css),
             f'Could not find element with the CSS ``{css}``'
         )
         return Element(self, element)
 
-    def find(self, css: str, at_least_one=True) -> Elements:
+    def find(self, css: str, at_least_one=True, timeout: int = 0) -> Elements:
         """ Finds all DOM elements that match the `css` selector.
 
         Args:
             css: The selector to use.
             at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
+            timeout: The number of seconds to wait for this to succeed. Overrides the default wait_time.
 
         Returns:
             A list of the found elements.
         """
         if at_least_one:
             self.log.step(f'py.find() - Find at least one element with css: ``{css}``')
-            elements = self.wait.until(
+            elements = self.wait(timeout).until(
                 lambda _: self.webdriver.find_elements(By.CSS_SELECTOR, css),
                 f'Could not find any elements with the CSS ``{css}``'
             )
@@ -249,19 +167,20 @@ class Pylenium:
             elements = self.webdriver.find_elements(By.CSS_SELECTOR, css)
         return Elements(self, elements)
 
-    def xpath(self, xpath: str, at_least_one=True) -> Union[Element, Elements]:
+    def xpath(self, xpath: str, at_least_one=True, timeout: int = 0) -> Union[Element, Elements]:
         """ Finds all DOM elements that match the `xpath` selector.
 
         Args:
             xpath: The selector to use.
             at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
+            timeout: The number of seconds to wait for this to succeed. Overrides the default wait_time.
 
         Returns:
             A list of the found elements. If only one is found, return that as Element.
         """
         if at_least_one:
             self.log.step(f'py.xpath() - Find at least one element with xpath: ``{xpath}``')
-            elements = self.wait.until(
+            elements = self.wait(timeout).until(
                 lambda _: self.webdriver.find_elements(By.XPATH, xpath),
                 f'Could not find any elements with the CSS ``{xpath}``'
             )
@@ -290,6 +209,31 @@ class Pylenium:
         """
         self.log.step(f'py.screenshot() - Save screenshot to: {filename}')
         self.webdriver.save_screenshot(filename)
+
+    def wait(self, timeout: int = 0, use_py: bool = False, ignored_exceptions: list = None) -> Union[WebDriverWait, PyleniumWait]:
+        """ The Wait object with the given timeout in seconds.
+
+        If timeout=0, return the default instance of wait, else return a new instance of WebDriverWait or PyleniumWait.
+
+        Args:
+            timeout: The number of seconds to wait for the condition.
+            use_py: True for a PyleniumWait.
+            ignored_exceptions: List of exceptions for the condition to ignore.
+
+        Default Ignored Exceptions:
+            * NoSuchElementException
+
+        Examples:
+            # use the default wait_time in pylenium.json
+            py.wait().until(lambda x: x.find_element_by_id('foo').get_attribute('style') == 'display: block;')
+            # use a different timeout to control how long to wait for
+            py.wait(5).until(lambda x: x.find_element_by_id('foo').is_displayed())
+            py.wait(15, [NoSuchElementException, WebDriverException]).until(lambda x: x.find_element_by_id('foo'))
+        """
+        if timeout:
+            return self._wait.build(timeout, use_py, ignored_exceptions)
+        else:
+            return self._wait.build(self.config.driver.wait_time, use_py, ignored_exceptions)
 
     # BROWSER #
     ###########

@@ -8,7 +8,6 @@ def test_api_fixture(api):
 
 def test_py_request(py):
     py.visit('https://statsroyale.com')
-    py.request.put()
     response = py.request.get(STATS_ROYALE_CARDS_API)
     assert response.ok
     assert response.json()[0]['name']

@@ -55,3 +55,33 @@ def test_hover_and_click_to_page_transition(py):
     py.visit('https://qap.dev')
     py.get('a[href="/about"]').hover().get('a[href="/leadership"][class*=Header]').click()
     assert py.contains('Carlos Kidman').text == 'Carlos Kidman'
+
+
+def test_pylenium_wait_until(py):
+    py.visit('https://qap.dev')
+    element = py.wait(use_py=True).until(lambda x: x.find_element_by_css_selector('[href="/about"]'))
+    assert element.tag_name == 'a'
+    assert element.hover()
+
+
+def test_pylenium_wait_until_with_seconds(py):
+    py.visit('https://qap.dev')
+    py.wait(use_py=True).sleep(2)
+    element = py.wait(5, use_py=True).until(lambda x: x.find_element_by_css_selector('[href="/about"]'))
+    assert element.tag_name == 'a'
+    assert element.hover()
+
+
+def test_webdriver_wait_until(py):
+    py.visit('https://qap.dev')
+    element = py.wait(5).until(lambda x: x.find_element_by_css_selector('[href="/about"]'))
+    assert element.tag_name == 'a'
+
+
+def test_switch_to_frame_then_back(py):
+    py.visit('http://the-internet.herokuapp.com/iframe')
+    py.switch_to.frame('mce_0_ifr').get('#tinymce').clear().type('foo')
+    assert py.switch_to.default_content().contains('An iFrame').tag_name == 'h3'
+    py.switch_to.frame('mce_0_ifr').get('#tinymce').type('bar')
+    assert py.get('#tinymce').text == 'foobar'
+    assert py.switch_to.parent_frame().contains('An iFrame').tag_name == 'h3'
