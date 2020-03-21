@@ -89,7 +89,7 @@ def test_run(project_root, request) -> str:
     return test_results_dir
 
 
-@pytest.fixture('function')
+@pytest.fixture('session')
 def py_config(project_root, request) -> PyleniumConfig:
     """ Initialize a PyleniumConfig for each test
 
@@ -198,36 +198,3 @@ def pytest_addoption(parser):
         '--options', action='store',
         default='', help='Comma-separated list of Browser Options. Ex. "headless, incognito"'
     )
-
-
-@pytest.fixture(scope='class')
-def pyc(test_run, py_config, request):
-    """ A singleton of Pylenium to be shared in the tests of a Class.
-
-    The tests in the class are executed sequentially and in order.
-
-    Warnings:
-        This approach is NOT recommended. You should want your tests to be modular, atomic and deterministic.
-
-    Examples:
-          class TestGoogle:
-              def test_visit_google(self, pyc):
-                  # first test navigates to google.com
-                  pyc.visit('https://google.com')
-
-              def test_google_search(self, pyc):
-                  # second test is already on google.com, test search
-                  pyc.get("[name='q']").type('puppies', Keys.ENTER)
-                  assert 'puppies' in pyc.title
-    """
-    # init logger
-    class_name = request.node.name
-    file_path = f'{test_run}/{class_name}'
-    if not os.path.exists(file_path):
-        os.makedirs(file_path)
-    logger = Logger(class_name, file_path)
-
-    # init driver
-    py = Pylenium(py_config, logger)
-    yield py
-    py.quit()

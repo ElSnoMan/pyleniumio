@@ -1,19 +1,24 @@
+from selenium.common.exceptions import NoSuchFrameException
+from selenium.webdriver.support import expected_conditions as ec
+
+
 class SwitchTo:
     def __init__(self, pylenium):
         self._py = pylenium
 
-    def frame(self, name_or_id: str):
+    def frame(self, name_or_id: str, timeout: int = 0):
         """ Switch the driver's context to the new frame.
 
         Args:
             name_or_id: The frame's `id` or `name` attribute value
+            timeout: The number of seconds to wait for the frame to be switched to.
 
         Examples:
             # Switch to an iframe
-            py.switch_to_frame('main-frame')
+            py.switch_to.frame('main-frame')
         """
         self._py.log.action(f'py.switch_to.frame() - Switch to frame using name or id: ``{name_or_id}``')
-        self._py.wait.until(lambda _: self._py.webdriver.switch_to.frame(name_or_id))
+        self._py.wait(timeout).until(ec.frame_to_be_available_and_switch_to_it(name_or_id))
         return self._py
 
     def parent_frame(self):

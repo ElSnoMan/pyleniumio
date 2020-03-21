@@ -105,13 +105,13 @@ class Element:
     @property
     def tag_name(self) -> str:
         """ Gets the tag name of this element. """
-        self.py.log.info('.tag_name - Get the tag name of this element', True)
+        self.py.log.step('.tag_name - Get the tag name of this element', True)
         return self.webelement.tag_name
 
     @property
     def text(self) -> str:
         """ Gets the InnerText of this element. """
-        self.py.log.info('.text - Get the text in this element', True)
+        self.py.log.step('.text - Get the text in this element', True)
         return self.webelement.text
 
     # METHODS #
@@ -130,7 +130,7 @@ class Element:
         Returns:
             The value of the attribute. If the attribute does not exist, returns None
         """
-        self.py.log.action(f'.get_attribute() - Get the {attribute} value of this element', True)
+        self.py.log.step(f'.get_attribute() - Get the {attribute} value of this element', True)
         value = self.webelement.get_attribute(attribute)
         if value == 'true':
             return True
@@ -152,7 +152,7 @@ class Element:
         if type_ != 'checkbox' or type_ == 'radio':
             raise ValueError('Element is not a checkbox or radio button.')
 
-        self.py.log.info(f'Check if this checkbox or radio button element is checked', True)
+        self.py.log.step(f'Check if this checkbox or radio button element is checked', True)
         return self.py.execute_script('return arguments[0].checked;', self.webelement)
 
     def is_displayed(self) -> bool:
@@ -164,7 +164,7 @@ class Element:
         Returns:
             True if element is visible to the user, else False
         """
-        self.py.log.info('Check if this element is displayed', True)
+        self.py.log.step('Check if this element is displayed', True)
         return self.webelement.is_displayed()
 
     # ACTIONS #
@@ -367,45 +367,54 @@ class Element:
     # FIND ELEMENTS #
     #################
 
-    def contains(self, text) -> 'Element':
+    def contains(self, text: str, timeout: int = 0) -> 'Element':
         """ Gets the DOM element containing the `text`.
+
+        Args:
+            text: The text for the element to contain
+            timeout: The number of seconds to find the element.
 
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
         self.py.log.step(f'.contains() - Find the element that contains text: ``{text}``', True)
-        element = self.py.wait.until(
+        element = self.py.wait(timeout).until(
             lambda _: self.webelement.find_element(By.XPATH, f'//*[contains(text(), "{text}")]'),
             f'Could not find element with the text ``{text}``'
         )
         return Element(self.py, element)
 
-    def get(self, css) -> 'Element':
+    def get(self, css: str, timeout: int = 0) -> 'Element':
         """ Gets the DOM element that matches the `css` selector in this element's context.
+
+        Args:
+            css: The selector
+            timeout: The number of seconds to find the element.
 
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
         self.py.log.step(f'.get() - Find the element that has css: ``{css}``', True)
-        element = self.py.wait.until(
+        element = self.py.wait(timeout).until(
             lambda _: self.webelement.find_element(By.CSS_SELECTOR, css),
             f'Could not find element with the CSS ``{css}``'
         )
         return Element(self.py, element)
 
-    def find(self, css, at_least_one=True) -> Elements:
+    def find(self, css: str, at_least_one=True, timeout: int = 0) -> Elements:
         """ Finds all DOM elements that match the `css` selector in this element's context.
 
         Args:
             css: The selector
             at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
+            timeout: The number of seconds to find at least one element.
 
         Returns:
             A list of the found elements.
         """
         self.py.log.step(f'.find() - Find the elements with css: ``{css}``', True)
         if at_least_one:
-            elements = self.py.wait.until(
+            elements = self.py.wait(timeout).until(
                 lambda _: self.webelement.find_elements(By.CSS_SELECTOR, css),
                 f'Could not find any elements with CSS ``{css}``'
             )
@@ -413,19 +422,20 @@ class Element:
             elements = self.webelement.find_elements(By.CSS_SELECTOR, css)
         return Elements(self.py, elements)
 
-    def xpath(self, xpath: str, at_least_one=True) -> Union['Element', Elements]:
+    def xpath(self, xpath: str, at_least_one=True, timeout: int = 0) -> Union['Element', Elements]:
         """ Finds all DOM elements that match the `xpath` selector.
 
         Args:
             xpath: The selector to use.
             at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
+            timeout: The number of seconds to find at least one element.
 
         Returns:
             A list of the found elements. If only one is found, return that as Element.
         """
         self.py.log.step(f'.xpath() - Find the elements with xpath: ``{xpath}``', True)
         if at_least_one:
-            elements = self.py.wait.until(
+            elements = self.py.wait(timeout).until(
                 lambda _: self.webelement.find_elements(By.XPATH, xpath),
                 f'Could not find any elements with the CSS ``{xpath}``'
             )
