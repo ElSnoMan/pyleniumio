@@ -210,6 +210,21 @@ class Pylenium:
         self.log.step(f'py.screenshot() - Save screenshot to: {filename}')
         self.webdriver.save_screenshot(filename)
 
+    def scroll_to(self, x, y) -> 'Pylenium':
+        """ Scroll to a location on the page.
+
+        Args:
+            x: The number of pixels to scroll horizontally.
+            y: The number of pixels to scroll vertically.
+
+        Examples:
+            # Scroll down 500 px
+            py.scroll_to(0, 500)
+        """
+        js = "window.scrollTo(arguments[0], arguments[1]);"
+        self.webdriver.execute_script(js, x, y)
+        return self
+
     def wait(self, timeout: int = 0, use_py: bool = False, ignored_exceptions: list = None) -> Union[WebDriverWait, PyleniumWait]:
         """ The Wait object with the given timeout in seconds.
 
