@@ -291,6 +291,16 @@ class Element:
         ActionChains(self.py.webdriver).move_to_element(self.webelement).perform()
         return self.py
 
+    def right_click(self) -> 'Pylenium':
+        """ Right clicks the element.
+
+        Returns:
+            The current instance of Pylenium so you can chain another command.
+        """
+        self.py.log.step('.right_click() - Right click this element', True)
+        ActionChains(self.py.webdriver).context_click(self.webelement).perform()
+        return self.py
+
     def select(self, value) -> 'Element':
         """ Selects an `<option>` within a `<select>` element.
 
@@ -497,4 +507,10 @@ class Element:
         """
         self.py.log.info(f'.screenshot() - Take a screenshot and save to: {filename}', True)
         self.webelement.screenshot(filename)
+        return self
+
+    def scroll_into_view(self) -> 'Element':
+        """ Scroll this element into view. """
+        self.py.log.info(f'.scroll_into_view() - Scroll this element into view', True)
+        self.py.webdriver.execute_script('arguments[0].scrollIntoView(true);', self.webelement)
         return self
