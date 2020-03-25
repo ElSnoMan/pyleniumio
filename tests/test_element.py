@@ -34,3 +34,9 @@ def test_children(py):
     py.visit('https://deckshop.pro')
     first_row_of_cards_in_deck = py.get("[href*='/deck/detail/'] > span").children()
     assert first_row_of_cards_in_deck.length == 4
+
+
+def test_forced_click(py):
+    py.visit('https://jane.com')
+    py.get('[data-testid="share"]').click()
+    py.get('[data-testid="si-pinterest"]').click(force=True)

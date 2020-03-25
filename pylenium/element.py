@@ -234,14 +234,20 @@ class Element:
         self.webelement.clear()
         return self
 
-    def click(self) -> 'Pylenium':
+    def click(self, force=False) -> 'Pylenium':
         """ Clicks the element.
+
+        Args:
+            force: If True, a JavascriptExecutor command is sent instead of Selenium's native `.click()`.
 
         Returns:
             The current instance of Pylenium so you can chain another command.
         """
         self.py.log.action('.click() - Click this element', True)
-        self.webelement.click()
+        if force:
+            self.py.webdriver.execute_script('arguments[0].click()', self.webelement)
+        else:
+            self.webelement.click()
         return self.py
 
     def deselect(self, value) -> 'Pylenium':
