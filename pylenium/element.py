@@ -305,7 +305,7 @@ class Element:
         """ Selects an `<option>` within a `<select>` element.
 
         Args:
-            value: The value or text content of the `<option>` to be selected.
+            value: The value, text content or index of the `<option>` to be selected.
 
         Raises:
             `ValueError` if this element is not a `<select>`.
@@ -320,6 +320,8 @@ class Element:
             Select(self.webelement).select_by_visible_text(value)
         except NoSuchElementException:
             Select(self.webelement).select_by_value(value)
+        except BaseException:
+            Select(self.webelement).select_by_index(value)
         finally:
             return self
 
