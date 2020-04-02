@@ -5,8 +5,6 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 
-from pylenium.element import Element, Elements
-
 
 class PyleniumWait:
     """ The Pylenium version of Wait that returns Element and Elements objects."""
@@ -79,7 +77,7 @@ class PyleniumWait:
 
 
 class ElementWait:
-    def __init__(self, webelement, timeout, ignored_exceptions: list = None):
+    def __init__(self, webelement, timeout: int, ignored_exceptions: list = None):
         self._webelement = webelement
         self._timeout = 10 if timeout == 0 else timeout
         if ignored_exceptions:

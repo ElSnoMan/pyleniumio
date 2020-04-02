@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebElement
 from selenium.webdriver.support.select import Select
 
+from pylenium.should import ElementShould
+
 
 class Elements(List['Element']):
     """ Represents a list of DOM elements. """
@@ -113,6 +115,21 @@ class Element:
         """ Gets the InnerText of this element. """
         self.py.log.step('.text - Get the text in this element', True)
         return self.webelement.text
+
+    # EXPECTATIONS #
+    ################
+
+    def should(self, timeout: int = 0, ignored_exceptions: list = None) -> ElementShould:
+        """ Collection of expectations for this element.
+
+        Examples:
+            py.get('#foo').should().be_clickable()
+        """
+        if timeout:
+            wait_time = timeout
+        else:
+            wait_time = self._py.config.driver.wait_time
+        return ElementShould(self.py, self, wait_time, ignored_exceptions)
 
     # METHODS #
     ###########

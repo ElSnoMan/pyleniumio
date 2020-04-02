@@ -1,39 +1,54 @@
-""" Use @pytest.fixtures when writing UI or end-to-end tests. """
+""" Examples will be added to this directory and its files.
 
+However, the best source for info and details is in the
+official documentation here:
 
-import pytest
+https://elsnoman.gitbook.io/pylenium
+
+You can also contact the author, @CarlosKidman
+on Twitter or LinkedIn.
+"""
+
+# You can mix Selenium into some Pylenium commands
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from pylenium import Pylenium
+from selenium.webdriver.support import expected_conditions as ec
 
 
-@pytest.fixture
-def py_():
-    # Code before `yield` is executed Before Each test.
-    # By default, fixtures are mapped to each test.
-    # You can change the scope by using:
-    # `@pytest.fixture(scope=SCOPE)` where SCOPE is 'class', 'module' or 'session'
-    _py = Pylenium()
-
-    # Then `yield` or `return` the instance of Pylenium
-    yield _py
-
-    # Code after `yield` is executed After Each test.
-    # In this case, once the test is complete, quit the driver.
-    # This will be executed whether the test passed or failed.
-    _py.quit()
+# pass in the `py` fixture into your test function
+# this _is_ Pylenium!
+def test_pylenium_basics(py):
+    # Use Cypress-like commands like `.visit()`
+    py.visit('https://google.com')
+    # `.get()` uses CSS to locate a single element
+    py.get('[name="q"]').type('puppies', Keys.ENTER)
+    # `assert` followed by a boolean expression
+    assert 'puppies' in py.title
 
 
-def test_using_fixture(py_):
-    """ You pass in the name of the fixture as seen on the line above.
+def test_access_selenium(py):
+    py.visit('https://google.com')
+    # access the wrapped WebDriver with `py.webdriver`
+    search_field = py.webdriver.find_element_by_css_selector('[name="q"]')
+    # access the wrapped WebElement with `Element.webelement`
+    assert py.get('[name"q"]').webelement.is_enabled()
+    # you can store elements and objects to be used later since
+    # we don't rely on Promises or chaining in Python
+    search_field.send_keys('puppies', Keys.ENTER)
+    assert 'puppies' in py.title
 
-    This is the RECOMMENDED option when writing automated tests.
-    To find more info on PyTest and Fixtures, go to their docs:
 
-    https://docs.pytest.org/en/latest/fixture.html
+def test_chaining_commands(py):
+    py.visit('https://google.com').get('[name="q"]').type('puppies', Keys.ENTER)
+    assert 'puppies' in py.title
 
-    * You can pass in any number of fixtures and fixtures can call other fixtures!
-    * You can store fixtures locally in test files or in conftest.py global files
-    """
-    py_.visit('https://google.com')
-    py_.get('[name="q"]').type('puppies', Keys.ENTER)
-    assert 'puppies' in py_.title
+
+def test_waiting(py):
+    py.visit('https://google.com')
+    # wait using expected conditions
+    # default `.wait()` uses WebDriverWait which returns Selenium's WebElement objects
+    py.wait().until(ec.visibility_of_element_located((By.CSS_SELECTOR, '[name="q"]'))).send_keys('puppies')
+    # use_py=True to use a PyleniumWait which returns Pylenium's Element and Elements objects
+    py.wait(use_py=True).until(lambda _: py.get('[name="q"]')).type(Keys.ENTER)
+    # wait using lambda function
+    assert py.wait().until(lambda x: 'puppies' in x.title)
