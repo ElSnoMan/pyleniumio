@@ -12,7 +12,7 @@ def test_execute_script(py):
 def test_google_search(py):
     py.visit('https://google.com')
     py.get("[name='q']").type('puppies', Keys.ENTER)
-    assert 'puppies' in py.title
+    assert py.should().contain_title('puppies')
 
 
 def test_cookies(py):
@@ -43,7 +43,7 @@ def test_viewport(py):
 def test_find_single_element_with_xpath(py):
     py.visit('https://google.com')
     py.xpath('//*[@name="q"]').type('QA at the Point', Keys.ENTER)
-    assert 'QA at the Point' in py.title
+    assert py.should().contain_title('QA at the Point')
 
 
 def test_find_elements_with_xpath(py):
@@ -54,7 +54,7 @@ def test_find_elements_with_xpath(py):
 def test_hover_and_click_to_page_transition(py):
     py.visit('https://qap.dev')
     py.get('a[href="/about"]').hover().get('a[href="/leadership"][class*=Header]').click()
-    assert py.contains('Carlos Kidman').text == 'Carlos Kidman'
+    assert py.contains('Carlos Kidman').should().have_text('Carlos Kidman')
 
 
 def test_pylenium_wait_until(py):

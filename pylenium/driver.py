@@ -2,9 +2,11 @@ from typing import List, Union
 
 import requests
 from faker import Faker
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
 
 from pylenium import webdriver_factory
 from pylenium.config import PyleniumConfig
@@ -12,6 +14,104 @@ from pylenium.element import Element, Elements
 from pylenium.logging import Logger
 from pylenium.switch_to import SwitchTo
 from pylenium.wait import PyleniumWait
+
+
+class PyleniumShould:
+    def __init__(self, py: 'Pylenium', timeout: int, ignored_exceptions: list = None):
+        self._py = py
+        self._wait: PyleniumWait = self._py.wait(timeout=timeout, use_py=True, ignored_exceptions=ignored_exceptions)
+
+    def have_title(self, title: str) -> 'Pylenium':
+        """ An expectation that the title matches the given title.
+
+        Args:
+            title: The title to match.
+
+        Returns:
+            The current instance of Pylenium.
+
+        Raises:
+            `AssertionError` if the condition is not met within the timeout.
+        """
+        self._py.log.step('.should().have_title()', True)
+        try:
+            value = self._wait.until(ec.title_is(title))
+        except TimeoutException:
+            value = False
+        if value:
+            return self._py
+        else:
+            self._py.log.failed('.should().have_title()')
+            raise AssertionError(f'Title was not {title}, but was {self._py.title}')
+
+    def contain_title(self, string: str) -> 'Pylenium':
+        """ An expectation that the title contains the given string.
+
+        Args:
+            string: The case-sensitive string for the title to contain.
+
+        Returns:
+            The current instance of Pylenium.
+
+        Raises:
+            `AssertionError` if the condition is not met within the timeout.
+        """
+        self._py.log.step('.should().contain_title()', True)
+        try:
+            value = self._wait.until(ec.title_contains(string))
+        except TimeoutException:
+            value = False
+        if value:
+            return self._py
+        else:
+            self._py.log.failed('.should().contain_title()')
+            raise AssertionError(f'Title did not contain {string}, but was {self._py.title}')
+
+    def have_url(self, url: str) -> 'Pylenium':
+        """ An expectation that the URL matches the given url.
+
+        Args:
+            url: The url to match.
+
+        Returns:
+            The current instance of Pylenium.
+
+        Raises:
+            `AssertionError` if the condition is not met within the timeout.
+        """
+        self._py.log.step('.should().have_url()', True)
+        try:
+            value = self._wait.until(ec.url_to_be(url))
+        except TimeoutException:
+            value = False
+        if value:
+            return self._py
+        else:
+            self._py.log.failed('.should().contain_title()')
+            raise AssertionError(f'URL was not {url}, but was {self._py.url}')
+
+    def contain_url(self, string: str) -> 'Pylenium':
+        """ An expectation that the URL contains the given string.
+
+        Args:
+            string: The case-sensitive string for the url to contain.
+
+        Returns:
+            The current instance of Pylenium.
+
+        Raises:
+            `AssertionError` if the condition is not met within the timeout.
+        """
+        self._py.log.step('.should().contain_url()', True)
+        try:
+            value = self._wait.until(ec.url_contains(string))
+        except TimeoutException:
+            value = False
+        if value:
+            return self._py
+        else:
+            self._py.log.failed('.should().contain_url()', True)
+            raise AssertionError(f'URL did not contain {string}, but was {self._py.url}')
 
 
 class Pylenium:
@@ -122,11 +222,12 @@ class Pylenium:
             The first element that is found, even if multiple elements match the query.
         """
         self.log.step(f'py.contains() - Find the element with text: ``{text}``')
+        locator = (By.XPATH, f'//*[contains(text(), "{text}")]')
         element = self.wait(timeout).until(
-            lambda _: self._webdriver.find_element(By.XPATH, f'//*[contains(text(), "{text}")]'),
+            lambda x: x.find_element(*locator),
             f'Could not find element with the text ``{text}``'
         )
-        return Element(self, element)
+        return Element(self, element, locator)
 
     def get(self, css: str, timeout: int = 0) -> Element:
         """ Get the DOM element that matches the `css` selector.
@@ -139,11 +240,12 @@ class Pylenium:
             The first element that is found, even if multiple elements match the query.
         """
         self.log.step(f'py.get() - Find the element with css: ``{css}``')
+        by = By.CSS_SELECTOR
         element = self.wait(timeout).until(
-            lambda _: self._webdriver.find_element(By.CSS_SELECTOR, css),
+            lambda x: x.find_element(by, css),
             f'Could not find element with the CSS ``{css}``'
         )
-        return Element(self, element)
+        return Element(self, element, locator=(by, css))
 
     def find(self, css: str, at_least_one=True, timeout: int = 0) -> Elements:
         """ Finds all DOM elements that match the `css` selector.
@@ -156,16 +258,17 @@ class Pylenium:
         Returns:
             A list of the found elements.
         """
+        by = By.CSS_SELECTOR
         if at_least_one:
             self.log.step(f'py.find() - Find at least one element with css: ``{css}``')
             elements = self.wait(timeout).until(
-                lambda _: self.webdriver.find_elements(By.CSS_SELECTOR, css),
+                lambda x: x.find_elements(by, css),
                 f'Could not find any elements with the CSS ``{css}``'
             )
         else:
-            self.log.action(f'py.find() - Find elements with css (no wait): ``{css}``')
-            elements = self.webdriver.find_elements(By.CSS_SELECTOR, css)
-        return Elements(self, elements)
+            self.log.step(f'py.find() - Find elements with css (no wait): ``{css}``')
+            elements = self.webdriver.find_elements(by, css)
+        return Elements(self, elements, locator=(by, css))
 
     def xpath(self, xpath: str, at_least_one=True, timeout: int = 0) -> Union[Element, Elements]:
         """ Finds all DOM elements that match the `xpath` selector.
@@ -178,22 +281,39 @@ class Pylenium:
         Returns:
             A list of the found elements. If only one is found, return that as Element.
         """
+        by = By.XPATH
         if at_least_one:
             self.log.step(f'py.xpath() - Find at least one element with xpath: ``{xpath}``')
             elements = self.wait(timeout).until(
-                lambda _: self.webdriver.find_elements(By.XPATH, xpath),
+                lambda x: x.find_elements(by, xpath),
                 f'Could not find any elements with the CSS ``{xpath}``'
             )
         else:
             self.log.step(f'py.xpath() - Find elements with xpath (no wait): ``{xpath}``')
-            elements = self.webdriver.find_elements(By.CSS_SELECTOR, xpath)
+            elements = self.webdriver.find_elements(by, xpath)
 
         if len(elements) == 1:
             self.log.info('Only 1 element matched your xpath')
-            return Element(self, elements[0])
+            return Element(self, elements[0], locator=(by, xpath))
 
         self.log.info(f'{len(elements)} elements matched your xpath')
-        return Elements(self, elements)
+        return Elements(self, elements, locator=(by, xpath))
+
+    # EXPECTATIONS #
+    ################
+
+    def should(self, timeout: int = 0, ignored_exceptions: list = None) -> PyleniumShould:
+        """ A collection of expectations for this driver.
+
+        Examples:
+            py.should().contain_title('QA at the Point')
+            py.should().have_url('https://qap.dev')
+        """
+        if timeout:
+            wait_time = timeout
+        else:
+            wait_time = self.config.driver.wait_time
+        return PyleniumShould(self, wait_time, ignored_exceptions)
 
     # UTILITIES #
     #############

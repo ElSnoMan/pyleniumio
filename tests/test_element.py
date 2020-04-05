@@ -4,7 +4,7 @@ import pytest
 def test_element_with_no_siblings(py):
     py.visit('https://deckshop.pro')
     elements = py.get("a[href='/spy/']").siblings()
-    assert elements.length == 0
+    assert elements.is_empty()
 
 
 def test_element_parent_and_siblings(py):
@@ -16,20 +16,20 @@ def test_element_parent_and_siblings(py):
 
 def test_element_text(py):
     py.visit('https://deckshop.pro')
-    assert py.contains('More info').text == 'More info'
+    assert py.contains('More info').should().have_text('More info')
 
 
 def test_find_in_element_context(py):
     py.visit('https://deckshop.pro')
     headers = py.find('h5')
-    assert 'Mega Knight' in headers[1].get("a").text
+    assert headers[1].get('a').should().contain_text('Royal')
 
 
 def test_input_type_and_get_value(py):
     py.visit('https://deckshop.pro')
     search_field = py.get('#smartSearch')
-    assert search_field.type('golem').get_attribute('value') == 'golem'
-    assert search_field.clear().get_attribute('value') == ''
+    assert search_field.type('golem').should().have_value('golem')
+    assert search_field.clear().should().have_value('')
 
 
 def test_children(py):
@@ -39,9 +39,9 @@ def test_children(py):
 
 
 def test_forced_click(py):
-    py.visit('https://jane.com')
-    py.get('[data-testid="share"]').click()
-    py.get('[data-testid="si-pinterest"]').click(force=True)
+    py.visit('https://amazon.com')
+    # without forcing, this raises ElementNotInteractableException
+    py.get("#nav-al-your-account > a").click(force=True)
 
 
 def test_element_should_be_clickable(py):
@@ -61,7 +61,17 @@ def test_element_should_be_visible(py):
     assert py.get('#ajaxdiv').should().be_visible()
 
 
-def test_element_should_not_be_visible(py):
+def test_element_should_be_hidden(py):
     py.visit('https://deckshop.pro')
-    with pytest.raises(AssertionError):
-        py.get('#smartHelp').should().be_visible()
+    assert py.get('#smartHelp').should().be_hidden()
+
+
+def test_element_should_be_focused(py):
+    py.visit('https://deckshop.pro')
+    py.get('#smartSearch').click()
+    assert py.get('#smartSearch').should().be_focused()
+
+
+def test_element_should_not_be_focused(py):
+    py.visit('https://deckshop.pro')
+    assert py.get('#smartSearch').should().not_be_focused()
