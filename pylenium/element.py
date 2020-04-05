@@ -505,7 +505,6 @@ class ElementShould:
             raise AssertionError(f'Element had the text matching ``{text}``')
 
 
-
 class Elements(List['Element']):
     """ Represents a list of DOM elements. """
     def __init__(self, py, web_elements, locator: Optional[Tuple]):
