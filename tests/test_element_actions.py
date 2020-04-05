@@ -3,7 +3,7 @@ URL = 'http://the-internet.herokuapp.com'
 
 def test_check_single_box(py):
     py.visit(f'{URL}/checkboxes')
-    assert py.get('[type="checkbox"]').check().is_checked() is True
+    assert py.get('[type="checkbox"]').check().should().be_checked()
     assert py.get('[type="checkbox"]').uncheck().is_checked() is False
 
 
