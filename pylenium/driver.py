@@ -42,7 +42,7 @@ class PyleniumShould:
             return self._py
         else:
             self._py.log.failed('.should().have_title()')
-            raise AssertionError(f'Title was not {title}, but was {self._py.title}')
+            raise AssertionError(f'Expected Title: {title}  - Actual Title: {self._py.title}')
 
     def contain_title(self, string: str) -> 'Pylenium':
         """ An expectation that the title contains the given string.
@@ -65,7 +65,7 @@ class PyleniumShould:
             return self._py
         else:
             self._py.log.failed('.should().contain_title()')
-            raise AssertionError(f'Title did not contain {string}, but was {self._py.title}')
+            raise AssertionError(f'Expected {string} to be in {self._py.title}')
 
     def have_url(self, url: str) -> 'Pylenium':
         """ An expectation that the URL matches the given url.
@@ -87,8 +87,8 @@ class PyleniumShould:
         if value:
             return self._py
         else:
-            self._py.log.failed('.should().contain_title()')
-            raise AssertionError(f'URL was not {url}, but was {self._py.url}')
+            self._py.log.failed('.should().have_url()')
+            raise AssertionError(f'Expected URL: {url} - Actual URL: {self._py.url}')
 
     def contain_url(self, string: str) -> 'Pylenium':
         """ An expectation that the URL contains the given string.
@@ -111,7 +111,7 @@ class PyleniumShould:
             return self._py
         else:
             self._py.log.failed('.should().contain_url()', True)
-            raise AssertionError(f'URL did not contain {string}, but was {self._py.url}')
+            raise AssertionError(f'Expected {string} to be in {self._py.url}')
 
 
 class Pylenium:

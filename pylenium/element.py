@@ -148,7 +148,7 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().be_focused()')
-            raise AssertionError('Element did not have focus')
+            raise AssertionError('Element was not focused')
 
     def be_hidden(self) -> 'Element':
         """ An expectation that the element is not displayed but still in the DOM (aka hidden).
@@ -236,7 +236,7 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_attr()')
-            raise AssertionError(f'Element did not have attribute ``{attr}`` with the value of ``{value}``')
+            raise AssertionError(f'Expected Attribute Value: {value} - Actual Attribute Value: {self._element.get_attribute("value")}')
 
     def have_class(self, class_name: str) -> 'Element':
         """ An expectation that the element has the given className.
@@ -260,7 +260,7 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_class()')
-            raise AssertionError(f'Element did not have className ``{class_name}``')
+            raise AssertionError(f'Expected className: {class_name} - Actual className: {self._element.get_attribute("class")}')
 
     def have_prop(self, prop: str, value: str) -> 'Element':
         """ An expectation that the element has the given property with the given value.
@@ -285,7 +285,7 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_prop()')
-            raise AssertionError(f'Element did not have property ``{prop}`` with the value of ``{value}``')
+            raise AssertionError(f'Expected Property value: {value} - Actual Property value: {self.element.get_property(property)}')
 
     def have_text(self, text, case_sensitive=True) -> 'Element':
         """ An expectation that the element has the given text.
@@ -313,7 +313,7 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_text()')
-            raise AssertionError(f'Element did not have text matching ``{text}``')
+            raise AssertionError(f'Expected text: {text} - Actual text: {self._element.text}')
 
     def contain_text(self, text, case_sensitive=True) -> 'Element':
         """ An expectation that the element contains the given text.
@@ -341,7 +341,7 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().contain_text()')
-            raise AssertionError(f'Element did not contain the text ``{text}``')
+            raise AssertionError(f'Expected {text} to be in {self._element.text}')
 
     def have_value(self, value) -> 'Element':
         """ An expectation that the element has the given value.
@@ -370,7 +370,7 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_value()')
-            raise AssertionError(f'Element did not have value matching ``{value}``')
+            raise AssertionError(f'Expected value: {value} - Actual value: {self._element.get_attribute("value")}')
 
     # NEGATIVE CONDITIONS #
     #######################
@@ -400,7 +400,7 @@ class ElementShould:
         """ An expectation that the element no longer exists in the DOM.
 
         Returns:
-            The current element.
+            The current instance of Pylenium.
 
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.

@@ -85,3 +85,8 @@ def test_switch_to_frame_then_back(py):
     py.switch_to.frame('mce_0_ifr').get('#tinymce').type('bar')
     assert py.get('#tinymce').text == 'foobar'
     assert py.switch_to.parent_frame().contains('An iFrame').tag_name == 'h3'
+
+
+def test_have_url(py):
+    py.visit('https://qap.dev')
+    py.should().have_url('https://qap.dev')
