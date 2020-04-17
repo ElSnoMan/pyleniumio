@@ -18,6 +18,9 @@ def test_py_config_defaults(py_config):
     assert py_config.viewport.height == 900
     assert py_config.viewport.orientation == 'portrait'
 
+    # custom settings
+    assert py_config.custom is not None
+
 
 @pytest.mark.skip(reason="local test only")
 def test_py_config_cli_log_level_off(py_config):

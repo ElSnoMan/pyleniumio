@@ -93,17 +93,18 @@ def test_run(project_root, request) -> str:
 def py_config(project_root, request) -> PyleniumConfig:
     """ Initialize a PyleniumConfig for each test
 
-    This starts by deserializing pylenium.json into PyleniumConfig.
-    Then any CLI arguments override their respective key/values.
+    1. This starts by deserializing the user-created pylenium.json from the Project Root.
+    2. If that file is not found, then proceed with Pylenium Defaults.
+    3. Then any CLI arguments override their respective key/values.
     """
-    # Deserialize pylenium.json
     try:
+        # 1. Load pylenium.json in Project Root, if available
         with open(f'{project_root}/pylenium.json') as file:
             _json = json.load(file)
         config = PyleniumConfig(**_json)
-    except BaseException:
-        raise FileNotFoundError("Could not find pylenium.json in Project Root."
-                                " Make sure Pylenium's pylenium.json and conftest.py are at the top-level directory.")
+    except FileNotFoundError:
+        # pylenium.json not found, proceed with defaults
+        config = PyleniumConfig()
 
     # Override with any CLI args/options
     # Driver Settings

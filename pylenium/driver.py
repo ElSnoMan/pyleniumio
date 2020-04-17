@@ -117,10 +117,13 @@ class PyleniumShould:
 class Pylenium:
     """ The Pylenium API.
 
-    V1
-        * Chrome is the default local browser
-        * Firefox is also supported
-        * driver executable must be in PATH
+    V1.4.0: Chrome is the default local browser
+
+    Other supported browsers:
+        * Firefox
+        * IE
+        * Opera
+
     """
     def __init__(self, config: PyleniumConfig, logger: Logger):
         self.config = config

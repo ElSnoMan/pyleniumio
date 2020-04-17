@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pyleniumio',
-    version='1.3.1',
+    version='1.4.0',
     packages=[
         'pylenium'
     ],
@@ -15,5 +15,5 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     install_requires=['selenium', 'pytest', 'pytest-xdist', 'pydantic', 'faker', 'requests'],
-    data_files=[('..', ['conftest.py', 'pylenium.json'])]
+    data_files=[('..', ['conftest.py'])]
 )

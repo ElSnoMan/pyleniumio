@@ -11,7 +11,8 @@ class DriverConfig(BaseModel):
     browser: str = 'chrome'
     remote_url: str = ''
     wait_time: int = 10
-    options: List[str]
+    options: List[str] = []
+    version: str = 'latest'
 
 
 class LoggingConfig(BaseModel):
@@ -27,10 +28,10 @@ class ViewportConfig(BaseModel):
 
 
 class PyleniumConfig(BaseModel):
-    driver: DriverConfig
-    logging: LoggingConfig
-    viewport: ViewportConfig
-
+    driver: DriverConfig = DriverConfig()
+    logging: LoggingConfig = LoggingConfig()
+    viewport: ViewportConfig = ViewportConfig()
+    custom: dict = {}
 
 # MODELS #
 ##########
