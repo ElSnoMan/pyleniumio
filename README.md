@@ -2,7 +2,7 @@
 
 ## The mission is simple
 
-> Make the Selenium experience more like Cypress
+> Bring the best of Selenium, Cypress and Python into one package.
 
 This means:
 
