@@ -4,6 +4,7 @@
     "remote_url": "",
     "wait_time": 90,
     "options": [],
+    "caps":[{}],
     "version": "latest"
   },
 
