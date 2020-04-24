@@ -166,7 +166,7 @@ def build_remote(browser: str, remote_url: str, browser_options: List[str], capa
     elif browser == 'edge':
         caps = webdriver.DesiredCapabilities.EDGE.copy()
     else:
-        caps = None
+        caps = {}
 
     if capabilities:
         caps = capabilities

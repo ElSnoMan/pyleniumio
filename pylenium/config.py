@@ -12,7 +12,7 @@ class DriverConfig(BaseModel):
     remote_url: str = ''
     wait_time: int = 10
     options: List[str] = []
-    capabilities: List[dict] = [{}]
+    capabilities: List[dict] = []
     version: str = 'latest'
 
 
@@ -33,6 +33,7 @@ class PyleniumConfig(BaseModel):
     logging: LoggingConfig = LoggingConfig()
     viewport: ViewportConfig = ViewportConfig()
     custom: dict = {}
+
 
 # MODELS #
 ##########
