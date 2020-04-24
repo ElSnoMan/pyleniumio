@@ -126,6 +126,10 @@ def py_config(project_root, request) -> PyleniumConfig:
         shots_on = True if cli_screenshots_on.lower() == 'true' else False
         config.logging.screenshots_on = shots_on
 
+    cli_browser = request.config.getoption('--browser')
+    if cli_browser:
+        config.driver.browser = cli_browser
+
     return config
 
 
