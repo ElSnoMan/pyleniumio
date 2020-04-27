@@ -42,19 +42,17 @@ def build_options(browser, browser_options: List[str], capabilities: Optional[Li
     elif browser == Browser.EDGE:
         options = Options()
     else:
-        options = None
+        raise ValueError(f'{browser} is not supported. https://elsnoman.gitbook.io/pylenium/configuration/driver')
 
-    if options:
-        for option in browser_options:
-            options.add_argument(f'--{option}')
+    for option in browser_options:
+        options.add_argument(f'--{option}')
 
-        if browser == Browser.EDGE or browser == Browser.IE and capabilities:
-            for cap in capabilities:
-                (key, value), = cap.items()
-                options.set_capability(key, value)
-        return options
-    else:
-        raise ValueError(f'{browser} is not currently supported. Try "chrome" or "firefox" instead.')
+    if capabilities:
+        for cap in capabilities:
+            (key, value), = cap.items()
+            options.set_capability(key, value)
+
+    return options
 
 
 def build_from_config(config: PyleniumConfig) -> WebDriver:
