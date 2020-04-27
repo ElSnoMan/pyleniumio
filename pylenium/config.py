@@ -12,7 +12,7 @@ class DriverConfig(BaseModel):
     remote_url: str = ''
     wait_time: int = 10
     options: List[str] = []
-    capabilities: List[dict] = []
+    capabilities: dict = {}
     version: str = 'latest'
 
 

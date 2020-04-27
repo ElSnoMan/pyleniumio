@@ -122,8 +122,8 @@ def py_config(project_root, request) -> PyleniumConfig:
 
     cli_capabilities = request.config.getoption('--caps')
     if cli_capabilities:
-        # --caps must be in '[{}, {}]' format
-        # with double quotes around each key and value
+        # --caps must be in '{"name": "value", "boolean": true}' format
+        # with double quotes around each key. booleans are lowercase.
         config.driver.capabilities = json.loads(cli_capabilities)
 
     # Logging Settings
@@ -211,5 +211,5 @@ def pytest_addoption(parser):
     )
     parser.addoption(
         '--caps', action='store',
-        default='', help='List of key-value pairs. Ex. "[{}, {}]"'
+        default='', help='List of key-value pairs. Ex. \'{"name": "value", "boolean": true}\''
     )

@@ -19,13 +19,43 @@ class Browser:
     OPERA = 'opera'
 
 
-def build_options(browser, browser_options: List[str], capabilities: Optional[List[dict]]):
+def build_capabilities(browser, capabilities: dict):
+    """ Build the capabilities dictionary for WebDriver.
+
+    Args:
+        browser: The name of the browser.
+        capabilities: The dict of capabilities to include.
+
+    Examples:
+        caps = WebDriverFactory().build_capabilities({'enableVNC': True, 'enableVideo': False})
+    """
+    caps = {}
+
+    if browser == Browser.CHROME:
+        caps.update(webdriver.DesiredCapabilities.CHROME.copy())
+    elif browser == Browser.FIREFOX:
+        caps.update(webdriver.DesiredCapabilities.FIREFOX.copy())
+    elif browser == Browser.IE:
+        caps.update(webdriver.DesiredCapabilities.INTERNETEXPLORER.copy())
+    elif browser == Browser.OPERA:
+        caps.update(webdriver.DesiredCapabilities.OPERA.copy())
+    elif browser == Browser.EDGE:
+        caps.update(webdriver.DesiredCapabilities.EDGE.copy())
+    else:
+        raise ValueError(f'{browser} is not supported.')
+
+    if capabilities:
+        caps.update(capabilities)
+
+    return caps
+
+
+def build_options(browser, browser_options: List[str]):
     """ Build the Options object for Chrome or Firefox.
 
     Args:
         browser: The name of the browser.
         browser_options: The list of options/arguments to include.
-        capabilities: The list of capabilities to include.
 
     Examples:
         driver = WebDriverFactory().build_chrome(['headless', 'incognito'])
@@ -46,11 +76,6 @@ def build_options(browser, browser_options: List[str], capabilities: Optional[Li
 
     for option in browser_options:
         options.add_argument(f'--{option}')
-
-    if capabilities:
-        for cap in capabilities:
-            (key, value), = cap.items()
-            options.set_capability(key, value)
 
     return options
 
@@ -73,7 +98,7 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
     elif browser == Browser.FIREFOX:
         return build_firefox(config.driver.version, config.driver.options)
     elif browser == Browser.IE:
-        return build_ie(config.driver.version, config.driver.options)
+        return build_ie(config.driver.version, config.driver.options, config.driver.capabilities)
     elif browser == Browser.OPERA:
         return build_opera(config.driver.version, config.driver.options)
     elif browser == Browser.EDGE:
@@ -92,23 +117,25 @@ def build_chrome(version: str, browser_options: List[str]) -> WebDriver:
     Examples:
         driver = WebDriverFactory().build_chrome('latest', ['headless', 'incognito'])
     """
-    options = build_options('chrome', browser_options, None)
+    options = build_options(Browser.CHROME, browser_options)
     return webdriver.Chrome(ChromeDriverManager(version=version).install(), options=options)
 
 
-def build_edge(version: str, browser_options: List[str], capabilities: List[dict]) -> WebDriver:
+def build_edge(version: str, browser_options: List[str], capabilities: dict) -> WebDriver:
     """ Build a Edge Driver.
 
     Args:
         version: The desired version of Edge.
         browser_options: The list of options/arguments to include.
-        capabilities: The list of capabilities to include.
+        capabilities: The dict of capabilities to include.
 
     Examples:
         driver = WebDriverFactory().build_edge('latest', ['headless', 'incognito'])
     """
-    options = build_options('edge', browser_options, capabilities)
-    return webdriver.Edge(EdgeChromiumDriverManager(version=version).install(), capabilities=options.to_capabilities())
+    caps = build_capabilities(Browser.EDGE, capabilities)
+    options = build_options(Browser.EDGE, browser_options).to_capabilities()
+    caps.update(options)
+    return webdriver.Edge(EdgeChromiumDriverManager(version=version).install(),  capabilities=caps)
 
 
 def build_firefox(version: str, browser_options: List[str]) -> WebDriver:
@@ -121,22 +148,24 @@ def build_firefox(version: str, browser_options: List[str]) -> WebDriver:
     Examples:
         driver = WebDriverFactory().build_firefox('latest', ['headless', 'incognito'])
     """
-    options = build_options('firefox', browser_options, None)
+    options = build_options(Browser.FIREFOX, browser_options)
     return webdriver.Firefox(executable_path=GeckoDriverManager(version=version).install(), options=options)
 
 
-def build_ie(version: str, browser_options: List[str]) -> WebDriver:
+def build_ie(version: str, browser_options: List[str], capabilities: dict) -> WebDriver:
     """ Build an IEDriver.
 
     Args:
         version: The desired version of IE.
         browser_options: The list of options/arguments to include.
+        capabilities: The dict of capabilities.
 
     Examples:
         driver = WebDriverFactory().build_ie('latest', ['headless'])
     """
-    options = build_options('ie', browser_options, None)
-    return webdriver.Ie(executable_path=IEDriverManager(version=version).install(), options=options)
+    caps = build_capabilities(Browser.IE, capabilities)
+    options = build_options(Browser.IE, browser_options)
+    return webdriver.Ie(executable_path=IEDriverManager(version=version).install(), options=options, capabilities=caps)
 
 
 def build_opera(version: str, browser_options: List[str]) -> WebDriver:
@@ -149,43 +178,28 @@ def build_opera(version: str, browser_options: List[str]) -> WebDriver:
     Examples:
         driver = WebDriverFactory().build_opera('latest', ['--start-maximized'])
     """
-    options = build_options('opera', browser_options, None)
+    options = build_options(Browser.OPERA, browser_options)
     return webdriver.Opera(executable_path=OperaDriverManager(version=version).install(), options=options)
 
 
-def build_remote(browser: str, remote_url: str, browser_options: List[str], capabilities: List[dict]) -> WebDriver:
+def build_remote(browser: str, remote_url: str, browser_options: List[str], capabilities: dict) -> WebDriver:
     """ Build a RemoteDriver connected to a Grid.
 
     Args:
         browser: Name of the browser to connect to.
         remote_url: The URL to connect to the Grid.
         browser_options: The list of options/arguments to include.
-        capabilities: The list of capabilities to include.
+        capabilities: The dict of capabilities to include.
 
     Returns:
         The instance of WebDriver once the connection is successful
     """
     browser = browser.lower()
-    if browser == Browser.CHROME:
-        caps = webdriver.DesiredCapabilities.CHROME.copy()
-    elif browser == Browser.FIREFOX:
-        caps = webdriver.DesiredCapabilities.FIREFOX.copy()
-    elif browser == Browser.IE:
-        caps = webdriver.DesiredCapabilities.INTERNETEXPLORER.copy()
-    elif browser == Browser.OPERA:
-        caps = webdriver.DesiredCapabilities.OPERA.copy()
-    elif browser == Browser.EDGE:
-        caps = webdriver.DesiredCapabilities.EDGE.copy()
-    else:
-        caps = {}
-
-    if capabilities:
-        caps = capabilities
-
-    options = build_options(browser, browser_options, caps)
+    caps = build_capabilities(browser, capabilities)
+    options = build_options(browser, browser_options)
 
     return webdriver.Remote(
         command_executor=remote_url,
         desired_capabilities=caps,
-        options=options,
+        options=options
     )
