@@ -11,6 +11,14 @@ from selenium.webdriver.edge.options import Options
 from pylenium.config import PyleniumConfig
 
 
+class Browser:
+    CHROME = 'chrome'
+    EDGE = 'edge'
+    FIREFOX = 'firefox'
+    IE = 'ie'
+    OPERA = 'opera'
+
+
 def build_options(browser, browser_options: List[str], capabilities: Optional[List[dict]]):
     """ Build the Options object for Chrome or Firefox.
 
@@ -22,15 +30,16 @@ def build_options(browser, browser_options: List[str], capabilities: Optional[Li
     Examples:
         driver = WebDriverFactory().build_chrome(['headless', 'incognito'])
     """
-    if browser == 'chrome':
+    browser = browser.lower()
+    if browser == Browser.CHROME:
         options = webdriver.ChromeOptions()
-    elif browser == 'firefox':
+    elif browser == Browser.FIREFOX:
         options = webdriver.FirefoxOptions()
-    elif browser == 'ie':
+    elif browser == Browser.IE:
         options = webdriver.IeOptions()
-    elif browser == 'opera':
+    elif browser == Browser.OPERA:
         options = webdriver.ChromeOptions()
-    elif browser == 'edge':
+    elif browser == Browser.EDGE:
         options = Options()
     else:
         options = None
@@ -39,9 +48,9 @@ def build_options(browser, browser_options: List[str], capabilities: Optional[Li
         for option in browser_options:
             options.add_argument(f'--{option}')
 
-        if browser == 'edge' and capabilities:
+        if browser == Browser.EDGE or browser == Browser.IE and capabilities:
             for cap in capabilities:
-                key, value = cap
+                (key, value), = cap.items()
                 options.set_capability(key, value)
         return options
     else:
@@ -60,16 +69,19 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
             browser_options=config.driver.options,
             capabilities=config.driver.capabilities
         )
-    if config.driver.browser == 'chrome':
+    browser = config.driver.browser.lower()
+    if browser == Browser.CHROME:
         return build_chrome(config.driver.version, config.driver.options)
-    elif config.driver.browser == 'firefox':
+    elif browser == Browser.FIREFOX:
         return build_firefox(config.driver.version, config.driver.options)
-    elif config.driver.browser == 'ie':
+    elif browser == Browser.IE:
         return build_ie(config.driver.version, config.driver.options)
-    elif config.driver.browser == 'opera':
+    elif browser == Browser.OPERA:
         return build_opera(config.driver.version, config.driver.options)
+    elif browser == Browser.EDGE:
+        return build_edge(config.driver.version, config.driver.options, config.driver.capabilities)
     else:
-        raise ValueError(f'{config.driver.browser} is not supported. Try using lowercase like "chrome".')
+        raise ValueError(f'{config.driver.browser} is not supported. https://elsnoman.gitbook.io/pylenium/configuration/driver')
 
 
 def build_chrome(version: str, browser_options: List[str]) -> WebDriver:
@@ -155,15 +167,16 @@ def build_remote(browser: str, remote_url: str, browser_options: List[str], capa
     Returns:
         The instance of WebDriver once the connection is successful
     """
-    if browser == 'chrome':
+    browser = browser.lower()
+    if browser == Browser.CHROME:
         caps = webdriver.DesiredCapabilities.CHROME.copy()
-    elif browser == 'firefox':
+    elif browser == Browser.FIREFOX:
         caps = webdriver.DesiredCapabilities.FIREFOX.copy()
-    elif browser == 'ie':
+    elif browser == Browser.IE:
         caps = webdriver.DesiredCapabilities.INTERNETEXPLORER.copy()
-    elif browser == 'opera':
+    elif browser == Browser.OPERA:
         caps = webdriver.DesiredCapabilities.OPERA.copy()
-    elif browser == 'edge':
+    elif browser == Browser.EDGE:
         caps = webdriver.DesiredCapabilities.EDGE.copy()
     else:
         caps = {}
