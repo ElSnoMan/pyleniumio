@@ -117,13 +117,13 @@ class PyleniumShould:
 class Pylenium:
     """ The Pylenium API.
 
-    V1.4.0: Chrome is the default local browser
+    V1.5.1+: Chrome is the default local browser
 
     Other supported browsers:
         * Firefox
+        * Edge Chromium
         * IE
         * Opera
-
     """
     def __init__(self, config: PyleniumConfig, logger: Logger):
         self.config = config
@@ -145,6 +145,9 @@ class Pylenium:
         self._wait = PyleniumWait(self, self._webdriver, self.config.driver.wait_time, ignored_exceptions=None)
 
         # Initial Browser Setup
+        if config.driver.page_load_wait_time:
+            self.set_page_load_timeout(config.driver.page_load_wait_time)
+
         if config.viewport.maximize:
             self.maximize_window()
         else:
@@ -469,6 +472,15 @@ class Pylenium:
         """ Maximizes the current Window. """
         self.log.info('py.maximize_window() - Maximize window')
         self.webdriver.maximize_window()
+        return self
+
+    def set_page_load_timeout(self, timeout: int) -> 'Pylenium':
+        """ Set the amount of time to wait for a page load to complete before throwing an error.
+
+        Args:
+            timeout: The time to wait for.
+        """
+        self.webdriver.set_page_load_timeout(timeout)
         return self
 
     def viewport(self, width: int, height: int,  orientation: str = 'portrait') -> 'Pylenium':

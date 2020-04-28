@@ -126,6 +126,10 @@ def py_config(project_root, request) -> PyleniumConfig:
         # with double quotes around each key. booleans are lowercase.
         config.driver.capabilities = json.loads(cli_capabilities)
 
+    cli_page_wait_time = request.config.getoption('--page_load_wait_time')
+    if cli_page_wait_time and cli_page_wait_time.isdigit():
+        config.driver.page_load_wait_time = int(cli_page_wait_time)
+
     # Logging Settings
     cli_pylog_level = request.config.getoption('--pylog_level')
     if cli_pylog_level:
@@ -154,6 +158,7 @@ def test_case(test_run, py_config, request) -> TestCase:
     test_name = request.node.name
     test_result_path = f'{test_run}/{test_name}'
     logger = Logger(test_name, test_result_path, py_config.logging.pylog_level)
+    py_config.driver.capabilities.update({'name': test_name})
 
     test = {
         'name': test_name,
@@ -212,4 +217,9 @@ def pytest_addoption(parser):
     parser.addoption(
         '--caps', action='store',
         default='', help='List of key-value pairs. Ex. \'{"name": "value", "boolean": true}\''
+    )
+
+    parser.addoption(
+        '--page_load_wait_time', action='store',
+        default='', help='The amount of time to wait for a page load before raising an error. Default is 0.'
     )
