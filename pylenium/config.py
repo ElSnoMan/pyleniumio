@@ -11,8 +11,10 @@ class DriverConfig(BaseModel):
     browser: str = 'chrome'
     remote_url: str = ''
     wait_time: int = 10
+    page_load_wait_time: int = 0
     options: List[str] = []
     capabilities: dict = {}
+    experimental_options: List[dict] = None
     version: str = 'latest'
 
 
