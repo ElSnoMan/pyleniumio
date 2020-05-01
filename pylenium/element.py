@@ -1,3 +1,4 @@
+import pathlib
 import time
 from typing import List, Union, Tuple, Optional
 
@@ -7,6 +8,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebElement
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support import expected_conditions as ec
+
+from pylenium import utils
 
 
 class ElementWait:
@@ -837,6 +840,41 @@ class Element:
         self.py.log.action('.double_click() - Double click this element', True)
         ActionChains(self.py.webdriver).double_click(self.webelement).perform()
         return self.py
+
+    def drag_to(self, css: str) -> 'Element':
+        """ Drag the current element to another element given its CSS selector.
+
+        Args:
+            css: The CSS selector of the element to drag to.
+
+        Returns:
+            The current element.
+        """
+        to_element = self.py.get(css).webelement
+        dnd_javascript = utils.read_script_from_file('drag_and_drop.js')
+        self.py.execute_script(
+            dnd_javascript + "$(arguments[0]).simulateDragDrop({ dropTarget: arguments[1]});",
+            self.webelement,
+            to_element
+        )
+        return self
+
+    def drag_to_element(self, to_element: 'Element') -> 'Element':
+        """ Drag the current element to the given element.
+
+        Args:
+            to_element: The Element to drag to.
+
+        Returns:
+            The current element.
+        """
+        dnd_javascript = utils.read_script_from_file('drag_and_drop.js')
+        self.py.execute_script(
+            dnd_javascript + "$(arguments[0]).simulateDragDrop({ dropTarget: arguments[1]});",
+            self.webelement,
+            to_element.webelement
+        )
+        return self
 
     def hover(self) -> 'Pylenium':
         """ Hovers the element.
