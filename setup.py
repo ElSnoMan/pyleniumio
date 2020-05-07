@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pyleniumio',
-    version='1.6.1',
+    version='1.6.2',
     packages=[
         'pylenium'
     ],
