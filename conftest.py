@@ -140,6 +140,10 @@ def py_config(project_root, request) -> PyleniumConfig:
         shots_on = True if cli_screenshots_on.lower() == 'true' else False
         config.logging.screenshots_on = shots_on
 
+    cli_extensions = request.config.getoption('--extensions')
+    if cli_extensions:
+        config.driver.extension_paths = [ext.strip() for ext in cli_extensions.split(',')]
+
     return config
 
 
@@ -222,4 +226,8 @@ def pytest_addoption(parser):
     parser.addoption(
         '--page_load_wait_time', action='store',
         default='', help='The amount of time to wait for a page load before raising an error. Default is 0.'
+    )
+    parser.addoption(
+        '--extensions', action='store',
+        default='', help='Comma-separated list of extension paths. Ex. "*.crx, *.crx"'
     )
