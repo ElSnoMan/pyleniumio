@@ -7,7 +7,8 @@
     "options": [],
     "capabilities": {},
     "version": "latest",
-    "experimental_options": null
+    "experimental_options": null,
+    "extension_paths": ["./data/Get CRX.crx"]
   },
 
   "logging":{

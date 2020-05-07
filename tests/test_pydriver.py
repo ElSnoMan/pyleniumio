@@ -88,3 +88,12 @@ def test_switch_to_frame_then_back(py):
 def test_have_url(py):
     py.visit('https://qap.dev')
     py.should().have_url('https://qap.dev')
+
+
+def test_loading_extension_to_browser(py):
+    assert './data/Get CRX.crx' in py.config.driver.extension_paths
+    py.visit('chrome://extensions/')
+    shadow1 = py.get('extensions-manager').open_shadow_dom()
+    shadow2 = shadow1.get('extensions-item-list').open_shadow_dom()
+    ext_shadow_dom = shadow2.find('extensions-item')[1].open_shadow_dom()
+    assert ext_shadow_dom.get('#name-and-version').should().contain_text('Get CRX')

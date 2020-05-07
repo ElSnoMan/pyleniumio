@@ -51,13 +51,17 @@ def build_capabilities(browser, capabilities: dict):
     return caps
 
 
-def build_options(browser, browser_options: List[str], experimental_options: Optional[List[dict]]):
+def build_options(browser,
+                  browser_options: List[str],
+                  experimental_options: Optional[List[dict]],
+                  extension_paths: Optional[List[str]]):
     """ Build the Options object for Chrome or Firefox.
 
     Args:
         browser: The name of the browser.
         browser_options: The list of options/arguments to include.
         experimental_options: The list of experimental options to include.
+        extension_paths: The list of extensions to add to the browser session.
 
     Examples:
         WebDriverFactory().build_options('chrome', ['headless', 'incognito'], [{'useAutomationExtension', False}])
@@ -84,6 +88,10 @@ def build_options(browser, browser_options: List[str], experimental_options: Opt
             (name, value), = exp_option.items()
             options.add_experimental_option(name, value)
 
+    if extension_paths:
+        for path in extension_paths:
+            options.add_extension(path)
+
     return options
 
 
@@ -98,42 +106,48 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
             remote_url=config.driver.remote_url,
             browser_options=config.driver.options,
             capabilities=config.driver.capabilities,
-            experimental_options=config.driver.experimental_options
+            experimental_options=config.driver.experimental_options,
+            extension_paths=config.driver.extension_paths
         )
     browser = config.driver.browser.lower()
     if browser == Browser.CHROME:
-        return build_chrome(config.driver.version, config.driver.options, config.driver.experimental_options)
+        return build_chrome(config.driver.version, config.driver.options, config.driver.experimental_options, config.driver.extension_paths)
     elif browser == Browser.FIREFOX:
-        return build_firefox(config.driver.version, config.driver.options, config.driver.experimental_options)
+        return build_firefox(config.driver.version, config.driver.options, config.driver.experimental_options, config.driver.extension_paths)
     elif browser == Browser.IE:
-        return build_ie(config.driver.version, config.driver.options, config.driver.capabilities, config.driver.experimental_options)
+        return build_ie(config.driver.version, config.driver.options, config.driver.capabilities, config.driver.experimental_options, config.driver.extension_paths)
     elif browser == Browser.OPERA:
-        return build_opera(config.driver.version, config.driver.options, config.driver.experimental_options)
+        return build_opera(config.driver.version, config.driver.options, config.driver.experimental_options, config.driver.extension_paths)
     elif browser == Browser.EDGE:
-        return build_edge(config.driver.version, config.driver.options, config.driver.capabilities, config.driver.experimental_options)
+        return build_edge(config.driver.version, config.driver.options, config.driver.capabilities, config.driver.experimental_options, config.driver.extension_paths)
     else:
         raise ValueError(f'{config.driver.browser} is not supported. https://elsnoman.gitbook.io/pylenium/configuration/driver')
 
 
-def build_chrome(version: str, browser_options: List[str], experimental_options: Optional[List[dict]]) -> WebDriver:
+def build_chrome(version: str,
+                 browser_options: List[str],
+                 experimental_options: Optional[List[dict]],
+                 extension_paths: Optional[List[str]]) -> WebDriver:
     """ Build a ChromeDriver.
 
     Args:
         version: The desired version of Chrome.
         browser_options: The list of options/arguments to include.
         experimental_options: The list of experimental options to include.
+        extension_paths: The list of extensions to add to the browser.
 
     Examples:
         driver = WebDriverFactory().build_chrome('latest', ['headless', 'incognito'], None)
     """
-    options = build_options(Browser.CHROME, browser_options, experimental_options)
+    options = build_options(Browser.CHROME, browser_options, experimental_options, extension_paths)
     return webdriver.Chrome(ChromeDriverManager(version=version).install(), options=options)
 
 
 def build_edge(version: str,
                browser_options: List[str],
                capabilities: dict,
-               experimental_options: Optional[List[dict]]) -> WebDriver:
+               experimental_options: Optional[List[dict]],
+               extension_paths: Optional[List[str]]) -> WebDriver:
     """ Build a Edge Driver.
 
     Args:
@@ -141,35 +155,41 @@ def build_edge(version: str,
         browser_options: The list of options/arguments to include.
         capabilities: The dict of capabilities to include.
         experimental_options: The list of experimental options to include.
+        extension_paths: The list of extensions to add to the browser.
 
     Examples:
         driver = WebDriverFactory().build_edge('latest', ['headless', 'incognito'], None)
     """
     caps = build_capabilities(Browser.EDGE, capabilities)
-    options = build_options(Browser.EDGE, browser_options, experimental_options).to_capabilities()
+    options = build_options(Browser.EDGE, browser_options, experimental_options, extension_paths).to_capabilities()
     caps.update(options)
     return webdriver.Edge(EdgeChromiumDriverManager(version=version).install(),  capabilities=caps)
 
 
-def build_firefox(version: str, browser_options: List[str], experimental_options: Optional[List[dict]]) -> WebDriver:
+def build_firefox(version: str,
+                  browser_options: List[str],
+                  experimental_options: Optional[List[dict]],
+                  extension_paths: Optional[List[str]]) -> WebDriver:
     """ Build a FirefoxDriver.
 
     Args:
         version: The desired version of Firefox.
         browser_options: The list of options/arguments to include.
-        experimental_options: The list of experimental options to include
+        experimental_options: The list of experimental options to include.
+        extension_paths: The list of extensions to add to the browser.
 
     Examples:
         driver = WebDriverFactory().build_firefox('latest', ['headless', 'incognito'], None)
     """
-    options = build_options(Browser.FIREFOX, browser_options, experimental_options)
+    options = build_options(Browser.FIREFOX, browser_options, experimental_options, extension_paths)
     return webdriver.Firefox(executable_path=GeckoDriverManager(version=version).install(), options=options)
 
 
 def build_ie(version: str,
              browser_options: List[str],
              capabilities: dict,
-             experimental_options: Optional[List[dict]]) -> WebDriver:
+             experimental_options: Optional[List[dict]],
+             extension_paths: Optional[List[str]]) -> WebDriver:
     """ Build an IEDriver.
 
     Args:
@@ -177,27 +197,32 @@ def build_ie(version: str,
         browser_options: The list of options/arguments to include.
         capabilities: The dict of capabilities.
         experimental_options: The list of experimental options to include.
+        extension_paths: The list of extensions to add to the browser.
 
     Examples:
         driver = WebDriverFactory().build_ie('latest', ['headless'], None)
     """
     caps = build_capabilities(Browser.IE, capabilities)
-    options = build_options(Browser.IE, browser_options, experimental_options)
+    options = build_options(Browser.IE, browser_options, experimental_options, extension_paths)
     return webdriver.Ie(executable_path=IEDriverManager(version=version).install(), options=options, capabilities=caps)
 
 
-def build_opera(version: str, browser_options: List[str], experimental_options: Optional[List[dict]]) -> WebDriver:
+def build_opera(version: str,
+                browser_options: List[str],
+                experimental_options: Optional[List[dict]],
+                extension_paths: Optional[List[str]]) -> WebDriver:
     """ Build an OperaDriver.
 
     Args:
         version: The desired version of Opera.
         browser_options: The list of options/arguments to include.
         experimental_options: The list of experimental options to include.
+        extension_paths: The list of extensions to add to the browser.
 
     Examples:
         driver = WebDriverFactory().build_opera('latest', ['--start-maximized'], None)
     """
-    options = build_options(Browser.OPERA, browser_options, experimental_options)
+    options = build_options(Browser.OPERA, browser_options, experimental_options, extension_paths)
     return webdriver.Opera(executable_path=OperaDriverManager(version=version).install(), options=options)
 
 
@@ -205,7 +230,8 @@ def build_remote(browser: str,
                  remote_url: str,
                  browser_options: List[str],
                  capabilities: dict,
-                 experimental_options: Optional[List[dict]]) -> WebDriver:
+                 experimental_options: Optional[List[dict]],
+                 extension_paths: Optional[List[str]]) -> WebDriver:
     """ Build a RemoteDriver connected to a Grid.
 
     Args:
@@ -214,13 +240,14 @@ def build_remote(browser: str,
         browser_options: The list of options/arguments to include.
         capabilities: The dict of capabilities to include.
         experimental_options: The list of experimental options to include.
+        extension_paths: The list of extensions to add to the browser.
 
     Returns:
         The instance of WebDriver once the connection is successful
     """
     browser = browser.lower()
     caps = build_capabilities(browser, capabilities)
-    options = build_options(browser, browser_options, experimental_options)
+    options = build_options(browser, browser_options, experimental_options, extension_paths)
 
     return webdriver.Remote(
         command_executor=remote_url,

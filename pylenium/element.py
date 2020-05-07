@@ -1117,3 +1117,16 @@ class Element:
         self.py.log.info(f'.scroll_into_view() - Scroll this element into view', True)
         self.py.webdriver.execute_script('arguments[0].scrollIntoView(true);', self.webelement)
         return self
+
+    def open_shadow_dom(self) -> 'Element':
+        """ Open a Shadow DOM and return the Shadow Root element.
+
+        Examples:
+            shadow1 = py.get('extensions-manager').open_shadow_dom()
+            shadow2 = py.get('extensions-list').open_shadow_dom()
+
+        References:
+            https://www.seleniumeasy.com/selenium-tutorials/accessing-shadow-dom-elements-with-webdriver
+        """
+        shadow_element = self.py.execute_script("return arguments[0].shadowRoot", self.webelement)
+        return Element(self.py, shadow_element, locator=None)

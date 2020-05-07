@@ -15,6 +15,7 @@ class DriverConfig(BaseModel):
     options: List[str] = []
     capabilities: dict = {}
     experimental_options: List[dict] = None
+    extension_paths: List[str] = None
     version: str = 'latest'
 
 
