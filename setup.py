@@ -1,8 +1,10 @@
 from setuptools import setup
 
+from pylenium.scripts.cli import VERSION
+
 setup(
     name='pyleniumio',
-    version='1.6.2',
+    version=VERSION,
     packages=[
         'pylenium'
     ],
@@ -14,6 +16,11 @@ setup(
     description='The best of Selenium and Cypress in a single Python Package',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    install_requires=['selenium', 'pytest', 'pytest-xdist', 'pydantic', 'faker', 'requests', 'webdriver-manager'],
-    data_files=[('..', ['conftest.py'])]
+    install_requires=[
+        'selenium', 'pytest', 'pytest-xdist', 'pydantic', 'faker', 'requests', 'webdriver-manager', 'click'
+    ],
+    entry_points='''
+        [console_scripts]
+        pylenium=pylenium.scripts.cli:cli
+    '''
 )

@@ -1,6 +1,7 @@
 .idea
 .vscode
 test_results
+test_env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
