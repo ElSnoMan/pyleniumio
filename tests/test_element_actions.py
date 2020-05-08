@@ -28,3 +28,8 @@ def test_drag_to_with_element(py):
     column_b = py.get('#column-b')
     py.get('#column-a').drag_to_element(column_b)
     assert column_b.get('header').should().have_text('A')
+
+
+def test_hover(py):
+    py.visit('https://the-internet.herokuapp.com/hovers')
+    assert py.get('.figure').hover().contains('View profile').should().be_visible()
