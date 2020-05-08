@@ -1,8 +1,10 @@
 from setuptools import setup
 
+from pylenium.scripts.cli import VERSION
+
 setup(
     name='pyleniumio',
-    version='1.7.0',
+    version=VERSION,
     packages=[
         'pylenium'
     ],
@@ -17,7 +19,6 @@ setup(
     install_requires=[
         'selenium', 'pytest', 'pytest-xdist', 'pydantic', 'faker', 'requests', 'webdriver-manager', 'click'
     ],
-    data_files=[('..', ['conftest.py'])],
     entry_points='''
         [console_scripts]
         pylenium=pylenium.scripts.cli:cli

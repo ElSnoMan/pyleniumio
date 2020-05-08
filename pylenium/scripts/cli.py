@@ -3,7 +3,17 @@ import shutil
 import click
 
 
+VERSION = '1.7.0'
+
+
 def _copy(file, to_dir, message) -> str:
+    """ Copies a file to the given directory.
+
+    If the file exists, it is overwritten.
+
+    Returns:
+        The absolute path of the newly copied file.
+    """
     newly_created_path = shutil.copy(src=file, dst=to_dir)
     click.echo(f'{message} {newly_created_path}')
     return newly_created_path
@@ -55,7 +65,7 @@ def init(overwrite_conftest, overwrite_pylenium_json):
 @cli.command()
 def version():
     """ Displays the current version of Pylenium. """
-    click.echo('1.7.0')
+    click.echo(VERSION)
 
 
 if __name__ == '__main__':
