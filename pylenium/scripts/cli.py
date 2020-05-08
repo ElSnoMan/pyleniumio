@@ -3,7 +3,7 @@ import shutil
 import click
 
 
-VERSION = '1.7.0'
+VERSION = '1.7.7'
 
 
 def _copy(file, to_dir, message) -> str:

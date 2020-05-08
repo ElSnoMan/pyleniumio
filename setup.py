@@ -1,14 +1,11 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
-from pylenium.scripts.cli import VERSION
 
 setup(
     name='pyleniumio',
-    version=VERSION,
-    packages=[
-        'pylenium'
-    ],
-    package_dir={'pylenium': 'pylenium'},
+    version='1.7.7',
+    packages=find_packages(),
+    include_package_data=True,
     url='https://github.com/ElSnoMan/pyleniumio',
     license='MIT',
     author='Carlos Kidman',
@@ -19,6 +16,7 @@ setup(
     install_requires=[
         'selenium', 'pytest', 'pytest-xdist', 'pydantic', 'faker', 'requests', 'webdriver-manager', 'click'
     ],
+    data_files=[('', ['pylenium/scripts/pylenium.json'])],
     entry_points='''
         [console_scripts]
         pylenium=pylenium.scripts.cli:cli
