@@ -3,7 +3,7 @@ import shutil
 import click
 
 
-VERSION = '1.7.7'
+VERSION = '1.7.8'
 
 
 def _copy(file, to_dir, message) -> str:
@@ -26,8 +26,8 @@ def cli():
 
 
 @cli.command()
-@click.option('-c', '--overwrite-conftest', type=bool, default=False, show_default=True)
-@click.option('-p', '--overwrite-pylenium-json', type=bool, default=False, show_default=True)
+@click.option('-c', '--overwrite-conftest', type=bool, show_default=True, is_flag=True)
+@click.option('-p', '--overwrite-pylenium-json', type=bool, show_default=True, is_flag=True)
 def init(overwrite_conftest, overwrite_pylenium_json):
     """ Initializes Pylenium into the current directory.
 
@@ -47,7 +47,7 @@ def init(overwrite_conftest, overwrite_pylenium_json):
             _copy(file=conftest, to_dir=user_cwd, message='conftest.py was overwritten at:')
         else:
             click.echo('conftest.py already exists at this location. '
-                       'Use -c=true if you want to replace it with the latest.')
+                       'Use -c flag if you want to replace it with the latest.')
     else:
         _copy(file=conftest, to_dir=user_cwd, message='conftest.py was created at:')
 
@@ -57,7 +57,7 @@ def init(overwrite_conftest, overwrite_pylenium_json):
             _copy(file=pylenium_json, to_dir=user_cwd, message='pylenium.json was overwritten at:')
         else:
             click.echo('pylenium.json already exists at this location. '
-                       'Use -p=true if you want to replace it with the latest defaults.')
+                       'Use -p flag if you want to replace it with the latest defaults.')
     else:
         _copy(file=pylenium_json, to_dir=user_cwd, message='pylenium.json was created at:')
 
