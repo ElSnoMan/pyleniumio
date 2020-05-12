@@ -42,7 +42,7 @@ class PyleniumShould:
             return self._py
         else:
             self._py.log.failed('.should().have_title()')
-            raise AssertionError(f'Expected Title: {title}  - Actual Title: {self._py.title}')
+            raise AssertionError(f'Expected Title: ``{title}`` - Actual Title: ``{self._py.title()}``')
 
     def contain_title(self, string: str) -> 'Pylenium':
         """ An expectation that the title contains the given string.
@@ -65,7 +65,7 @@ class PyleniumShould:
             return self._py
         else:
             self._py.log.failed('.should().contain_title()')
-            raise AssertionError(f'Expected {string} to be in {self._py.title}')
+            raise AssertionError(f'Expected ``{string}`` to be in ``{self._py.title()}``')
 
     def have_url(self, url: str) -> 'Pylenium':
         """ An expectation that the URL matches the given url.
@@ -88,7 +88,7 @@ class PyleniumShould:
             return self._py
         else:
             self._py.log.failed('.should().have_url()')
-            raise AssertionError(f'Expected URL: {url} - Actual URL: {self._py.url}')
+            raise AssertionError(f'Expected URL: ``{url}`` - Actual URL: ``{self._py.url()}``')
 
     def contain_url(self, string: str) -> 'Pylenium':
         """ An expectation that the URL contains the given string.
@@ -110,8 +110,68 @@ class PyleniumShould:
         if value:
             return self._py
         else:
-            self._py.log.failed('.should().contain_url()', True)
-            raise AssertionError(f'Expected {string} to be in {self._py.url}')
+            self._py.log.failed('.should().contain_url()')
+            raise AssertionError(f'Expected ``{string}`` to be in ``{self._py.url()}``')
+
+    def not_find(self, css: str) -> bool:
+        """ An expectation that there are no elements with the given CSS in the DOM.
+
+        Args:
+            css: The CSS selector.
+
+        Returns:
+            True if no elements are found.
+
+        Raises:
+            `AssertionError` if the condition is not met within the timeout.
+        """
+        self._py.log.step('.should().not_find()', True)
+        try:
+            self._wait.until_not(lambda x: x.find_element(By.CSS_SELECTOR, css))
+            return True
+        except TimeoutException:
+            self._py.log.failed('.should().not_find()')
+            raise AssertionError(f'Found element with css: ``{css}``')
+
+    def not_find_xpath(self, xpath: str) -> bool:
+        """ An expectation that there are no elements with the given XPATH in the DOM.
+
+        Args:
+            xpath: The XPATH selector.
+
+        Returns:
+            True if no elements are found.
+
+        Raises:
+            `AssertionError` if the condition is not met within the timeout.
+        """
+        self._py.log.step('.should().not_find_xpath()', True)
+        try:
+            self._wait.until_not(lambda x: x.find_element(By.XPATH, xpath))
+            return True
+        except TimeoutException:
+            self._py.log.failed('.should().not_find_xpath()')
+            raise AssertionError(f'Found element with xpath: ``{xpath}``')
+
+    def not_contain(self, text: str) -> bool:
+        """ An expectation that there are no elements with the given text in the DOM.
+
+        Args:
+            text: The text to contain.
+
+        Returns:
+            True if no elements are found.
+
+        Raises:
+            `AssertionError` if the condition is not met within the timeout.
+        """
+        self._py.log.step('.should().not_contain()', True)
+        try:
+            self._wait.until_not(lambda x: x.find_element(By.XPATH, f'//*[contains(text(), "{text}")]'))
+            return True
+        except TimeoutException:
+            self._py.log.failed('.should().not_contain()')
+            raise AssertionError(f'Found element containing text: ``{text}``')
 
 
 class Pylenium:
@@ -158,16 +218,14 @@ class Pylenium:
         """ The current instance of Selenium's `WebDriver` API. """
         return self._webdriver
 
-    @property
     def title(self) -> str:
         """ The current page's title. """
-        self.log.step('py.title - Get the current page title')
+        self.log.step('py.title() - Get the current page title')
         return self.webdriver.title
 
-    @property
     def url(self) -> str:
         """ The current page's URL. """
-        self.log.step('py.url - Get the current page URL')
+        self.log.step('py.url() - Get the current page URL')
         return self.webdriver.current_url
 
     # NAVIGATION #
@@ -217,8 +275,12 @@ class Pylenium:
     # FIND ELEMENTS #
     #################
 
-    def contains(self, text: str, timeout: int = 0) -> Element:
+    def contains(self, text: str, timeout: int = None) -> Element:
         """ Get the DOM element containing the `text`.
+
+        * If timeout=None (default), use the default wait_time.
+        * If timeout > 0, override the default wait_time.
+        * If timeout=0, poll the DOM immediately without any waiting.
 
         Args:
             text: The text for the element to contain.
@@ -229,14 +291,22 @@ class Pylenium:
         """
         self.log.step(f'py.contains() - Find the element with text: ``{text}``')
         locator = (By.XPATH, f'//*[contains(text(), "{text}")]')
-        element = self.wait(timeout).until(
-            lambda x: x.find_element(*locator),
-            f'Could not find element with the text ``{text}``'
-        )
+
+        if timeout == 0:
+            element = self.webdriver.find_element(*locator)
+        else:
+            element = self.wait(timeout).until(
+                lambda x: x.find_element(*locator),
+                f'Could not find element with the text ``{text}``'
+            )
         return Element(self, element, locator)
 
-    def get(self, css: str, timeout: int = 0) -> Element:
+    def get(self, css: str, timeout: int = None) -> Element:
         """ Get the DOM element that matches the `css` selector.
+
+        * If timeout=None (default), use the default wait_time.
+        * If timeout > 0, override the default wait_time.
+        * If timeout=0, poll the DOM immediately without any waiting.
 
         Args:
             css: The selector to use.
@@ -247,62 +317,98 @@ class Pylenium:
         """
         self.log.step(f'py.get() - Find the element with css: ``{css}``')
         by = By.CSS_SELECTOR
-        element = self.wait(timeout).until(
-            lambda x: x.find_element(by, css),
-            f'Could not find element with the CSS ``{css}``'
-        )
+
+        if timeout == 0:
+            element = self.webdriver.find_element(by, css)
+        else:
+            element = self.wait(timeout).until(
+                lambda x: x.find_element(by, css),
+                f'Could not find element with the CSS ``{css}``'
+            )
         return Element(self, element, locator=(by, css))
 
-    def find(self, css: str, at_least_one=True, timeout: int = 0) -> Elements:
+    def find(self, css: str, timeout: int = None) -> Elements:
         """ Finds all DOM elements that match the `css` selector.
+
+        * If timeout=None (default), use the default wait_time.
+        * If timeout > 0, override the default wait_time.
+        * If timeout=0, poll the DOM immediately without any waiting.
 
         Args:
             css: The selector to use.
-            at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
             timeout: The number of seconds to wait for this to succeed. Overrides the default wait_time.
 
         Returns:
             A list of the found elements.
         """
         by = By.CSS_SELECTOR
-        if at_least_one:
-            self.log.step(f'py.find() - Find at least one element with css: ``{css}``')
-            elements = self.wait(timeout).until(
-                lambda x: x.find_elements(by, css),
-                f'Could not find any elements with the CSS ``{css}``'
-            )
-        else:
-            self.log.step(f'py.find() - Find elements with css (no wait): ``{css}``')
-            elements = self.webdriver.find_elements(by, css)
+        self.log.step(f'py.find() - Find elements with css: ``{css}``')
+
+        try:
+            if timeout == 0:
+                elements = self.webdriver.find_element(by, css)
+            else:
+                elements = self.wait(timeout).until(
+                    lambda x: x.find_elements(by, css),
+                    f'Could not find any elements with the CSS ``{css}``'
+                )
+        except TimeoutException:
+            elements = []
         return Elements(self, elements, locator=(by, css))
 
-    def xpath(self, xpath: str, at_least_one=True, timeout: int = 0) -> Union[Element, Elements]:
-        """ Finds all DOM elements that match the `xpath` selector.
+    def get_xpath(self, xpath: str, timeout: int = None) -> Element:
+        """ Finds the DOM element that match the `xpath` selector.
+
+        * If timeout=None (default), use the default wait_time.
+        * If timeout > 0, override the default wait_time.
+        * If timeout=0, poll the DOM immediately without any waiting.
 
         Args:
             xpath: The selector to use.
-            at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
             timeout: The number of seconds to wait for this to succeed. Overrides the default wait_time.
 
         Returns:
-            A list of the found elements. If only one is found, return that as Element.
+            The first element that is found, even if multiple elements match the query.
         """
         by = By.XPATH
-        if at_least_one:
-            self.log.step(f'py.xpath() - Find at least one element with xpath: ``{xpath}``')
-            elements = self.wait(timeout).until(
-                lambda x: x.find_elements(by, xpath),
-                f'Could not find any elements with the CSS ``{xpath}``'
-            )
+        self.log.step(f'py.get_xpath() - Find the element with xpath: ``{xpath}``')
+
+        if timeout == 0:
+            element = self.webdriver.find_element(by, xpath)
         else:
-            self.log.step(f'py.xpath() - Find elements with xpath (no wait): ``{xpath}``')
-            elements = self.webdriver.find_elements(by, xpath)
+            element = self.wait(timeout).until(
+                lambda x: x.find_element(by, xpath),
+                f'Could not find an element with xpath: ``{xpath}``'
+            )
+        return Element(self, element, locator=(by, xpath))
 
-        if len(elements) == 1:
-            self.log.info('Only 1 element matched your xpath')
-            return Element(self, elements[0], locator=(by, xpath))
+    def find_xpath(self, xpath: str, timeout: int = None) -> Elements:
+        """ Finds the DOM elements that match the `xpath` selector.
 
-        self.log.info(f'{len(elements)} elements matched your xpath')
+        * If timeout=None (default), use the default wait_time.
+        * If timeout > 0, override the default wait_time.
+        * If timeout=0, poll the DOM immediately without any waiting.
+
+        Args:
+            xpath: The selector to use.
+            timeout: The number of seconds to wait for this to succeed. Overrides the default wait_time.
+
+        Returns:
+            A list of the found elements.
+        """
+        by = By.XPATH
+        self.log.step(f'py.find_xpath() - Find elements with xpath: ``{xpath}``')
+
+        try:
+            if timeout == 0:
+                elements = self.webdriver.find_elements(by, xpath)
+            else:
+                elements = self.wait(timeout).until(
+                    lambda x: x.find_elements(by, xpath),
+                    f'Could not find an element with xpath: ``{xpath}``'
+                )
+        except TimeoutException:
+            elements = []
         return Elements(self, elements, locator=(by, xpath))
 
     # EXPECTATIONS #
@@ -351,10 +457,11 @@ class Pylenium:
         self.webdriver.execute_script(js, x, y)
         return self
 
-    def wait(self, timeout: int = 0, use_py: bool = False, ignored_exceptions: list = None) -> Union[WebDriverWait, PyleniumWait]:
+    def wait(self, timeout: int = None, use_py: bool = False, ignored_exceptions: list = None) -> Union[WebDriverWait, PyleniumWait]:
         """ The Wait object with the given timeout in seconds.
 
-        If timeout=0, return the default instance of wait, else return a new instance of WebDriverWait or PyleniumWait.
+        If timeout=None or timeout=0,
+        return the default instance of wait, else return a new instance of WebDriverWait or PyleniumWait.
 
         Args:
             timeout: The number of seconds to wait for the condition.
@@ -371,7 +478,7 @@ class Pylenium:
             py.wait(5).until(lambda x: x.find_element_by_id('foo').is_displayed())
             py.wait(15, [NoSuchElementException, WebDriverException]).until(lambda x: x.find_element_by_id('foo'))
         """
-        if timeout:
+        if timeout:  # if not None and greater than 0
             return self._wait.build(timeout, use_py, ignored_exceptions)
         else:
             return self._wait.build(self.config.driver.wait_time, use_py, ignored_exceptions)

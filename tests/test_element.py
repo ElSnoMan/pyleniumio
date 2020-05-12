@@ -4,25 +4,25 @@ import pytest
 def test_element_with_no_siblings(py):
     py.visit('https://deckshop.pro')
     elements = py.get("a[href='/spy/']").siblings()
-    assert elements.is_empty()
+    assert elements.should().be_empty()
 
 
 def test_element_parent_and_siblings(py):
     py.visit('https://deckshop.pro')
     parent = py.get("a.nav-link[href='/spy/']").parent()
-    assert parent.tag_name == 'li'
-    assert parent.siblings().length == 8
+    assert parent.tag_name() == 'li'
+    assert parent.siblings().should().have_length(8)
 
 
 def test_element_text(py):
     py.visit('https://deckshop.pro')
-    assert py.contains('More info').should().have_text('More info')
+    assert py.contains('Season').should().have_text('Season 11!')
 
 
 def test_find_in_element_context(py):
     py.visit('https://deckshop.pro')
     headers = py.find('h5')
-    assert headers[1].get('a').should().contain_text('Royal')
+    assert headers[1].get('a').should().contain_text('Loon Cycle')
 
 
 def test_input_type_and_get_value(py):
@@ -35,13 +35,13 @@ def test_input_type_and_get_value(py):
 def test_children(py):
     py.visit('https://deckshop.pro')
     first_row_of_cards_in_deck = py.get("[href*='/deck/detail/'] > span").children()
-    assert first_row_of_cards_in_deck.length == 4
+    assert first_row_of_cards_in_deck.should().have_length(4)
 
 
 def test_forced_click(py):
     py.visit('https://amazon.com')
     # without forcing, this raises ElementNotInteractableException
-    py.get("#nav-al-your-account > a").click(force=True)
+    py.get_xpath("//*[@class='nav-title and text()='Your Account']").click(force=True)
 
 
 def test_element_should_be_clickable(py):
@@ -75,3 +75,51 @@ def test_element_should_be_focused(py):
 def test_element_should_not_be_focused(py):
     py.visit('https://deckshop.pro')
     assert py.get('#smartSearch').should().not_be_focused()
+
+
+def test_elements_should_be_empty(py):
+    py.visit('https://google.com')
+    assert py.find('select', timeout=3).should().be_empty()
+    assert py.find_xpath('//select', timeout=0).should().be_empty()
+
+
+def test_elements_should_not_be_empty(py):
+    py.visit('https://the-internet.herokuapp.com/add_remove_elements/')
+    py.contains('Add Element').click()
+    py.contains('Add Element').click()
+    assert py.find('.added-manually').should().not_be_empty()
+
+
+def test_elements_should_have_length(py):
+    py.visit('https://the-internet.herokuapp.com/add_remove_elements/')
+    py.contains('Add Element').click()
+    py.contains('Add Element').click()
+    assert py.find('.added-manually').should().have_length(2)
+
+
+def test_elements_should_be_greater_than(py):
+    py.visit('https://the-internet.herokuapp.com/add_remove_elements/')
+    py.contains('Add Element').click()
+    py.contains('Add Element').click()
+    assert py.find('.added-manually').should().be_greater_than(1)
+
+
+def test_elements_should_be_less_than(py):
+    py.visit('https://the-internet.herokuapp.com/add_remove_elements/')
+    py.contains('Add Element').click()
+    py.contains('Add Element').click()
+    assert py.find('.added-manually').should().be_less_than(3)
+
+
+def test_element_attribute(py):
+    search_field = '[name="q"]'
+    py.visit('https://google.com')
+    assert py.get(search_field).get_attribute('title') == 'Search'
+    assert py.get(search_field).should().have_attr('title', 'Search')
+
+
+def test_element_property(py):
+    search_field = '[name="q"]'
+    py.visit('https://google.com')
+    assert py.get(search_field).get_property('maxLength') == 2048
+    assert py.get(search_field).should().have_prop('maxLength', 2048)
