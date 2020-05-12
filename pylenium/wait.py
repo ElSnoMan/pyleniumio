@@ -60,6 +60,34 @@ class PyleniumWait:
                 pass  # not a list of WebElement
         return value
 
+    def until_not(self, method, message=''):
+        """ Wait until the method returns a False value.
+
+        * The method uses Selenium WebDriver
+
+        Args:
+            method: The condition to wait for
+            message: The message to show if the condition is not met in the time frame.
+
+        Returns:
+            If the value is a webelement, return a Pylenium Element object
+            If the value is a list of WebElement, return a Pylenium Elements object
+            Else return the non-False value
+
+        Examples:
+            # wait until the title is not 'Home Page'
+            py.wait().until_not(lambda x: x.title == 'Home Page' )
+        """
+        value = self._wait.until_not(method, message)
+        if isinstance(value, WebElement):
+            return Element(self._py, value, None)
+        if isinstance(value, list):
+            try:
+                return Elements(self._py, value, None)
+            except:
+                pass  # not a list of WebElement
+        return value
+
     def build(self, timeout: int, use_py=False, ignored_exceptions: list = None) -> Union[WebDriverWait, 'PyleniumWait']:
         """ Builds a WebDriverWait or PyleniumWait.
 

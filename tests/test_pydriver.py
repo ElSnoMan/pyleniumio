@@ -38,15 +38,15 @@ def test_viewport(py):
     assert {'width': 1280, 'height': 800} == py.window_size
 
 
-def test_find_single_element_with_xpath(py):
+def test_get_xpath(py):
     py.visit('https://google.com')
-    py.xpath('//*[@name="q"]').type('QA at the Point', Keys.ENTER)
+    py.get_xpath('//*[@name="q"]').type('QA at the Point', Keys.ENTER)
     assert py.should().contain_title('QA at the Point')
 
 
-def test_find_elements_with_xpath(py):
+def test_find_xpath(py):
     py.visit('https://deckshop.pro')
-    assert py.xpath('//a[@class="nav-link"]').length > 1
+    assert py.find_xpath('//a[@class="nav-link"]').should().be_greater_than(1)
 
 
 def test_hover_and_click_to_page_transition(py):
@@ -58,7 +58,7 @@ def test_hover_and_click_to_page_transition(py):
 def test_pylenium_wait_until(py):
     py.visit('https://qap.dev')
     element = py.wait(use_py=True).until(lambda x: x.find_element_by_css_selector('[href="/about"]'))
-    assert element.tag_name == 'a'
+    assert element.tag_name() == 'a'
     assert element.hover()
 
 
@@ -66,7 +66,7 @@ def test_pylenium_wait_until_with_seconds(py):
     py.visit('https://qap.dev')
     py.wait(use_py=True).sleep(2)
     element = py.wait(5, use_py=True).until(lambda x: x.find_element_by_css_selector('[href="/about"]'))
-    assert element.tag_name == 'a'
+    assert element.tag_name() == 'a'
     assert element.hover()
 
 
@@ -79,15 +79,15 @@ def test_webdriver_wait_until(py):
 def test_switch_to_frame_then_back(py):
     py.visit('http://the-internet.herokuapp.com/iframe')
     py.switch_to.frame('mce_0_ifr').get('#tinymce').clear().type('foo')
-    assert py.switch_to.default_content().contains('An iFrame').tag_name == 'h3'
+    assert py.switch_to.default_content().contains('An iFrame').tag_name() == 'h3'
     py.switch_to.frame('mce_0_ifr').get('#tinymce').type('bar')
-    assert py.get('#tinymce').text == 'foobar'
-    assert py.switch_to.parent_frame().contains('An iFrame').tag_name == 'h3'
+    assert py.get('#tinymce').text() == 'foobar'
+    assert py.switch_to.parent_frame().contains('An iFrame').tag_name() == 'h3'
 
 
 def test_have_url(py):
     py.visit('https://qap.dev')
-    py.should().have_url('https://qap.dev')
+    py.should().have_url('https://www.qap.dev/')
 
 
 def test_loading_extension_to_browser(py):
@@ -97,3 +97,18 @@ def test_loading_extension_to_browser(py):
     shadow2 = shadow1.get('extensions-item-list').open_shadow_dom()
     ext_shadow_dom = shadow2.find('extensions-item')[1].open_shadow_dom()
     assert ext_shadow_dom.get('#name-and-version').should().contain_text('Get CRX')
+
+
+def test_should_not_find(py):
+    py.visit('https://google.com')
+    assert py.should().not_find('select')
+
+
+def test_should_not_find_xpath(py):
+    py.visit('https://google.com')
+    assert py.should().not_find_xpath('//select')
+
+
+def test_should_not_contain(py):
+    py.visit('https://google.com')
+    assert py.should().not_contain('foobar')

@@ -1,6 +1,5 @@
-import pathlib
 import time
-from typing import List, Union, Tuple, Optional
+from typing import List, Tuple, Optional
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains
@@ -40,6 +39,134 @@ class ElementWait:
             if time.time() > end_time:
                 break
         raise TimeoutException(message, screen, stacktrace)
+
+
+class ElementsShould:
+    """ Expectations for the current list of elements, if any. """
+    def __init__(self, py, elements: 'Elements', timeout: int, ignored_exceptions: list = None):
+        self._py = py
+        self._elements = elements
+        self._wait = py.wait(timeout=timeout, use_py=True, ignored_exceptions=ignored_exceptions)
+
+    def be_empty(self) -> bool:
+        """ An expectation that the list has no elements.
+
+        Returns:
+            True if empty, else False.
+
+        Raises:
+            `AssertionError` if the condition is not met in the specified amount of time.
+        """
+        self._py.log.step('.should().be_empty()', True)
+        try:
+            if self._elements.is_empty():
+                return True
+            else:
+                locator = self._elements.locator
+                value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) == 0)
+        except TimeoutException:
+            value = False
+        if value:
+            return True
+        else:
+            self._py.log.failed('.should().be_empty()')
+            raise AssertionError('List of elements was not empty.')
+
+    def be_greater_than(self, length: int) -> bool:
+        """ An expectation that the number of elements in the list is greater than the given length.
+
+        Args:
+            length: The length that the list should be greater than.
+
+        Raises:
+            `AssertionError` if the condition is not met in the specified amount of time.
+        """
+        self._py.log.step('.should().be_greater_than()', True)
+        try:
+            if self._elements.length() > length:
+                return True
+            else:
+                locator = self._elements.locator
+                value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) > length)
+        except TimeoutException:
+            value = False
+        if value:
+            return True
+        else:
+            self._py.log.failed('.should().be_greater_than()')
+            raise AssertionError(f'Length of elements was not greater than {length}.')
+
+    def be_less_than(self, length: int) -> bool:
+        """ An expectation that the number of elements in the list is less than the given length.
+
+        Args:
+            length: The length that the list should be less than.
+
+        Raises:
+            `AssertionError` if the condition is not met in the specified amount of time.
+        """
+        self._py.log.step('.should().be_less_than()', True)
+        try:
+            if self._elements.length() < length:
+                return True
+            else:
+                locator = self._elements.locator
+                value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) < length)
+        except TimeoutException:
+            value = False
+        if value:
+            return True
+        else:
+            self._py.log.failed('.should().be_less_than()')
+            raise AssertionError(f'Length of elements was not less than {length}.')
+
+    def have_length(self, length: int) -> bool:
+        """ An expectation that the number of elements in the list is equal to the given length.
+
+        Args:
+            length: The length that the list should be equal to.
+
+        Raises:
+            `AssertionError` if the condition is not met in the specified amount of time.
+        """
+        self._py.log.step('.should().have_length()', True)
+        try:
+            if self._elements.length() == length:
+                return True
+            else:
+                locator = self._elements.locator
+                value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) == length)
+        except TimeoutException:
+            value = False
+        if value:
+            return True
+        else:
+            self._py.log.failed('.should().have_length()')
+            raise AssertionError(f'Length of elements was not equal to {length}.')
+
+    def not_be_empty(self) -> 'Elements':
+        """ An expectation that the list has at least one element.
+
+        Returns:
+            The list of elements if not empty.
+
+        Raises:
+            `AssertionError` if the condition is not met in the specified amount of time.
+        """
+        self._py.log.step('.should().not_be_empty()', True)
+        try:
+            if not self._elements.is_empty():
+                return self._elements
+            else:
+                locator = self._elements.locator
+                value = self._wait.until(lambda drvr: drvr.find_elements(*locator))
+        except TimeoutException:
+            value = False
+        if value:
+            return Elements(self._py, value, self._elements.locator)
+        else:
+            self._py.log.failed('.should().not_be_empty()')
+            raise AssertionError('List of elements was empty.')
 
 
 class ElementShould:
@@ -239,7 +366,8 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_attr()')
-            raise AssertionError(f'Expected Attribute Value: {value} - Actual Attribute Value: {self._element.get_attribute("value")}')
+            raise AssertionError(f'Expected Attribute Value: ``{value}`` '
+                                 f'- Actual Attribute Value: ``{self._element.get_attribute("value")}``')
 
     def have_class(self, class_name: str) -> 'Element':
         """ An expectation that the element has the given className.
@@ -263,7 +391,8 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_class()')
-            raise AssertionError(f'Expected className: {class_name} - Actual className: {self._element.get_attribute("class")}')
+            raise AssertionError(f'Expected className: ``{class_name}`` '
+                                 f'- Actual className: ``{self._element.get_attribute("class")}``')
 
     def have_prop(self, prop: str, value: str) -> 'Element':
         """ An expectation that the element has the given property with the given value.
@@ -280,7 +409,7 @@ class ElementShould:
         """
         self._py.log.step('.should().have_prop()', True)
         try:
-            val = self._wait.until(lambda e: e.get_property(property) == value)
+            val = self._wait.until(lambda e: e.get_property(prop) == value)
         except TimeoutException:
             val = False
 
@@ -288,7 +417,8 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_prop()')
-            raise AssertionError(f'Expected Property value: {value} - Actual Property value: {self.element.get_property(property)}')
+            raise AssertionError(f'Expected Property value: ``{value}`` '
+                                 f'- Actual Property value: ``{self._element.get_property(prop)}``')
 
     def have_text(self, text, case_sensitive=True) -> 'Element':
         """ An expectation that the element has the given text.
@@ -316,7 +446,7 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_text()')
-            raise AssertionError(f'Expected text: {text} - Actual text: {self._element.text}')
+            raise AssertionError(f'Expected text: ``{text}`` - Actual text: ``{self._element.text()}``')
 
     def contain_text(self, text, case_sensitive=True) -> 'Element':
         """ An expectation that the element contains the given text.
@@ -344,7 +474,7 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().contain_text()')
-            raise AssertionError(f'Expected {text} to be in {self._element.text}')
+            raise AssertionError(f'Expected ``{text}`` to be in ``{self._element.text()}``')
 
     def have_value(self, value) -> 'Element':
         """ An expectation that the element has the given value.
@@ -373,7 +503,8 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_value()')
-            raise AssertionError(f'Expected value: {value} - Actual value: {self._element.get_attribute("value")}')
+            raise AssertionError(f'Expected value: ``{value}`` '
+                                 f'- Actual value: ``{self._element.get_attribute("value")}``')
 
     # NEGATIVE CONDITIONS #
     #######################
@@ -516,14 +647,25 @@ class Elements(List['Element']):
         self.locator = locator
         super().__init__(self._list)
 
-    @property
+    def should(self, timeout: int = 0, ignored_exceptions: list = None) -> ElementsShould:
+        """ A collection of expectations for this list of elements.
+
+        Examples:
+            py.find('option').should().not_be_empty()
+        """
+        if timeout:
+            wait_time = timeout
+        else:
+            wait_time = self._py.config.driver.wait_time
+        return ElementsShould(self._py, self, wait_time, ignored_exceptions)
+
     def length(self) -> int:
         """ The number of elements in the list. """
         return len(self._list)
 
     def is_empty(self) -> bool:
         """ Checks if there are no elements in the list. """
-        return self.length == 0
+        return self.length() == 0
 
     def first(self) -> 'Element':
         """ Gets the first element in the list.
@@ -531,7 +673,7 @@ class Elements(List['Element']):
         Raises:
             `IndexError` if the list is empty.
         """
-        if self.length > 0:
+        if self.length() > 0:
             return self._list[0]
         else:
             raise IndexError('Cannot get first() from an empty list.')
@@ -542,7 +684,7 @@ class Elements(List['Element']):
         Raises:
             `IndexError` if the list is empty.
         """
-        if self.length > 0:
+        if self.length() > 0:
             return self._list[-1]
         else:
             raise IndexError('Cannot get last() from an empty list.')
@@ -611,16 +753,14 @@ class Element:
         """ The current instance of `py` that found this element. """
         return self._py
 
-    @property
     def tag_name(self) -> str:
         """ Gets the tag name of this element. """
-        self.py.log.step('.tag_name - Get the tag name of this element', True)
+        self.py.log.step('.tag_name() - Get the tag name of this element', True)
         return self.webelement.tag_name
 
-    @property
     def text(self) -> str:
         """ Gets the InnerText of this element. """
-        self.py.log.step('.text - Get the text in this element', True)
+        self.py.log.step('.text() - Get the text in this element', True)
         return self.webelement.text
 
     # EXPECTATIONS #
@@ -663,17 +803,17 @@ class Element:
         else:
             return value
 
-    def get_property(self, property: str):
+    def get_property(self, prop: str):
         """ Gets the property's value.
 
         Args:
-            property: The name of the element's property.
+            prop: The name of the element's property.
 
         Returns:
             The value of the attribute.
         """
-        self.py.log.step(f'.get_property() - Get the {property} value of this element', True)
-        return self.webelement.get_property(property)
+        self.py.log.step(f'.get_property() - Get the {prop} value of this element', True)
+        return self.webelement.get_property(prop)
 
     # CONDITIONS #
     ##############
@@ -974,91 +1114,120 @@ class Element:
     # FIND ELEMENTS #
     #################
 
-    def contains(self, text: str, timeout: int = 0) -> 'Element':
+    def contains(self, text: str, timeout: int = None) -> 'Element':
         """ Gets the DOM element containing the `text`.
 
         Args:
             text: The text for the element to contain
-            timeout: The number of seconds to find the element.
+            timeout: The number of seconds to find the element. Overrides default wait_time.
 
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
         self.py.log.step(f'.contains() - Find the element that contains text: ``{text}``', True)
         locator = (By.XPATH, f'.//*[contains(text(), "{text}")]')
-        element = self.py.wait(timeout).until(
-            lambda _: self.webelement.find_element(*locator),
-            f'Could not find element with the text ``{text}``'
-        )
+
+        if timeout == 0:
+            element = self.webelement.find_element(*locator)
+        else:
+            element = self.py.wait(timeout).until(
+                lambda _: self.webelement.find_element(*locator),
+                f'Could not find element with the text ``{text}``'
+            )
         return Element(self.py, element, locator)
 
-    def get(self, css: str, timeout: int = 0) -> 'Element':
+    def get(self, css: str, timeout: int = None) -> 'Element':
         """ Gets the DOM element that matches the `css` selector in this element's context.
 
         Args:
             css: The selector
-            timeout: The number of seconds to find the element.
+            timeout: The number of seconds to find the element. Overrides default wait_time.
 
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
         self.py.log.step(f'.get() - Find the element that has css: ``{css}``', True)
         by = By.CSS_SELECTOR
-        element = self.py.wait(timeout).until(
-            lambda _: self.webelement.find_element(by, css),
-            f'Could not find element with the CSS ``{css}``'
-        )
+
+        if timeout == 0:
+            element = self.webelement.find_element(by, css)
+        else:
+            element = self.py.wait(timeout).until(
+                lambda _: self.webelement.find_element(by, css),
+                f'Could not find element with the CSS ``{css}``'
+            )
         return Element(self.py, element, locator=(by, css))
 
-    def find(self, css: str, at_least_one=True, timeout: int = 0) -> Elements:
+    def find(self, css: str, timeout: int = None) -> Elements:
         """ Finds all DOM elements that match the `css` selector in this element's context.
 
         Args:
             css: The selector
-            at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
-            timeout: The number of seconds to find at least one element.
+            timeout: The number of seconds to find at least one element. Overrides default wait_time.
 
         Returns:
             A list of the found elements.
         """
+        self.py.log.step(f'.find() - Find elements with css: ``{css}``', True)
         by = By.CSS_SELECTOR
-        if at_least_one:
-            self.py.log.step(f'.find() - Find at least one element with css: ``{css}``', True)
-            elements = self.py.wait(timeout).until(
-                lambda _: self.webelement.find_elements(by, css),
-                f'Could not find any elements with CSS ``{css}``'
-            )
-        else:
-            self.py.log.step(f'.find() - Find elements with css (no wait): ``{css}``', True)
-            elements = self.webelement.find_elements(by, css)
+
+        try:
+            if timeout == 0:
+                elements = self.webelement.find_elements(by, css)
+            else:
+                elements = self.py.wait(timeout).until(
+                    lambda _: self.webelement.find_elements(by, css),
+                    f'Could not find any elements with CSS ``{css}``'
+                )
+        except TimeoutException:
+            elements = []
         return Elements(self.py, elements, locator=(by, css))
 
-    def xpath(self, xpath: str, at_least_one=True, timeout: int = 0) -> Union['Element', Elements]:
-        """ Finds all DOM elements that match the `xpath` selector.
+    def get_xpath(self, xpath: str, timeout: int = None) -> 'Element':
+        """ Finds the DOM element that matches the `xpath` selector.
 
         Args:
             xpath: The selector to use.
-            at_least_one: True if you want to make sure at least one element is found. False can return an empty list.
-            timeout: The number of seconds to find at least one element.
+            timeout: The number of seconds to find the element. Overrides default wait_time.
 
         Returns:
-            A list of the found elements. If only one is found, return that as Element.
+            The first element found, even if multiple elements match the query.
         """
+        self.py.log.step(f'.get_xpath() - Find the element with xpath: ``{xpath}``', True)
         by = By.XPATH
-        if at_least_one:
-            self.py.log.step(f'.xpath() - Find at least one element with xpath: ``{xpath}``', True)
+
+        if timeout == 0:
+            elements = self.webelement.find_element(by, xpath)
+        else:
             elements = self.py.wait(timeout).until(
-                lambda _: self.webelement.find_elements(by, xpath),
+                lambda _: self.webelement.find_element(by, xpath),
                 f'Could not find any elements with the xpath ``{xpath}``'
             )
-        else:
-            self.py.log.step(f'.xpath() - Find elements with xpath (no wait): ``{xpath}``', True)
-            elements = self.webelement.find_elements(by, xpath)
+        return Element(self, elements, locator=(by, xpath))
 
-        if len(elements) == 1:
-            # If only one is found, return the single Element
-            return Element(self, elements[0], locator=(by, xpath))
+    def find_xpath(self, xpath: str, timeout: int = None) -> 'Elements':
+        """ Finds the DOM elements that matches the `xpath` selector.
 
+        Args:
+            xpath: The selector to use.
+            timeout: The number of seconds to find at least one element. Overrides default wait_time.
+
+        Returns:
+            A list of the found elements.
+        """
+        self.py.log.step(f'.find_xpath() - Find the elements with xpath: ``{xpath}``', True)
+        by = By.XPATH
+
+        try:
+            if timeout == 0:
+                elements = self.webelement.find_elements(by, xpath)
+            else:
+                elements = self.py.wait(timeout).until(
+                    lambda _: self.webelement.find_elements(by, xpath),
+                    f'Could not find any elements with the xpath ``{xpath}``'
+                )
+        except TimeoutException:
+            elements = []
         return Elements(self, elements, locator=(by, xpath))
 
     def children(self) -> Elements:
