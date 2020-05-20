@@ -15,6 +15,7 @@ faker = "*"
 requests = "*"
 webdriver-manager = "*"
 click = "*"
+pyfiglet = "*"
 
 [requires]
 python_version = "3.7"

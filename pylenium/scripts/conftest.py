@@ -3,7 +3,7 @@
 
 conftest.py
     Although this file is editable, you should only change its contents if you know what you are doing.
-    Instead, you can create your own conftest.py file win the folder where you store your tests.
+    Instead, you can create your own conftest.py file in the folder where you store your tests.
 
 pylenium.json
     You can change the values, but DO NOT touch the keys or you will break the schema.
