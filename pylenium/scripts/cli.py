@@ -1,9 +1,9 @@
 import os
 import shutil
 import click
+from pyfiglet import Figlet
 
-
-VERSION = '1.8.0'
+VERSION = '1.8.1'
 
 
 def _copy(file, to_dir, message) -> str:
@@ -66,6 +66,12 @@ def init(overwrite_conftest, overwrite_pylenium_json):
 def version():
     """ Displays the current version of Pylenium. """
     click.echo(VERSION)
+
+
+@cli.command()
+def joy():
+    custom_fig = Figlet(font='colossal')
+    click.echo(custom_fig.renderText('Pyl e n i u m Sparks Joy'))
 
 
 if __name__ == '__main__':

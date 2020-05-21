@@ -123,3 +123,29 @@ def test_element_property(py):
     py.visit('https://google.com')
     assert py.get(search_field).get_property('maxLength') == 2048
     assert py.get(search_field).should().have_prop('maxLength', 2048)
+
+
+def test_element_should_disappear(py):
+    spinner = '#serverSideDataTable_processing'
+    py.visit('https://www.copart.com/lotSearchResults/?free=true&query=nissan')
+    assert py.get(spinner).should().disappear()
+
+
+def test_element_has_attribute(py):
+    py.visit('http://the-internet.herokuapp.com/checkboxes')
+    py.find('[type="checkbox"]')[1].should().have_attr('checked')
+
+
+def test_element_does_not_have_attribute(py):
+    py.visit('http://the-internet.herokuapp.com/checkboxes')
+    py.get('[type="checkbox"]').should().not_have_attr('checked')
+
+
+def test_element_has_attribute_with_value(py):
+    py.visit('http://the-internet.herokuapp.com/checkboxes')
+    py.get('[type="checkbox"]').should().have_attr('type', 'checkbox')
+
+
+def test_element_does_not_have_attribute_with_value(py):
+    py.visit('http://the-internet.herokuapp.com/checkboxes')
+    py.get('[type="checkbox"]').should().not_have_attr('type', 'box')

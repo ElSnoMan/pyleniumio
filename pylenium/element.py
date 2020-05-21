@@ -343,12 +343,12 @@ class ElementShould:
             self._py.log.failed('.should().be_visible()')
             raise AssertionError('Element was not visible')
 
-    def have_attr(self, attr: str, value: str) -> 'Element':
+    def have_attr(self, attr: str, value: Optional[str] = None) -> 'Element':
         """ An expectation that the element has the given attribute with the given value.
 
         Args:
             attr: The name of the attribute.
-            value: The value of the attribute.
+            value (optional): The value of the attribute.
 
         Returns:
             The current element.
@@ -358,7 +358,10 @@ class ElementShould:
         """
         self._py.log.step('.should().have_attr()', True)
         try:
-            val = self._wait.until(lambda e: e.get_attribute(attr) == value)
+            if value is None:
+                val = self._wait.until(lambda e: e.get_attribute(attr))
+            else:
+                val = self._wait.until(lambda e: e.get_attribute(attr) == value)
         except TimeoutException:
             val = False
 
@@ -366,8 +369,11 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().have_attr()')
-            raise AssertionError(f'Expected Attribute Value: ``{value}`` '
-                                 f'- Actual Attribute Value: ``{self._element.get_attribute("value")}``')
+            if value is None:
+                raise AssertionError(f'Element did not have attribute: ``{attr}``')
+            else:
+                raise AssertionError(f'Expected Attribute Value: ``{value}`` '
+                                     f'- Actual Attribute Value: ``{self._element.get_attribute("value")}``')
 
     def have_class(self, class_name: str) -> 'Element':
         """ An expectation that the element has the given className.
@@ -530,8 +536,8 @@ class ElementShould:
             self._py.log.failed('.should().not_be_focused()')
             raise AssertionError('Element had focus')
 
-    def not_exist(self) -> 'Pylenium':
-        """ An expectation that the element no longer exists in the DOM.
+    def disappear(self) -> 'Pylenium':
+        """ An expectation that the element eventually disappears from the DOM.
 
         Returns:
             The current instance of Pylenium.
@@ -541,9 +547,9 @@ class ElementShould:
 
         Examples:
             # wait for a loading spinner to appear and then disappear once the load is complete
-            py.get(#spinner).should().not_exist()
+            py.get(#spinner).should().disappear()
         """
-        self._py.log.step('.should().not_exist()', True)
+        self._py.log.step('.should().disappear()', True)
         try:
             value = self._wait.until(ec.invisibility_of_element(self._element.webelement))
         except TimeoutException:
@@ -551,17 +557,17 @@ class ElementShould:
         if value:
             return self._py
         else:
-            self._py.log.failed('.should().not_exist()')
+            self._py.log.failed('.should().disappear()')
             raise AssertionError('Element was still visible or still in the DOM')
 
-    def not_have_attr(self, attr: str, value: str) -> 'Element':
+    def not_have_attr(self, attr: str, value: Optional[str] = None) -> 'Element':
         """ An expectation that the element does not have the given attribute with the given value.
 
         Either the attribute does not exist on the element or the value does not match the given value.
 
         Args:
             attr: The name of the attribute.
-            value: The value of the attribute.
+            value (optional): The value of the attribute.
 
         Returns:
             The current element.
@@ -571,7 +577,10 @@ class ElementShould:
         """
         self._py.log.step('.should().not_have_attr()', True)
         try:
-            val = self._wait.until(lambda e: e.get_attribute(attr) is None or e.get_attribute(attr) != value)
+            if value is None:
+                val = self._wait.until(lambda e: not e.get_attribute(attr))
+            else:
+                val = self._wait.until(lambda e: e.get_attribute(attr) is None or e.get_attribute(attr) != value)
         except TimeoutException:
             val = False
 
@@ -579,7 +588,10 @@ class ElementShould:
             return self._element
         else:
             self._py.log.failed('.should().not_have_attr()')
-            raise AssertionError(f'Element still had attribute ``{attr}`` with the value of ``{value}``')
+            if value is None:
+                raise AssertionError(f'Element had the attribute: ``{attr}``')
+            else:
+                raise AssertionError(f'Element still had attribute ``{attr}`` with the value of ``{value}``')
 
     def not_have_value(self, value) -> 'Element':
         """ An expectation that the element does not have the given value.
