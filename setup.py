@@ -16,7 +16,7 @@ setup(
     install_requires=[
         'selenium', 'pytest', 'pytest-xdist', 'pydantic', 'faker', 'requests', 'webdriver-manager', 'click'
     ],
-    data_files=[('', ['pylenium/scripts/pylenium.json'])],
+    data_files=[('', ['pylenium/scripts/pylenium.json', 'pylenium/scripts/drag_and_drop.js'])],
     entry_points='''
         [console_scripts]
         pylenium=pylenium.scripts.cli:cli
