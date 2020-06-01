@@ -40,3 +40,12 @@ def test_jquery(py):
 def test_hover(py):
     py.visit('https://the-internet.herokuapp.com/hovers')
     assert py.get('.figure').hover().contains('View profile').should().be_visible()
+
+
+def test_radio_buttons(py):
+    py.visit('http://test.rubywatir.com/radios.php')
+    radio = py.get('#radioId')
+    assert radio.check().should().be_checked()
+
+    py.get('[value="Radio1"]').check()
+    assert not radio.is_checked()
