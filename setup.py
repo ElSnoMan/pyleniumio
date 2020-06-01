@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyleniumio',
-    version='1.8.2',
+    version='1.8.4',
     packages=find_packages(),
     include_package_data=True,
     url='https://github.com/ElSnoMan/pyleniumio',
@@ -16,7 +16,11 @@ setup(
     install_requires=[
         'selenium', 'pytest', 'pytest-xdist', 'pydantic', 'faker', 'requests', 'webdriver-manager', 'click', 'pyfiglet'
     ],
-    data_files=[('', ['pylenium/scripts/pylenium.json', 'pylenium/scripts/drag_and_drop.js'])],
+    data_files=[('', [
+        'pylenium/scripts/pylenium.json',
+        'pylenium/scripts/drag_and_drop.js',
+        'pylenium/scripts/load_jquery.js'
+    ])],
     entry_points='''
         [console_scripts]
         pylenium=pylenium.scripts.cli:cli

@@ -30,6 +30,13 @@ def test_drag_to_with_element(py):
     assert column_b.get('header').should().have_text('A')
 
 
+def test_jquery(py):
+    py.visit('https://amazon.com')
+    py.load_jquery('3.5.1')
+    assert py.execute_script('return jQuery.expando;') is not None
+    assert py.execute_script('return $.expando;') is not None
+
+
 def test_hover(py):
     py.visit('https://the-internet.herokuapp.com/hovers')
     assert py.get('.figure').hover().contains('View profile').should().be_visible()
