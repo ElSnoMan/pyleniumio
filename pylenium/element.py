@@ -996,36 +996,47 @@ class Element:
         ActionChains(self.py.webdriver).double_click(self.webelement).perform()
         return self.py
 
-    def drag_to(self, css: str) -> 'Element':
+    def drag_to(self, css: str, jquery_version='3.5.1') -> 'Element':
         """ Drag the current element to another element given its CSS selector.
 
         Args:
             css: The CSS selector of the element to drag to.
+            jquery_version: The version of jQuery to use for this action.
 
         Returns:
             The current element.
+
+        Examples:
+            py.get('#draggable-card').drag_to('#done-column')
         """
         to_element = self.py.get(css).webelement
+        self.py.load_jquery(jquery_version)
         dnd_javascript = utils.read_script_from_file('drag_and_drop.js')
         self.py.execute_script(
-            dnd_javascript + "$(arguments[0]).simulateDragDrop({ dropTarget: arguments[1]});",
+            dnd_javascript + "$(arguments[0]).simulateDragDrop({ dropTarget: arguments[1] });",
             self.webelement,
             to_element
         )
         return self
 
-    def drag_to_element(self, to_element: 'Element') -> 'Element':
+    def drag_to_element(self, to_element: 'Element', jquery_version='3.5.1') -> 'Element':
         """ Drag the current element to the given element.
 
         Args:
             to_element: The Element to drag to.
+            jquery_version: The version of jQuery to use for this action.
 
         Returns:
             The current element.
+
+        Examples:
+            column = py.get('#done-column')
+            py.get('#draggable-card').drag_to_element(column)
         """
+        self.py.load_jquery(jquery_version)
         dnd_javascript = utils.read_script_from_file('drag_and_drop.js')
         self.py.execute_script(
-            dnd_javascript + "$(arguments[0]).simulateDragDrop({ dropTarget: arguments[1]});",
+            dnd_javascript + "$(arguments[0]).simulateDragDrop({ dropTarget: arguments[1] });",
             self.webelement,
             to_element.webelement
         )

@@ -8,7 +8,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
-from pylenium import webdriver_factory
+from pylenium import webdriver_factory, utils
 from pylenium.config import PyleniumConfig
 from pylenium.element import Element, Elements
 from pylenium.logging import Logger
@@ -430,6 +430,24 @@ class Pylenium:
     # UTILITIES #
     #############
 
+    def load_jquery(self, version: str = '3.5.1', timeout=None) -> 'Pylenium':
+        """ Load jQuery onto the current page if it doesn't already exist.
+
+        Args:
+            version: The version of jQuery to load. Default version = 3.5.1
+            timeout: The number of seconds to give this command to complete.
+
+        Examples:
+            py.load_jquery('3.5.1')
+        """
+        jquery_url = f'https://code.jquery.com/jquery-{version}.min.js'
+        load_jquery = utils.read_script_from_file('load_jquery.js')
+        self.webdriver.execute_async_script(load_jquery, jquery_url)
+        self.wait(timeout=timeout) \
+            .until(lambda _: self.execute_script('return typeof(jQuery) !== "undefined";'),
+                   message='jQuery was "undefined" which means it did not load within timeout.')
+        return self
+
     def screenshot(self, filename: str):
         """ Take a screenshot of the current Window.
 
@@ -548,6 +566,22 @@ class Pylenium:
         """
         self.log.action('py.execute_script() - Execute javascript into the Browser')
         return self.webdriver.execute_script(javascript, *args)
+
+    def execute_async_script(self, javascript: str, *args):
+        """ Executes javascript asynchronously in the current window or frame.
+
+        Args:
+            javascript: The script string to execute.
+            args: Any arguments to be used in the script.
+
+        Returns:
+            The value returned by the script.
+
+        Examples:
+            `py.execute_async_script('return document.title;')`
+        """
+        self.log.step('py.execute_async_script() - Execute javascript asynchronously into the Browser')
+        return self.webdriver.execute_async_script(javascript, *args)
 
     def quit(self):
         """ Quits the driver.

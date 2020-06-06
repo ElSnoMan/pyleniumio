@@ -3,7 +3,7 @@ import shutil
 import click
 from pyfiglet import Figlet
 
-VERSION = '1.8.3'
+VERSION = '1.8.4'
 
 
 def _copy(file, to_dir, message) -> str:
