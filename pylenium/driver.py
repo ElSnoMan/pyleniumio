@@ -440,8 +440,7 @@ class Pylenium:
         Examples:
             py.load_jquery('3.5.1')
         """
-        jquery_url = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'
-        # jquery_url = f'https://code.jquery.com/jquery-{version}.min.js'
+        jquery_url = f'https://code.jquery.com/jquery-{version}.min.js'
         load_jquery = utils.read_script_from_file('load_jquery.js')
         self.webdriver.execute_async_script(load_jquery, jquery_url)
         self.wait(timeout=timeout) \
