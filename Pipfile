@@ -16,6 +16,7 @@ requests = "*"
 webdriver-manager = "*"
 click = "*"
 pyfiglet = "*"
+pytest-reportportal = "*"
 
 [requires]
 python_version = "3.7"

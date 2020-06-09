@@ -40,13 +40,13 @@ def test_viewport(py):
 
 def test_get_xpath(py):
     py.visit('https://google.com')
-    py.get_xpath('//*[@name="q"]').type('QA at the Point', Keys.ENTER)
+    py.getx('//*[@name="q"]').type('QA at the Point', Keys.ENTER)
     assert py.should().contain_title('QA at the Point')
 
 
 def test_find_xpath(py):
     py.visit('https://deckshop.pro')
-    assert py.find_xpath('//a[@class="nav-link"]').should().be_greater_than(1)
+    assert py.findx('//a[@class="nav-link"]').should().be_greater_than(1)
 
 
 def test_hover_and_click_to_page_transition(py):

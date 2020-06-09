@@ -28,7 +28,6 @@ from faker import Faker
 
 from pylenium import Pylenium
 from pylenium.config import PyleniumConfig, TestCase
-from pylenium.logging import Logger
 
 
 def make_dir(filepath) -> bool:
@@ -161,13 +160,13 @@ def test_case(test_run, py_config, request) -> TestCase:
     """
     test_name = request.node.name
     test_result_path = f'{test_run}/{test_name}'
-    logger = Logger(test_name, test_result_path, py_config.logging.pylog_level)
+    # logger = Logger(test_name, test_result_path, py_config.logging.pylog_level)
     py_config.driver.capabilities.update({'name': test_name})
 
     test = {
         'name': test_name,
         'file_path': test_result_path,
-        'logger': logger
+        # 'logger': logger
     }
     return TestCase(**test)
 

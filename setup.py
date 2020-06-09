@@ -19,7 +19,8 @@ setup(
     data_files=[('', [
         'pylenium/scripts/pylenium.json',
         'pylenium/scripts/drag_and_drop.js',
-        'pylenium/scripts/load_jquery.js'
+        'pylenium/scripts/load_jquery.js',
+        'pylenium/scripts/pytest.ini'
     ])],
     entry_points='''
         [console_scripts]

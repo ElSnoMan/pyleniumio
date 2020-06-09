@@ -2,6 +2,8 @@
 .vscode
 test_results
 test_env
+tests/data
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
