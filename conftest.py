@@ -185,8 +185,6 @@ def test_case(test_run, py_config, request) -> TestCase:
     """
     test_name = request.node.name
     test_result_path = f'{test_run}/{test_name}'
-    # logging.basicConfig(filename=f'{test_result_path}/test.log', level=py_config.logging.pylog_level)
-    # logger = Logger(test_name, test_result_path, py_config.logging.pylog_level)
     py_config.driver.capabilities.update({'name': test_name})
     return TestCase(name=test_name, file_path=test_result_path)
 
@@ -204,25 +202,29 @@ def py(test_case, py_config, request, rp_logger):
     """
     py = Pylenium(py_config)
     yield py
-    if request.node.rep_call.failed:
-        # if the test failed, execute code in this block
-        if py_config.logging.screenshots_on:
-            screenshot = py.screenshot(f'{test_case.file_path}/test_failed.png')
-            with open(screenshot, "rb") as image_file:
-                rp_logger.info("Test Failed - Attaching Screenshot",
-                               attachment={"name": "test_failed.png",
-                                           "data": image_file,
-                                           "mime": "image/png"})
+    try:
+        if request.node.report.failed:
+            # if the test failed, execute code in this block
+            if py_config.logging.screenshots_on:
+                screenshot = py.screenshot(f'{test_case.file_path}/test_failed.png')
+                with open(screenshot, "rb") as image_file:
+                    rp_logger.info("Test Failed - Attaching Screenshot",
+                                   attachment={"name": "test_failed.png",
+                                               "data": image_file,
+                                               "mime": "image/png"})
+    except AttributeError:
+        rp_logger.error('Unable to access request.node.report.failed, unable to take screenshot.')
     py.quit()
 
 
-@pytest.hookimpl(hookwrapper=True, tryfirst=True)
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """ Yield each test's outcome so we can handle it in other fixtures. """
     outcome = yield
-    rep = outcome.get_result()
-    setattr(item, "rep_" + rep.when, rep)
-    return rep
+    report = outcome.get_result()
+    if report.when == 'call':
+        setattr(item, "report", report)
+    return report
 
 
 def pytest_addoption(parser):

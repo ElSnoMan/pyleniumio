@@ -7,16 +7,21 @@ verify_ssl = true
 autopep8 = "*"
 
 [packages]
+# webdriver
 selenium = "*"
-pytest = "*"
-pytest-xdist = "*"
+webdriver-manager = "*"
+# data, api
 pydantic = "*"
 faker = "*"
 requests = "*"
-webdriver-manager = "*"
+# cli
 click = "*"
 pyfiglet = "*"
+# pytest
+pytest = "*"
 pytest-reportportal = "*"
+pytest-xdist = "*"
+pytest-parallel = "*"
 
 [requires]
 python_version = "3.7"

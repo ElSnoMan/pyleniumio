@@ -8,7 +8,6 @@
 """
 
 
-import platform
 from pylenium.scripts import cli_utils
 
 
@@ -34,15 +33,6 @@ def download_compose_yaml_file():
     return response
 
 
-def setup_elastic_search_permissions():
-    """ ElasticSearch needs a data folder with read/write permissions before deploy. """
-    system = platform.system()
-    if system == 'Linux' or system == 'Darwin':
-        cli_utils.run_process(['mkdir', '-p', 'data/elasticsearch'])
-        cli_utils.run_process(['chmod', 'g+rwx', 'data/elasticsearch'])
-        cli_utils.run_process(['chgrp', '1000', 'data/elasticsearch'])
-
-
 def compose_up():
     """ Spin up a ReportPortal instance using docker-compose.report-portal.yml.
 
@@ -59,6 +49,50 @@ def compose_up():
     ])
     if response.returncode != 0:
         raise EnvironmentError('Unable to run "docker-compose" command to create ReportPortal instance.'
-                               'Are you sure you have Docker installed?',
+                               '\n * Make sure Docker is installed and running'
+                               '\n * Make sure this command is run in the same dir as docker-compose.report-portal.yml'
                                f'\nResponse: {response}')
     return response
+
+
+def down():
+    """ Tear down the ReportPortal instance.
+
+    This does not use the docker-compose.report-portal.yml file because, depending on Docker version, you may
+    or may not have a network created that is not handled by docker-compose down.
+
+    1. Stop all reportportal containers
+    2. Kill (remove) all reportportal containers
+    3. Remove the reportportal_default network (depends on docker version)
+
+    Returns:
+        `CompletedProcess` for the
+
+    Raises:
+        `EnvironmentError` if process returns non-zero status code.
+    """
+    # 1. Stop all reportportal containers
+    stop_containers_response = cli_utils.run_process([
+        'docker stop $(docker ps -a -f "name=reportportal" --format "{{.Names}}")'
+    ], shell=True)
+    if stop_containers_response.returncode != 0:
+        raise EnvironmentError('[FAILED] docker stop $(docker ps -a -f "name=reportportal" --format "{{.Names}}")'
+                               '\nUnable to stop ReportPortal containers:'
+                               '\n * Make sure Docker is installed and running'
+                               '\n * Make sure this command is run in the same dir as docker-compose.report-portal.yml'
+                               f'\nResponse: {stop_containers_response}')
+
+    # 2. Kill (remove) all reportportal containers
+    remove_containers_response = cli_utils.run_process([
+        'docker rm $(docker ps -a -f "name=reportportal" --format "{{.Names}}")'
+    ], shell=True)
+    if remove_containers_response.returncode != 0:
+        raise EnvironmentError('[FAILED] docker rm $(docker ps -a -f "name=reportportal" --format "{{.Names}}")'
+                               '\nUnable to remove ReportPortal containers after stopping them.'
+                               f'\nResponse: {remove_containers_response}')
+
+    # 3. Remove the reportportal_default network. The network may not exist, but that's ok.
+    remove_network_response = cli_utils.run_process([
+        'docker', 'network', 'rm', 'reportportal_default'
+    ])
+    return remove_network_response

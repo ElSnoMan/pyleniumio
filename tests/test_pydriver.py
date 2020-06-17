@@ -1,12 +1,15 @@
+import pytest
 from selenium.webdriver.common.keys import Keys
 
 
+@pytest.mark.rp
 def test_execute_script(py):
     py.visit('https://google.com')
     webelement = py.get("[name='q']").webelement
     assert py.execute_script('return arguments[0].parentNode;', webelement)
 
 
+@pytest.mark.rp
 def test_google_search(py):
     py.visit('https://google.com')
     py.get("[name='q']").type('puppies', Keys.ENTER)
@@ -90,8 +93,9 @@ def test_have_url(py):
     py.should().have_url('https://www.qap.dev/')
 
 
+@pytest.mark.skip(reason='pylenium.json needs to be configured')
 def test_loading_extension_to_browser(py):
-    assert './data/Get CRX.crx' in py.config.driver.extension_paths
+    assert './Get CRX.crx' in py.config.driver.extension_paths
     py.visit('chrome://extensions/')
     shadow1 = py.get('extensions-manager').open_shadow_dom()
     shadow2 = shadow1.get('extensions-item-list').open_shadow_dom()
@@ -106,7 +110,7 @@ def test_should_not_find(py):
 
 def test_should_not_find_xpath(py):
     py.visit('https://google.com')
-    assert py.should().not_find_xpath('//select')
+    assert py.should().not_findx('//select')
 
 
 def test_should_not_contain(py):

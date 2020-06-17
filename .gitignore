@@ -3,6 +3,7 @@
 test_results
 test_env
 tests/data
+data
 
 
 # Byte-compiled / optimized / DLL files
