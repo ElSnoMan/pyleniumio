@@ -1052,7 +1052,7 @@ class Element:
         Returns:
             The current instance of Pylenium so you can chain another command.
         """
-        self.py.log.info(' __ [STEP] .hover() - Hovers this element')
+        self.py.log.info('  [STEP] .hover() - Hovers this element')
         ActionChains(self.py.webdriver).move_to_element(self.webelement).perform()
         return self.py
 

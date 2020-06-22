@@ -148,4 +148,5 @@ def test_element_has_attribute_with_value(py):
 
 def test_element_does_not_have_attribute_with_value(py):
     py.visit('http://the-internet.herokuapp.com/checkboxes')
+    py.should().contain_title('The Internet')
     py.get('[type="checkbox"]').should().not_have_attr('type', 'box')

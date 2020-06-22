@@ -33,7 +33,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info('[ASSERT] .should().have_title()', True)
+        self._py.log.info('[ASSERT] .should().have_title()')
         try:
             value = self._wait.until(ec.title_is(title))
         except TimeoutException:
@@ -79,7 +79,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info('[ASSERT] .should().have_url()', True)
+        self._py.log.info('[ASSERT] .should().have_url()')
         try:
             value = self._wait.until(ec.url_to_be(url))
         except TimeoutException:
@@ -102,7 +102,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info('[ASSERT] .should().contain_url()', True)
+        self._py.log.info('[ASSERT] .should().contain_url()')
         try:
             value = self._wait.until(ec.url_contains(string))
         except TimeoutException:
@@ -125,7 +125,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info('[ASSERT] .should().not_find()', True)
+        self._py.log.info('[ASSERT] .should().not_find()')
         try:
             self._wait.until_not(lambda x: x.find_element(By.CSS_SELECTOR, css))
             return True
@@ -145,7 +145,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info('[ASSERT] .should().not_find_xpath()', True)
+        self._py.log.info('[ASSERT] .should().not_find_xpath()')
         try:
             self._wait.until_not(lambda x: x.find_element(By.XPATH, xpath))
             return True
@@ -165,7 +165,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info('[ASSERT] .should().not_contain()', True)
+        self._py.log.info('[ASSERT] .should().not_contain()')
         try:
             self._wait.until_not(lambda x: x.find_element(By.XPATH, f'//*[contains(text(), "{text}")]'))
             return True

@@ -1,4 +1,3 @@
-import subprocess
 from pylenium.scripts import report_portal
 
 
@@ -7,10 +6,11 @@ def test_download_report_portal_compose_yaml():
     assert response.returncode == 0
 
 
-def test_elastic_search_permissions():
-    report_portal.setup_elastic_search_permissions()
-
-
 def test_compose_up_report_portal():
     response = report_portal.compose_up()
+    assert response.returncode == 0
+
+
+def test_down_report_portal():
+    response = report_portal.down()
     assert response.returncode == 0

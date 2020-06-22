@@ -2,14 +2,12 @@ import pytest
 from selenium.webdriver.common.keys import Keys
 
 
-@pytest.mark.rp
 def test_execute_script(py):
     py.visit('https://google.com')
     webelement = py.get("[name='q']").webelement
     assert py.execute_script('return arguments[0].parentNode;', webelement)
 
 
-@pytest.mark.rp
 def test_google_search(py):
     py.visit('https://google.com')
     py.get("[name='q']").type('puppies', Keys.ENTER)
