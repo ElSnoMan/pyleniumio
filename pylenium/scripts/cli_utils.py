@@ -1,8 +1,8 @@
 import subprocess
-from typing import List
+from typing import List, Union
 
 
-def run_process(tokenized_command: List[str], shell=False) -> subprocess.CompletedProcess:
+def run_process(tokenized_command: Union[List[str], str], shell=False) -> subprocess.CompletedProcess:
     """ Run a subprocess given the tokenized command.
 
     Args:
