@@ -15,7 +15,7 @@ setup(
     long_description_content_type='text/markdown',
     install_requires=[
         'selenium', 'pytest', 'pytest-xdist', 'pytest-parallel', 'pydantic', 'pytest-reportportal',
-        'faker', 'requests', 'webdriver-manager', 'click', 'pyfiglet'
+        'faker', 'requests', 'webdriver-manager', 'click', 'pyfiglet', 'pytest-bdd'
     ],
     data_files=[('', [
         'pylenium/scripts/pylenium.json',

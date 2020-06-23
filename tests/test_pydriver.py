@@ -8,6 +8,7 @@ def test_execute_script(py):
     assert py.execute_script('return arguments[0].parentNode;', webelement)
 
 
+@pytest.mark.bdd_covered
 def test_google_search(py):
     py.visit('https://google.com')
     py.get("[name='q']").type('puppies', Keys.ENTER)
@@ -33,12 +34,14 @@ def test_cookies(py):
     assert py.get_cookie('foo') is None
 
 
+@pytest.mark.bdd_covered
 def test_viewport(py):
     py.visit('https://google.com')
     py.viewport(1280, 800)
     assert {'width': 1280, 'height': 800} == py.window_size
 
 
+@pytest.mark.bdd_covered
 def test_get_xpath(py):
     py.visit('https://google.com')
     py.getx('//*[@name="q"]').type('QA at the Point', Keys.ENTER)
@@ -50,12 +53,14 @@ def test_find_xpath(py):
     assert py.findx('//a[@class="nav-link"]').should().be_greater_than(1)
 
 
+@pytest.mark.bdd_covered
 def test_hover_and_click_to_page_transition(py):
     py.visit('https://qap.dev')
     py.get('a[href="/about"]').hover().get('a[href="/leadership"][class*=Header]').click()
     assert py.contains('Carlos Kidman').should().have_text('Carlos Kidman')
 
 
+@pytest.mark.bdd_covered
 def test_pylenium_wait_until(py):
     py.visit('https://qap.dev')
     element = py.wait(use_py=True).until(lambda x: x.find_element_by_css_selector('[href="/about"]'))
@@ -86,6 +91,7 @@ def test_switch_to_frame_then_back(py):
     assert py.switch_to.parent_frame().contains('An iFrame').tag_name() == 'h3'
 
 
+@pytest.mark.bdd_covered
 def test_have_url(py):
     py.visit('https://qap.dev')
     py.should().have_url('https://www.qap.dev/')
@@ -101,16 +107,19 @@ def test_loading_extension_to_browser(py):
     assert ext_shadow_dom.get('#name-and-version').should().contain_text('Get CRX')
 
 
+@pytest.mark.bdd_covered
 def test_should_not_find(py):
     py.visit('https://google.com')
     assert py.should().not_find('select')
 
 
+@pytest.mark.bdd_covered
 def test_should_not_find_xpath(py):
     py.visit('https://google.com')
     assert py.should().not_findx('//select')
 
 
+@pytest.mark.bdd_covered
 def test_should_not_contain(py):
     py.visit('https://google.com')
     assert py.should().not_contain('foobar')
