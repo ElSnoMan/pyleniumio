@@ -18,8 +18,8 @@ setup(
         'faker', 'requests', 'webdriver-manager', 'click', 'pyfiglet'
     ],
     data_files=[('', [
-        'pylenium/pylenium.json',
-        'pylenium/pytest.ini',
+        'pylenium/scripts/pylenium.json',
+        'pylenium/scripts/pytest.ini',
         'pylenium/scripts/drag_and_drop.js',
         'pylenium/scripts/load_jquery.js'
     ])],
