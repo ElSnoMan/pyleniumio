@@ -20,7 +20,9 @@ def __stop_containers():
     """
     command = 'docker stop $(docker ps -a -f "name=reportportal" --format "{{.Names}}")'
     if platform.system() == 'Windows':
-        command = "FOR /f \"tokens=*\" %i IN ('docker ps -a -q') DO docker stop %i"
+        command = "FOR /f \"tokens=*\" %i IN " \
+                  "('docker ps -a -f \"name=reportportal\" --format \"{{.Names}}\"') " \
+                  "DO docker stop %i"
 
     stop_containers_response = cli_utils.run_process(command, shell=True)
     if stop_containers_response.returncode != 0:
@@ -40,7 +42,9 @@ def __remove_containers():
     """
     command = 'docker rm $(docker ps -a -f "name=reportportal" --format "{{.Names}}")'
     if platform.system() == 'Windows':
-        command = "FOR /f \"tokens=*\" %i IN ('docker ps -a -q') DO docker rm %i"
+        command = "FOR /f \"tokens=*\" %i IN " \
+                  "('docker ps -a -f \"name=reportportal\" --format \"{{.Names}}\"') " \
+                  "DO docker rm %i"
 
     remove_containers_response = cli_utils.run_process(command, shell=True)
     if remove_containers_response.returncode != 0:
