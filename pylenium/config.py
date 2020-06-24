@@ -1,7 +1,6 @@
 from typing import List
 
 from pydantic import BaseModel
-from pylenium.logging import Logger
 
 # PYLENIUM CONFIG #
 ###################
@@ -44,7 +43,6 @@ class PyleniumConfig(BaseModel):
 class TestCase(BaseModel):
     name: str
     file_path: str
-    logger: Logger
 
     class Config:
         arbitrary_types_allowed = True

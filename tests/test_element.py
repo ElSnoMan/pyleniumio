@@ -41,7 +41,7 @@ def test_children(py):
 def test_forced_click(py):
     py.visit('https://amazon.com')
     # without forcing, this raises ElementNotInteractableException
-    py.get_xpath("//*[@class='nav-title and text()='Your Account']").click(force=True)
+    py.getx("//*[@class='nav-title and text()='Your Account']").click(force=True)
 
 
 def test_element_should_be_clickable(py):
@@ -80,7 +80,7 @@ def test_element_should_not_be_focused(py):
 def test_elements_should_be_empty(py):
     py.visit('https://google.com')
     assert py.find('select', timeout=3).should().be_empty()
-    assert py.find_xpath('//select', timeout=0).should().be_empty()
+    assert py.findx('//select', timeout=0).should().be_empty()
 
 
 def test_elements_should_not_be_empty(py):
@@ -148,4 +148,5 @@ def test_element_has_attribute_with_value(py):
 
 def test_element_does_not_have_attribute_with_value(py):
     py.visit('http://the-internet.herokuapp.com/checkboxes')
+    py.should().contain_title('The Internet')
     py.get('[type="checkbox"]').should().not_have_attr('type', 'box')

@@ -1,3 +1,4 @@
+import pytest
 from selenium.webdriver.common.keys import Keys
 
 
@@ -40,13 +41,13 @@ def test_viewport(py):
 
 def test_get_xpath(py):
     py.visit('https://google.com')
-    py.get_xpath('//*[@name="q"]').type('QA at the Point', Keys.ENTER)
+    py.getx('//*[@name="q"]').type('QA at the Point', Keys.ENTER)
     assert py.should().contain_title('QA at the Point')
 
 
 def test_find_xpath(py):
     py.visit('https://deckshop.pro')
-    assert py.find_xpath('//a[@class="nav-link"]').should().be_greater_than(1)
+    assert py.findx('//a[@class="nav-link"]').should().be_greater_than(1)
 
 
 def test_hover_and_click_to_page_transition(py):
@@ -90,8 +91,9 @@ def test_have_url(py):
     py.should().have_url('https://www.qap.dev/')
 
 
+@pytest.mark.skip(reason='pylenium.json needs to be configured')
 def test_loading_extension_to_browser(py):
-    assert './data/Get CRX.crx' in py.config.driver.extension_paths
+    assert './Get CRX.crx' in py.config.driver.extension_paths
     py.visit('chrome://extensions/')
     shadow1 = py.get('extensions-manager').open_shadow_dom()
     shadow2 = shadow1.get('extensions-item-list').open_shadow_dom()
@@ -106,7 +108,7 @@ def test_should_not_find(py):
 
 def test_should_not_find_xpath(py):
     py.visit('https://google.com')
-    assert py.should().not_find_xpath('//select')
+    assert py.should().not_findx('//select')
 
 
 def test_should_not_contain(py):

@@ -15,20 +15,22 @@ py
 Examples:
     def test_go_to_google(py):
         py.visit('https://google.com')
-        assert 'Google' in py.title
+        assert 'Google' in py.title()
 """
 
 import json
+import logging
 import os
 import shutil
+import sys
 
 import pytest
 import requests
 from faker import Faker
+from pytest_reportportal import RPLogger, RPLogHandler
 
 from pylenium import Pylenium
 from pylenium.config import PyleniumConfig, TestCase
-from pylenium.logging import Logger
 
 
 def make_dir(filepath) -> bool:
@@ -54,6 +56,28 @@ def fake() -> Faker:
 def api():
     """ A basic instance of Requests to make HTTP API calls. """
     return requests
+
+
+@pytest.fixture(scope="session")
+def rp_logger(request):
+    """ Report Portal Logger """
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    # Create handler for Report Portal if the service has been
+    # configured and started.
+    if hasattr(request.node.config, 'py_test_service'):
+        # Import Report Portal logger and handler to the test module.
+        logging.setLoggerClass(RPLogger)
+        rp_handler = RPLogHandler(request.node.config.py_test_service)
+        # Add additional handlers if it is necessary
+        console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setLevel(logging.INFO)
+        logger.addHandler(console_handler)
+    else:
+        rp_handler = logging.StreamHandler(sys.stdout)
+    # Set INFO level for Report Portal handler.
+    rp_handler.setLevel(logging.INFO)
+    return logger
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -103,10 +127,10 @@ def py_config(project_root, request) -> PyleniumConfig:
             _json = json.load(file)
         config = PyleniumConfig(**_json)
     except FileNotFoundError:
-        # pylenium.json not found, proceed with defaults
+        # 2. pylenium.json not found, proceed with defaults
         config = PyleniumConfig()
 
-    # Override with any CLI args/options
+    # 3. Override with any CLI args/options
     # Driver Settings
     cli_remote_url = request.config.getoption('--remote_url')
     if cli_remote_url:
@@ -161,19 +185,12 @@ def test_case(test_run, py_config, request) -> TestCase:
     """
     test_name = request.node.name
     test_result_path = f'{test_run}/{test_name}'
-    logger = Logger(test_name, test_result_path, py_config.logging.pylog_level)
     py_config.driver.capabilities.update({'name': test_name})
-
-    test = {
-        'name': test_name,
-        'file_path': test_result_path,
-        'logger': logger
-    }
-    return TestCase(**test)
+    return TestCase(name=test_name, file_path=test_result_path)
 
 
 @pytest.fixture(scope='function')
-def py(test_case, py_config, request):
+def py(test_case, py_config, request, rp_logger):
     """ Initialize a Pylenium driver for each test.
 
     Pass in this `py` fixture into the test function.
@@ -181,24 +198,35 @@ def py(test_case, py_config, request):
     Examples:
         def test_go_to_google(py):
             py.visit('https://google.com')
-            assert 'Google' in py.title
+            assert 'Google' in py.title()
     """
-    py = Pylenium(py_config, test_case.logger)
+    py = Pylenium(py_config)
     yield py
-    if request.node.rep_call.failed:
-        # if the test failed, execute code in this block
-        if py_config.logging.screenshots_on:
-            py.screenshot(f'{test_case.file_path}/test_failed.png')
+    try:
+        if request.node.report.failed:
+            # if the test failed, execute code in this block
+            if py_config.logging.screenshots_on:
+                screenshot = py.screenshot(f'{test_case.file_path}/test_failed.png')
+                with open(screenshot, "rb") as image_file:
+                    rp_logger.info("Test Failed - Attaching Screenshot",
+                                   attachment={"name": "test_failed.png",
+                                               "data": image_file,
+                                               "mime": "image/png"})
+    except AttributeError:
+        rp_logger.error('Unable to access request.node.report.failed, unable to take screenshot.')
+    except TypeError:
+        rp_logger.info('Report Portal is not connected to this test run.')
     py.quit()
 
 
-@pytest.hookimpl(hookwrapper=True, tryfirst=True)
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """ Yield each test's outcome so we can handle it in other fixtures. """
     outcome = yield
-    rep = outcome.get_result()
-    setattr(item, "rep_" + rep.when, rep)
-    return rep
+    report = outcome.get_result()
+    if report.when == 'call':
+        setattr(item, "report", report)
+    return report
 
 
 def pytest_addoption(parser):
@@ -222,7 +250,6 @@ def pytest_addoption(parser):
         '--caps', action='store',
         default='', help='List of key-value pairs. Ex. \'{"name": "value", "boolean": true}\''
     )
-
     parser.addoption(
         '--page_load_wait_time', action='store',
         default='', help='The amount of time to wait for a page load before raising an error. Default is 0.'
