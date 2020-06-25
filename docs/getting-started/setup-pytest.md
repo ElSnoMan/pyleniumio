@@ -40,10 +40,11 @@ pylenium init
 Execute this command at your Project Root
 {% endhint %}
 
-This creates two files:
+This creates three files:
 
 * `conftest.py` - This has the fixtures needed for Pylenium.
 * `pylenium.json` - This is the [configuration ](../configuration/pylenium.json.md)file for Pylenium.
+* `pytest.ini` - This is the configuration file for pytest and is used to connect to [ReportPortal](../cli/report-portal.md)
 
 ## 3. Select pytest as the Test Framework
 

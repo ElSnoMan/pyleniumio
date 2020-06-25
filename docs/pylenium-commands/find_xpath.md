@@ -2,18 +2,18 @@
 description: The command to find all the elements that match the XPath selector.
 ---
 
-# find\_xpath
+# findx
 
 ## Syntax
 
 ```python
-py.find_xpath(xpath)
-py.find_xpath(xpath, timeout)
+py.findx(xpath)
+py.findx(xpath, timeout)
 
 ---or---
 
-Element.find_xpath(xpath)
-Element.find_xpath(xpath, timeout)
+Element.findx(xpath)
+Element.findx(xpath, timeout)
 ```
 
 ## Usage
@@ -21,37 +21,37 @@ Element.find_xpath(xpath, timeout)
 {% code title="correct usage" %}
 ```python
 # Yield all Elements in .nav with tag name of a
-py.get('.nav').find_xpath('//a')
+py.get('.nav').findx('//a')
 
 ---or---
 
 # Yield all Elements in document with id of 'button'
-py.find_xpath('//*[@id="button"]')
+py.findx('//*[@id="button"]')
 
 ---or--- # store in variable
 
-elements = py.find_xpath('//*[@id="button"]')
+elements = py.findx('//*[@id="button"]')
 
 ---or--- # chain an Element(s) command
 
 # if one element is found, still returns a list of 1: [Element]
-py.find_xpath('//*[@id="button"]').first().click()
+py.findx('//*[@id="button"]').first().click()
 
 ---or--- # control the timeout in any of the above usages
 
-py.find_xpath('//a[@href="/about"]', timeout=5).length()
+py.findx('//a[@href="/about"]', timeout=5).length()
 ```
 {% endcode %}
 
 {% code title="incorrect usage" %}
 ```python
 # Errors, 'title' does not yield Element
-py.title.find_xpath('//a')
+py.title.findx('//a')
 
 ---or---
 
 # Errors, 'get_cookie' does not yield Element
-py.get_cookie().find_xpath('//[text()="foo" and @class="bar"]')
+py.get_cookie().findx('//[text()="foo" and @class="bar"]')
 ```
 {% endcode %}
 
@@ -73,6 +73,6 @@ py.get_cookie().find_xpath('//[text()="foo" and @class="bar"]')
 
 ```python
 # there should be 3 `a` elements
-py.find_xpath('//a').should().have_length(3)
+py.findx('//a').should().have_length(3)
 ```
 

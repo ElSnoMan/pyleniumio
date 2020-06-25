@@ -1,5 +1,5 @@
 ---
-description: 'Latest Version: 1.8.2'
+description: 'Latest Version: 1.9.0'
 ---
 
 # Welcome to the Pylenium.io Docs

@@ -10,6 +10,7 @@ You should have created these in the previous step, but they are required for **
 
 * `conftest.py`
 * `pylenium.json`
+* `pytest.ini`
 
 {% hint style="success" %}
 Make sure these are at the Project Root \(aka Workspace\)
@@ -122,7 +123,7 @@ $ python -m pytest tests/api/test_payment.py
 You _can_ group tests into Suites using Classes.
 
 {% hint style="danger" %}
-This is not the recommended approach - especially for beginners
+This is not the recommended approach for beginners
 {% endhint %}
 
 ```python

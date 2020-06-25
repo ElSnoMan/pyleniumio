@@ -4,6 +4,44 @@ description: Summary of notable changes and fixes.
 
 # Changelog
 
+## 1.9.0 - 2020-06-24
+
+> Changes were made to the `conftest.py` file, so make sure to run `pylenium init -c` after upgrading to `1.9.0` to overwrite it with the latest. Not doing this will likely result in `ModuleNotFoundErrors`
+
+### Report Portal \(RP\)
+
+RP is now natively supported by Pylenium! If you are not already familiar with Report Portal, I highly suggest you check it out. It gives you robust reporting and categorizing of your test runs and results and is backed with machine learning! [https://reportportal.io](https://reportportal.io)
+
+We had very basic logging and reporting, but we wanted to provide a better and more robust reporting solution. After a lot of research, we landed on RP. They are not only free and Open Source, but they also have a great community, Slack group, and YouTube channel with different demos and presentations to help you take your reporting to the next level. This level of modern support was crucial in our decision and we hope you enjoy it!
+
+#### Added
+
+* `pylenium init` now also creates a default `pytest.ini` file at your Project Root. This contains values to easily connect with RP.
+* `pylenium portal` [CLI Commands](cli/report-portal.md) to quickly setup your RP instance
+
+```bash
+# 1. Download the docker-compose file used to spin up RP
+pylenium portal download
+
+# 2. Configure your machine and this docker-compose.yml based on your OS and needs
+#     by going to https://reportportal.io/docs/Deploy-with-Docker
+```
+
+```bash
+# 3. Spin up the RP instance
+pylenium portal up
+```
+
+That's it! You'll get helpful hints as you execute each command so you know where to go and how to login. Happy reporting!
+
+#### Fixes
+
+* `get_xpath` and `find_xpath` functions were not behaving as expected. This has been fixed, but we have also renamed them to
+  * `getx()`
+  * `findx()`
+* `AttributeError` was raised if there were more than one `pytest_runtest_makereport` fixtures in the project.
+* Logging now uses the built-in `logging` python package, but screenshots are still saved to the `test_results` directory.
+
 ## 1.8.2 - 2020-05-21
 
 ### Changed

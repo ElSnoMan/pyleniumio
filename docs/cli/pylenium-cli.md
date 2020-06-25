@@ -10,6 +10,7 @@ Initializes Pylenium into the current directory. This creates Pylenium's require
 
 * `conftest.py`
 * `pylenium.json`
+* `pytest.ini`
 
 {% code title="Terminal $" %}
 ```bash
@@ -42,6 +43,16 @@ You can overwrite an existing **pylenium.json** file with the latest defaults by
 {% code title="Terminal $" %}
 ```bash
 pylenium init -p
+```
+{% endcode %}
+
+## Overwrite pytest.ini file
+
+You can overwrite an existing **pytest.ini** file with the latest defaults by using the `-i` flag.\
+
+{% code title="Terminal $" %}
+```bash
+pylenium init -i
 ```
 {% endcode %}
 

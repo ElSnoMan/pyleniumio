@@ -18,12 +18,14 @@
 ## CLI
 
 * [Pylenium CLI](cli/pylenium-cli.md)
+* [Report Portal](cli/report-portal.md)
 
 ## Configuration
 
 * [pylenium.json](configuration/pylenium.json.md)
 * [Driver](configuration/driver.md)
 * [Logging](configuration/logging.md)
+* [Report Portal](configuration/report-portal.md)
 
 ## CONTRIBUTE
 
@@ -43,11 +45,11 @@
 * [execute\_script](pylenium-commands/execute_script.md)
 * [fake](pylenium-commands/fake.md)
 * [find](pylenium-commands/find.md)
-* [find\_xpath](pylenium-commands/find_xpath.md)
+* [findx](pylenium-commands/find_xpath.md)
 * [get](pylenium-commands/get.md)
 * [get\_cookies](pylenium-commands/get_cookies.md)
 * [get\_cookie](pylenium-commands/get_cookie.md)
-* [get\_xpath](pylenium-commands/get_xpath.md)
+* [getx](pylenium-commands/get_xpath.md)
 * [go](pylenium-commands/go.md)
 * [maximize\_window](pylenium-commands/maximize_window.md)
 * [quit](pylenium-commands/quit.md)
