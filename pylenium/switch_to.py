@@ -59,7 +59,7 @@ class SwitchTo:
             self._py.webdriver.switch_to.window(handle)
             return self._py
         elif name_or_handle:
-            self._py.log.action(f'[STEP] py.switch_to.window() - Switch to a Tab or Window by name or handle: ``{name_or_handle}``')
+            self._py.log.info(f'[STEP] py.switch_to.window() - Switch to a Tab or Window by name or handle: ``{name_or_handle}``')
             self._py.webdriver.switch_to.window(name_or_handle)
             return self._py
         else:
