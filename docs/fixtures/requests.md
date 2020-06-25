@@ -24,7 +24,7 @@ py.request
 
 ---or--- # use the fixture
 
-def test_(fake)
+def test_(api)
 
 ---or--- # just import it
 
