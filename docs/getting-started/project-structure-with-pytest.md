@@ -30,33 +30,35 @@ If you put any other **custom** functions or fixtures in this **conftest.py**, t
 import pytest
 
 @pytest.fixture
-def driver():
-    pyl = Pylenium()
-    yield pyl
-    pyl.quit()
+def user():
+    new_user = user_service.create()
+    yield new_user
+    user_service.delete(new_user)
 ```
 
 * `@pytest.fixture` - this decorator indicates that this function has a Setup and Teardown 
-* `def driver():` - define the function like normal. `driver` will be the name of the fixture to be used in tests
+* `def user():` - define the function like normal. `user` will be the name of the fixture to be used in tests
 * Everything _before_ the `yield` is executed before each test
-* `yield pyl` - returns `pyl` and gives control back to the test. The rest of the function is not executed yet
+* `yield new_user` - returns `new_user` and gives control back to the test. The rest of the function is not executed yet
 * Everything _after_ the `yield` is executed after each test
 
 ### Use the Fixture
 
 {% code title="test\_\*.py file" %}
 ```bash
-def test_my_website(driver):
-    assert driver.visit('https://qap.dev').title == 'QA at the Point'
+def test_my_website(py, login, user):
+    py.visit('https://qap.dev')
+    login.with(user)
+    ...
 ```
 {% endcode %}
 
 When this test is ran:
 
-1. test - The test looks at its parameter list and calls the `driver` fixture
-2. fixture - `driver` yields a new instance of Pylenium
-3. test - line 2 is executed by navigating to `https://qap.dev` and then asserting the title matches
-4. fixture - test is complete \(doesn't matter if it passes or fails\) and `pyl.quit()` is executed
+1. test - The test looks at its parameter list and calls the `py` fixture
+2. fixture - `user` yields the newly created user
+3. test - line 2 is executed by navigating to `https://qap.dev` and then logging in with the new user
+4. fixture - test is complete \(doesn't matter if it passes or fails\) and `user_service.delete_user()` is executed
 
 ### Folder Structure
 
