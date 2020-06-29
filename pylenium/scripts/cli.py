@@ -30,7 +30,7 @@ from pyfiglet import Figlet
 
 from pylenium.scripts import report_portal
 
-VERSION = '1.9.1'
+VERSION = '1.9.2'
 
 
 def _copy(file, to_dir, message) -> str:
