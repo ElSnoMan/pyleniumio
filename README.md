@@ -84,7 +84,7 @@ What if we tried to get the best from both worlds and combine it with an amazing
 ## Quick Start
 
 {% hint style="success" %}
-If you are new to Selenium or Python, do the [Getting Started steps 1-4](getting-started/virtual-environments.md)
+If you are new to Selenium or Python, do the [Getting Started steps 1-4](docs/getting-started/virtual-environments.md)
 {% endhint %}
 
 You can also watch the Getting Started video with Pylenium's creator, Carlos Kidman!

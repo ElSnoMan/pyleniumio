@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyleniumio',
-    version='1.9.2',
+    version='1.9.3',
     packages=find_packages(),
     include_package_data=True,
     url='https://github.com/ElSnoMan/pyleniumio',
@@ -11,7 +11,7 @@ setup(
     author='Carlos Kidman',
     author_email='carlos@qap.dev',
     description='The best of Selenium and Cypress in a single Python Package',
-    long_description=open('docs/README.md').read(),
+    long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     install_requires=[
         'selenium', 'pytest', 'pytest-xdist', 'pytest-parallel', 'pydantic', 'pytest-reportportal',
