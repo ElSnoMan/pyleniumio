@@ -1,5 +1,5 @@
 ---
-description: 'Latest Version: 1.9.3'
+description: 'Latest Version: 1.9.4'
 ---
 
 # Welcome to the Pylenium.io Docs
@@ -49,15 +49,15 @@ def driver():
 def test_carlos_is_on_leadership_page_with_selenium(driver_setup):
     wait = WebDriverWait(driver, timeout=10)
     driver.get('https://qap.dev')
-    
+
     # hover About link
     about_link = driver.find_element(By.CSS_SELECTOR, "a[href='/about']")
     actions = ActionChains(driver)
     actions.move_to_element(about_link).perform()
-    
+
     # click Leadership link in About menu
     wait.until(EC.element_visible(By.CSS_SELECTOR, "a[href='/leadership'][class^='Header-nav']")).click()
-    
+
     # check if 'Carlos Kidman' is on the page
     assert wait.until(lambda _: driver.find_element(By.XPATH, "//*[contains(text(), 'Carlos Kidman')]"))
 ```
