@@ -1,10 +1,4 @@
-from os import path
 from setuptools import setup, find_packages
-
-
-this_directory = path.abspath(path.dirname(__file__))
-with open(f'{this_directory}/docs/README.md', 'r') as f:
-    long_description = f.read()
 
 
 setup(
@@ -17,7 +11,7 @@ setup(
     author='Carlos Kidman',
     author_email='carlos@qap.dev',
     description='The best of Selenium and Cypress in a single Python Package',
-    long_description=long_description,
+    long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     install_requires=[
         'selenium', 'pytest', 'pytest-xdist', 'pytest-parallel', 'pydantic', 'pytest-reportportal',
