@@ -214,6 +214,8 @@ def py(test_case, py_config, request, rp_logger):
                                                "mime": "image/png"})
     except AttributeError:
         rp_logger.error('Unable to access request.node.report.failed, unable to take screenshot.')
+    except TypeError:
+        rp_logger.info('Report Portal is not connected to this test run.')
     py.quit()
 
 
