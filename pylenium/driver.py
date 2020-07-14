@@ -190,9 +190,12 @@ class Pylenium:
         self.log = logging.getLogger(__name__)
         self.fake = Faker()
         self.request = requests
+        self._webdriver = None
+        self._wait = None
 
-        # Instantiate WebDriver
-        self._webdriver = webdriver_factory.build_from_config(config)
+    def init_webdriver(self):
+        """ Initialize WebDriver using the Pylenium Config. """
+        self._webdriver = webdriver_factory.build_from_config(self.config)
         caps = self._webdriver.capabilities
         try:
             self.log.info(f'Capabilities: '
@@ -206,18 +209,19 @@ class Pylenium:
         self._wait = PyleniumWait(self, self._webdriver, self.config.driver.wait_time, ignored_exceptions=None)
 
         # Initial Browser Setup
-        if config.driver.page_load_wait_time:
-            self.set_page_load_timeout(config.driver.page_load_wait_time)
+        if self.config.driver.page_load_wait_time:
+            self.set_page_load_timeout(self.config.driver.page_load_wait_time)
 
-        if config.viewport.maximize:
+        if self.config.viewport.maximize:
             self.maximize_window()
         else:
-            self.viewport(config.viewport.width, config.viewport.height, config.viewport.orientation)
+            self.viewport(self.config.viewport.width, self.config.viewport.height, self.config.viewport.orientation)
+        return self._webdriver
 
     @property
     def webdriver(self) -> WebDriver:
         """ The current instance of Selenium's `WebDriver` API. """
-        return self._webdriver
+        return self.init_webdriver() if self._webdriver is None else self._webdriver
 
     def title(self) -> str:
         """ The current page's title. """

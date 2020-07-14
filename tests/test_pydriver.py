@@ -2,6 +2,12 @@ import pytest
 from selenium.webdriver.common.keys import Keys
 
 
+def test_jit_webdriver(py):
+    assert py._webdriver is None
+    assert py.webdriver is not None
+    assert py._webdriver is not None
+
+
 def test_execute_script(py):
     py.visit('https://google.com')
     webelement = py.get("[name='q']").webelement

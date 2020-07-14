@@ -1,3 +1,9 @@
+---
+description: 'Latest Version: 1.9.4'
+---
+
+# Welcome to the Pylenium.io Docs
+
 ## The mission is simple
 
 > Bring the best of Selenium, Cypress and Python into one package.
@@ -13,13 +19,14 @@ This means:
 
 ### Test Example
 
-Although Pylenium is a thin wrapper of Selenium, let's use this simple scenario to show the difference between using `Selenium` and `Pylenium`:
+Let's use this simple scenario to show the difference between using `Selenium` and `Pylenium`:
 
 1. **Visit** the QA at the Point website: [https://qap.dev](https://qap.dev/)
 2. **Hover** the About link to reveal a menu
 3. **Click** the Leadership link in that menu
 4. **Assert** Carlos Kidman is on the Leadership page
 
+{% code title="Using Pylenium" %}
 ```python
 def test_carlos_is_on_leadership(py):
     py.visit('https://qap.dev')
@@ -27,7 +34,9 @@ def test_carlos_is_on_leadership(py):
     py.get('a[href="/leadership"][class^="Header-nav"]').click()
     assert py.contains('Carlos Kidman')
 ```
+{% endcode %}
 
+{% code title="The same test using Selenium" %}
 ```python
 # define your setup and teardown fixture
 @pytest.fixture
@@ -40,18 +49,19 @@ def driver():
 def test_carlos_is_on_leadership_page_with_selenium(driver_setup):
     wait = WebDriverWait(driver, timeout=10)
     driver.get('https://qap.dev')
-    
+
     # hover About link
     about_link = driver.find_element(By.CSS_SELECTOR, "a[href='/about']")
     actions = ActionChains(driver)
     actions.move_to_element(about_link).perform()
-    
+
     # click Leadership link in About menu
     wait.until(EC.element_visible(By.CSS_SELECTOR, "a[href='/leadership'][class^='Header-nav']")).click()
-    
+
     # check if 'Carlos Kidman' is on the page
     assert wait.until(lambda _: driver.find_element(By.XPATH, "//*[contains(text(), 'Carlos Kidman')]"))
 ```
+{% endcode %}
 
 ### Purpose
 
@@ -73,10 +83,21 @@ What if we tried to get the best from both worlds and combine it with an amazing
 
 ## Quick Start
 
-The [Official Pylenium Docs](https://elsnoman.gitbook.io/pylenium) are the best place to start, but you can quickly get going with the following steps:
+{% hint style="success" %}
+If you are new to Selenium or Python, do the [Getting Started steps 1-4](getting-started/virtual-environments.md)
+{% endhint %}
+
+You can also watch the Getting Started video with Pylenium's creator, Carlos Kidman!
+
+{% embed url="https://www.youtube.com/watch?v=li1nc4SUojo" caption="Getting Started with v1.7.7+" %}
+
+{% hint style="success" %}
+You don't need to worry about installing any driver binaries like `chromedriver`. **Pylenium** does this all for you automatically :\)
+{% endhint %}
 
 ### 1. Install **pyleniumio**
 
+{% code title="Terminal $" %}
 ```python
 pip install pyleniumio
 
@@ -84,6 +105,7 @@ pip install pyleniumio
 
 pipenv install pyleniumio
 ```
+{% endcode %}
 
 ### 2. Write a test
 
@@ -91,14 +113,19 @@ Create a directory called `tests` and then a test file called `test_google.py`
 
 Define a new test called `test_google_search`
 
+{% code title="test\_google.py" %}
 ```python
 def test_google_search(py)
 ```
+{% endcode %}
 
+{% hint style="info" %}
 Pylenium uses **pytest** as the Test Framework. You only need to pass in `py`to the function!
+{% endhint %}
 
 Now we can use **Pylenium Commands** to interact with the browser.
 
+{% code title="test\_google.py" %}
 ```python
 def test_google_search(py):
     py.visit('https://google.com')
@@ -106,14 +133,17 @@ def test_google_search(py):
     py.get("[name='btnK']").submit()
     assert py.should().contain_title('puppies')
 ```
+{% endcode %}
 
 ### 3. Run the Test
 
 This will depend on your IDE, but you can always run tests from the CLI:
 
+{% code title="Terminal $ \(venv\)" %}
 ```bash
 python -m pytest tests/test_google.py
 ```
+{% endcode %}
 
 You're all set! You should see the browser open and complete the commands we had in the test :\)
 
