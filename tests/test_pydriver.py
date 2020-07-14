@@ -8,7 +8,6 @@ def test_execute_script(py):
     assert py.execute_script('return arguments[0].parentNode;', webelement)
 
 
-@pytest.mark.bdd_covered
 def test_google_search(py):
     py.visit('https://google.com')
     py.get("[name='q']").type('puppies', Keys.ENTER)

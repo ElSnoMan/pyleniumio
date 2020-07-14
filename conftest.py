@@ -262,97 +262,15 @@ def pytest_addoption(parser):
     )
 
 
+##############
+# PYTEST BDD #
+##############
+
+# Driver Actions
+
 @given(parsers.parse('I visit {url}'))
-def i_visit(url, py):
-    py.visit(url)
-
-
-@given(parsers.parse('I get {selector} element'))
-def i_get(py, selector):
-    return py.get(selector)
-
-
-@given(parsers.parse('I get {selector} element with xpath'), target_fixture="i_get")
-def i_getx(py, selector):
-    return py.getx(selector)
-
-
-@given(parsers.parse('I wait for an element {xpath_locator}'), target_fixture="i_get")
-def i_wait_for_an_element(py, xpath_locator):
-    return py.wait(use_py=True).until(lambda x: x.find_element_by_css_selector(xpath_locator))
-
-
-@when(parsers.parse("I hover {selector} element"))
-def i_hover(selector, py):
-    py.get(selector).hover()
-
-
-@when(parsers.parse("I click {selector} element"))
-def i_click_element(selector, py):
-    py.get(selector).click()
-
-
-@when(parsers.parse('I type {text} in {selector} element and hit Enter'))
-def i_type_in_element_and_hit_enter(py, text, selector):
-    py.get(selector).type(text, Keys.ENTER)
-
-
-@when(parsers.parse('I type {text} and hit Enter'))
-def i_type_and_hit_enter(text, i_get):
-    i_get.type(text, Keys.ENTER)
-
-
-@when(parsers.parse('I type {text}'))
-def i_type(py, text, i_get):
-    """
-    You need to have an element found first.
-    """
-    i_get.type(text, Keys.ENTER)
-
-
-@then(parsers.parse("title should contain {text}"))
-def title_should_contain(text, py):
-    assert py.should().contain_title(text)
-
-
-@then(parsers.parse("I should see {text} in {locator}"))
-def i_should_see_text_in_element(text, locator, py):
-    assert py.get(locator).should().have_text(text)
-
-
-@then(parsers.parse("I should see {text} on the page"))
-def i_should_see_text_on_the_page(py, text):
-    assert py.contains(text).should().have_text(text)
-
-
-@then(parsers.parse("it should contain {text}"))
-def element_should_contain_text(i_get, text):
-    assert i_get.should().contain_text(text)
-
-
-@then(parsers.parse("element tag name should be {tag_name}"))
-def element_tage_name_shoulb_be(i_get, tag_name):
-    assert i_get.tag_name() == tag_name
-
-
-@then("I should be able to hover element")
-def i_should_be_able_to_hover(i_get):
-    assert i_get.hover()
-
-
-@then(parsers.parse("I should be on {url}"))
-def i_should_be_on(url, py):
-    py.should().have_url(url)
-
-
-@when("I clear")
-def i_clear(i_get):
-    i_get.clear()
-
-
-@given(parsers.parse("I switch to frame {frame}"))
-def i_switch_to_frame(frame, py):
-    return py.switch_to.frame(frame)
+def i_visit(py, url):
+    return py.visit(url)
 
 
 @when(parsers.parse("I set window size to {width:d} and {height:d}"))
@@ -360,21 +278,38 @@ def i_set_window_size(py, width, height):
     py.viewport(width, height)
 
 
-@then(parsers.parse("window size should be {width:d} and {height:d}"))
-def window_size_should_be(py, width, height):
+# Driver Assertions
+
+@then(parsers.parse("the url should be {url}"))
+def the_url_should_be(py, url):
+    assert py.should().have_url(url)
+
+
+@then(parsers.parse("the url should contain {text}"))
+def the_url_should_contain(py, text):
+    assert py.should().contain_url(text)
+
+
+@then(parsers.parse('the title should be {title}'))
+def the_title_should_be(py, title):
+    assert py.should().have_title(title)
+
+
+@then(parsers.parse('the title should contain {text}'))
+def the_title_should_contain(py, text):
+    assert py.should().contain_title(text)
+
+
+@then(parsers.parse("I should see {text} on the page"))
+def i_should_see_text_on_the_page(py, text):
+    assert py.contains(text)
+
+
+@then(parsers.parse("the window size should be {width:d} and {height:d}"))
+def the_window_size_should_be(py, width, height):
     assert {'width': width, 'height': height} == py.window_size
 
 
-@then(parsers.parse("I should not find {locator}"))
-def i_should_not_find(py, locator):
-    assert py.should().not_find(locator)
-
-
-@then(parsers.parse("I should not find {locator} by xpath"))
-def i_should_not_find_by_xpath(py, locator):
-    assert py.should().not_findx(locator)
-
-
-@then(parsers.parse("I should not see {text}"))
-def i_should_not_see(py, text):
+@then(parsers.parse("I should not see text {text}"))
+def i_should_not_see_text(py, text):
     assert py.should().not_contain(text)
