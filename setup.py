@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyleniumio',
-    version='1.9.4',
+    version='1.9.5',
     packages=find_packages(),
     include_package_data=True,
     url='https://github.com/ElSnoMan/pyleniumio',

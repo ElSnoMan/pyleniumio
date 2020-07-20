@@ -765,6 +765,14 @@ class Element:
         """ The current instance of `py` that found this element. """
         return self._py
 
+    def css_value(self, css_name: str) -> str:
+        """ Gets the CSS Value of this element given the css_name. """
+        self.py.log.info(f'  [STEP] .css_value() - Get a CSS Value for this element ``{css_name}``')
+        value = self.py.execute_script(
+            'return window.getComputedStyle(arguments[0])[arguments[1]]',
+            self.webelement, css_name)
+        return value
+
     def tag_name(self) -> str:
         """ Gets the tag name of this element. """
         tag_name = self.webelement.tag_name
