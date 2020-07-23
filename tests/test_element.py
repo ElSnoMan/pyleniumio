@@ -155,11 +155,12 @@ def test_element_does_not_have_attribute_with_value(py):
 def test_element_css_value(py):
     py.visit('https://demoqa.com/buttons')
     element = py.contains('Click Me')
-    assert element.css_value('backgroundColor') == "rgb(0, 123, 255)"
-    assert element.css_value('background-color') == "rgb(0, 123, 255)"
+    assert element.css_value('backgroundColor') == "rgba(0, 123, 255, 1)"
+    assert element.css_value('background-color') == "rgba(0, 123, 255, 1)"
 
 
-def test_element_invalid_css_value(py):
+def test_element_invalid_css_property_name(py):
     py.visit('https://demoqa.com/buttons')
     element = py.contains('Click Me')
-    assert element.css_value('bg-color') is None
+    assert element.css_value('bg-color') == ''
+    assert element.css_value('length') is None
