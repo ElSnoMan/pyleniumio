@@ -77,6 +77,7 @@
 * [check](element-commands/check.md)
 * [children](element-commands/children.md)
 * [click](element-commands/click.md)
+* [css\_value](element-commands/css_value.md)
 * [deselect](element-commands/deselect.md)
 * [double\_click](element-commands/double_click.md)
 * [drag\_to](element-commands/drag_to.md)
