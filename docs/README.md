@@ -107,7 +107,28 @@ pipenv install pyleniumio
 ```
 {% endcode %}
 
-### 2. Write a test
+### 2. Initialize Pylenium
+
+{% code title="Terminal $ " %}
+```text
+pylenium init
+```
+{% endcode %}
+
+{% hint style="success" %}
+Execute this command at your Project Root
+{% endhint %}
+
+This creates three files:
+
+* `conftest.py` - This has the fixtures needed for Pylenium.
+* `pylenium.json` - This is the [configuration ](../configuration/pylenium.json.md)file for Pylenium.
+* `pytest.ini` - This is the configuration file for pytest and is used to connect to [ReportPortal](../cli/report-portal.md)
+
+By default, Pylenium uses Chrome browser. You have to install Chrome or update the `pylenium.json` file to use
+the browser of your choice.
+
+### 3. Write a test
 
 Create a directory called `tests` and then a test file called `test_google.py`
 
@@ -135,7 +156,7 @@ def test_google_search(py):
 ```
 {% endcode %}
 
-### 3. Run the Test
+### 4. Run the Test
 
 This will depend on your IDE, but you can always run tests from the CLI:
 
