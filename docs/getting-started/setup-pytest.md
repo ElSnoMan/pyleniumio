@@ -46,6 +46,9 @@ This creates three files:
 * `pylenium.json` - This is the [configuration ](../configuration/pylenium.json.md)file for Pylenium.
 * `pytest.ini` - This is the configuration file for pytest and is used to connect to [ReportPortal](../cli/report-portal.md)
 
+By default, pylenium uses Chrome browser. You have to install Chrome or update the `pylenium.json` to use
+the browser of your choice.
+
 ## 3. Select pytest as the Test Framework
 
 To get the most out of your IDE, you need to configure it to use **pytest** as the Test Framework. This will give you:
