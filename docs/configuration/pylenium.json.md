@@ -1,5 +1,5 @@
 ---
-description: An optional file to configure Pylenium
+description: The configuration file for Pylenium
 ---
 
 # pylenium.json
