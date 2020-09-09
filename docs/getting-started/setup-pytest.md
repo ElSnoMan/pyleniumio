@@ -21,7 +21,7 @@ pip install pyleniumio
 
 {% tab title="pipenv" %}
 {% code title="Terminal $ \(venv\)" %}
-```
+```text
 pipenv install pyleniumio
 ```
 {% endcode %}
@@ -46,8 +46,7 @@ This creates three files:
 * `pylenium.json` - This is the [configuration ](../configuration/pylenium.json.md)file for Pylenium.
 * `pytest.ini` - This is the configuration file for pytest and is used to connect to [ReportPortal](../cli/report-portal.md)
 
-By default, pylenium uses Chrome browser. You have to install Chrome or update the `pylenium.json` to use
-the browser of your choice.
+By default, pylenium uses Chrome browser. You have to install Chrome or update the `pylenium.json` to use the browser of your choice.
 
 ## 3. Select pytest as the Test Framework
 
@@ -61,7 +60,7 @@ To get the most out of your IDE, you need to configure it to use **pytest** as t
 {% tabs %}
 {% tab title="PyCharm" %}
 {% code title="\(RECOMMENDED IDE\)" %}
-```
+```text
 Open Preferences (or Settings)
 Open Tools > Python Integrated Tools
 Select pytest in the "Default test runner" dropdown
@@ -70,7 +69,7 @@ Select pytest in the "Default test runner" dropdown
 {% endtab %}
 
 {% tab title="VS Code" %}
-```
+```text
 Open Command Palette (CMD + SHIFT + P or CTRL + SHIFT + P)
 Search for "Python: Configure Tests"
 Select pytest
@@ -83,6 +82,4 @@ Select pytest
 {% hint style="info" %}
 Visit the pytest docs for more info on how to use it: [https://docs.pytest.org/](https://docs.pytest.org/)
 {% endhint %}
-
-
 
