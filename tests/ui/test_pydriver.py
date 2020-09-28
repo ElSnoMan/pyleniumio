@@ -8,6 +8,13 @@ def test_jit_webdriver(py):
     assert py._webdriver is not None
 
 
+def test_py_request(py):
+    py.visit('https://statsroyale.com')
+    response = py.request.get('https://statsroyale.com/api/cards')
+    assert response.ok
+    assert response.json()[0]['name']
+
+
 def test_execute_script(py):
     py.visit('https://google.com')
     webelement = py.get("[name='q']").webelement
