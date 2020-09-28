@@ -54,14 +54,14 @@ def test_not_forcing_click_raises_error(py):
 
 
 def test_element_should_be_clickable(py):
-    py.visit('https://demoqa.com/checkbox')
-    assert py.get("[type='checkbox']").should().be_clickable()
+    py.visit('https://demoqa.com/buttons')
+    assert py.contains("Click Me").should().be_clickable()
 
 
 def test_element_should_not_be_clickable(py):
-    py.visit('https://deckshop.pro')
+    py.visit('https://demoqa.com/checkbox')
     with pytest.raises(AssertionError):
-        py.get('#smartHelp').should().be_visible()
+        py.get('[type="checkbox"]').should(timeout=3).be_clickable()
 
 
 def test_element_should_be_visible(py):
