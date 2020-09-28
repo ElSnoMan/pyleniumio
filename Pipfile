@@ -18,7 +18,7 @@ requests = "*"
 click = "*"
 pyfiglet = "*"
 # pytest
-pytest = "*"
+pytest = "<6.1.0"
 pytest-reportportal = "*"
 pytest-xdist = "*"
 pytest-parallel = "*"

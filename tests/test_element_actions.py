@@ -49,3 +49,12 @@ def test_radio_buttons(py):
 
     py.get('[value="Radio1"]').check()
     assert not radio.is_checked()
+
+
+def test_checkbox_buttons(py):
+    py.visit('http://test.rubywatir.com/checkboxes.php')
+    checkbox = py.get('input[name=sports][value=soccer]')
+    assert checkbox.should().be_checked()
+
+    checkbox.uncheck()
+    assert not checkbox.is_checked()
