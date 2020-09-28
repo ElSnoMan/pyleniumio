@@ -1,4 +1,5 @@
 import pytest
+from selenium.common.exceptions import ElementNotInteractableException
 
 
 def test_element_with_no_siblings(py):
@@ -8,21 +9,22 @@ def test_element_with_no_siblings(py):
 
 
 def test_element_parent_and_siblings(py):
-    py.visit('https://deckshop.pro')
-    parent = py.get("a.nav-link[href='/spy/']").parent()
+    py.visit('https://demoqa.com/menu')
+    parent = py.contains('Main Item 1').parent()
     assert parent.tag_name() == 'li'
-    assert parent.siblings().should().have_length(8)
+    assert parent.siblings().should().have_length(2)
 
 
 def test_element_text(py):
-    py.visit('https://deckshop.pro')
-    assert py.contains('Season').should().have_text('Season 11!')
+    py.visit('https://demoqa.com/text-box')
+    assert py.get('#userName-label').should().have_text('Full Name')
 
 
 def test_find_in_element_context(py):
-    py.visit('https://deckshop.pro')
-    headers = py.find('h5')
-    assert headers[1].get('a').should().contain_text('Loon Cycle')
+    py.visit('https://demoqa.com/menu')
+    menu_2 = py.contains('Main Item 2')
+    items = menu_2.parent().find('li')
+    assert items.should().have_length(5)
 
 
 def test_input_type_and_get_value(py):
@@ -39,9 +41,16 @@ def test_children(py):
 
 
 def test_forced_click(py):
-    py.visit('https://amazon.com')
+    py.visit('https://demoqa.com/checkbox')
     # without forcing, this raises ElementNotInteractableException
-    py.getx("//*[@class='nav-title and text()='Your Account']").click(force=True)
+    py.get("[type='checkbox']").click(force=True)
+    assert py.get('#result').should().contain_text('You have selected')
+
+
+def test_not_forcing_click_raises_error(py):
+    py.visit('https://demoqa.com/checkbox')
+    with pytest.raises(ElementNotInteractableException):
+        py.get("[type='checkbox']").click()
 
 
 def test_element_should_be_clickable(py):
