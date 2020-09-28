@@ -47,4 +47,4 @@ jobs:
     -
       name: Run UI Tests
       run: |
-        pipenv run pytest tests/ui -n 4 --remote_url "http://localhost:4444/wd/hub"
+        pipenv run pytest tests/ui --workers 2 --tests-per-worker 2 --remote_url "http://localhost:4444/wd/hub"

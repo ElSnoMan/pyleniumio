@@ -54,8 +54,8 @@ def test_not_forcing_click_raises_error(py):
 
 
 def test_element_should_be_clickable(py):
-    py.visit('https://deckshop.pro')
-    assert py.get("a.nav-link[href='/spy/']").should().be_clickable()
+    py.visit('https://demoqa.com/checkbox')
+    assert py.get("[type='checkbox']").should().be_clickable()
 
 
 def test_element_should_not_be_clickable(py):
