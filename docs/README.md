@@ -1,5 +1,5 @@
 ---
-description: 'Latest Version: 1.9.6'
+description: 'Web Test Automation made easy'
 ---
 
 # Welcome to the Pylenium.io Docs

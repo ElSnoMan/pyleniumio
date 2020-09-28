@@ -30,8 +30,6 @@ from pyfiglet import Figlet
 
 from pylenium.scripts import report_portal
 
-VERSION = '1.9.6'
-
 
 def _copy(file, to_dir, message) -> str:
     """ Copies a file to the given directory.
@@ -47,6 +45,7 @@ def _copy(file, to_dir, message) -> str:
 
 
 @click.group()
+@click.version_option()
 def cli():
     """ The Pylenium CLI. """
     pass
@@ -102,12 +101,6 @@ def init(overwrite_conftest, overwrite_pylenium_json, overwrite_pytest_ini):
                        'Use -i flag if you want to replace it with the latest defaults.')
     else:
         _copy(file=pytest_ini, to_dir=user_cwd, message='pytest.ini was created at:')
-
-
-@cli.command()
-def version():
-    """ Displays the current version of Pylenium. """
-    click.echo(VERSION)
 
 
 @cli.command()

@@ -113,7 +113,7 @@ def test_run(project_root, request) -> str:
     return test_results_dir
 
 
-@pytest.fixture('session')
+@pytest.fixture(scope='session')
 def py_config(project_root, request) -> PyleniumConfig:
     """ Initialize a PyleniumConfig for each test
 
