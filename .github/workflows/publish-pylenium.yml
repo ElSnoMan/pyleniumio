@@ -34,8 +34,8 @@ jobs:
           # ensure the placeholder is there. If grep doesn't find the placeholder
           # it exits with exit code 1 and github actions aborts the build.
           grep "$PLACEHOLDER" "$VERSION_FILE"
-          if [ ${{ github.events.inputs.version }} != "develop"]; then
-            VERSION=${{ github.events.inputs.version }}
+          if [ ${{ github.events.inputs.version }} != "develop" ]; then
+            VERSION=${{ github.event.inputs.version }}
           fi
           sed -i "s/$PLACEHOLDER/__version__ = \"${VERSION}\"/g" "$VERSION_FILE"
         shell: bash
