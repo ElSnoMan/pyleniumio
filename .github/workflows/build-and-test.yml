@@ -1,0 +1,50 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Build and Test Pylenium
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    -
+      name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    -
+      name: Install dependencies
+      run: |
+        pip install pipenv
+        # install non-dev dependencies from Pipfile
+        pipenv install --skip-lock
+        # install flake8 for linting step
+        pipenv install flake8 --skip-lock
+    -
+      name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        pipenv run flake8 ./tests --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        pipenv run flake8 ./tests --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    -
+      name: Run Unit Tests
+      run: |
+        pipenv run pytest tests/unit
+    -
+      name: Start Selenoid Server
+      # You may pin to the exact commit or the version.
+      # uses: Xotabu4/selenoid-github-action@abe532e06774138cf8c38c5dac461071de092504
+      uses: Xotabu4/selenoid-github-action@v1
+    -
+      name: Run UI Tests
+      run: |
+        pipenv run pytest tests/ui -n 4 --remote_url "http://localhost:4444/wd/hub"

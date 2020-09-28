@@ -97,13 +97,12 @@ def test_have_url(py):
     py.should().have_url('https://www.qap.dev/')
 
 
-@pytest.mark.skip(reason='pylenium.json needs to be configured')
-def test_loading_extension_to_browser(py):
-    assert './Get CRX.crx' in py.config.driver.extension_paths
+def test_loading_extension_to_browser(py, project_root):
+    py.config.driver.extension_paths.append(f'{project_root}/tests/ui/Get CRX.crx')
     py.visit('chrome://extensions/')
     shadow1 = py.get('extensions-manager').open_shadow_dom()
     shadow2 = shadow1.get('extensions-item-list').open_shadow_dom()
-    ext_shadow_dom = shadow2.find('extensions-item')[1].open_shadow_dom()
+    ext_shadow_dom = shadow2.find('extensions-item').first().open_shadow_dom()
     assert ext_shadow_dom.get('#name-and-version').should().contain_text('Get CRX')
 
 
