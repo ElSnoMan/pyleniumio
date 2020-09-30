@@ -48,3 +48,7 @@ jobs:
       name: Run UI Tests
       run: |
         pipenv run pytest tests/ui -n 2 --remote_url "http://localhost:4444/wd/hub"
+    - 
+      name: Post success card to Trello
+      run: |
+        curl --request POST --url 'https://api.trello.com/1/cards?key=${{ secrets.TRELLO_API_KEY }}&token=${{ secrets.TRELLO_API_TOKEN }}&name=$GITHUB_RUN_ID&pos=top&idList=5f74cd2c688a83028ad48f5a&idLabels=5f74c7fdcdabcf46c0f94315&desc=Test%20Run%20passed,%20yo!
