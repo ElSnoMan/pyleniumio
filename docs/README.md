@@ -1,5 +1,5 @@
 ---
-description: 'Web Test Automation made easy'
+description: Web Test Automation made easy
 ---
 
 # Welcome to the Pylenium.io Docs

@@ -4,6 +4,32 @@ description: Summary of notable changes and fixes.
 
 # Changelog
 
+## 1.9.7 - 2020-09-28
+
+### Added
+
+* Github Actions CI to Pylenium repo
+* Pylenium CLI: `pylenium version` is now `pylenium --version`
+
+If you want to import the `Pylenium` class into a Module, you used to do this:
+
+```python
+from pylenium import Pylenium
+```
+
+This has now been changed \(for CI reasons\) to:
+
+```python
+from pylenium.driver import Pylenium
+```
+
+So make sure you update this import statement if you were using the previous version!
+
+### Fixes
+
+* pytest version 6.1.0 \(released in September 2020\) causes issues within Pylenium's conftest.py. Changed Pipfile to use previous version until a solution is found
+* `is_checked()` now works for Radio Buttons and Checkboxes
+
 ## 1.9.0 - 2020-06-24
 
 > Changes were made to the `conftest.py` file, so make sure to run `pylenium init -c` after upgrading to `1.9.0` to overwrite it with the latest. Not doing this will likely result in `ModuleNotFoundErrors`
