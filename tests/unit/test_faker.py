@@ -41,10 +41,6 @@ def test_fake_locale(fake):
     assert fake.locale()
 
 
-def test_fake_random_digit(fake):
-    assert fake.random_digit()
-
-
 def test_fake_country(fake):
     assert fake.country()
 

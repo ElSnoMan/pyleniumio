@@ -848,10 +848,7 @@ class Element:
             `ValueError` if element is not a checkbox or radio button
         """
         type_ = self.webelement.get_attribute('type')
-        if type_ != 'checkbox':
-            pass
-
-        if type_ != 'radio':
+        if type_ != 'checkbox' and type_ != 'radio':
             raise ValueError('Element is not a checkbox or radio button.')
 
         self.py.log.info(f'  [STEP] Check if this checkbox or radio button element is checked')

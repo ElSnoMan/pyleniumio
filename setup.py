@@ -1,9 +1,10 @@
 from setuptools import setup, find_packages
+import pylenium as app
 
 
 setup(
     name='pyleniumio',
-    version='1.10.0',
+    version=app.__version__,
     packages=find_packages(),
     include_package_data=True,
     url='https://github.com/ElSnoMan/pyleniumio',

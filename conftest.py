@@ -29,7 +29,7 @@ import requests
 from faker import Faker
 from pytest_reportportal import RPLogger, RPLogHandler
 
-from pylenium import Pylenium
+from pylenium.driver import Pylenium
 from pylenium.config import PyleniumConfig, TestCase
 
 

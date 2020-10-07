@@ -8,6 +8,13 @@ def test_jit_webdriver(py):
     assert py._webdriver is not None
 
 
+def test_py_request(py):
+    py.visit('https://statsroyale.com')
+    response = py.request.get('https://statsroyale.com/api/cards')
+    assert response.ok
+    assert response.json()[0]['name']
+
+
 def test_execute_script(py):
     py.visit('https://google.com')
     webelement = py.get("[name='q']").webelement
@@ -97,13 +104,12 @@ def test_have_url(py):
     py.should().have_url('https://www.qap.dev/')
 
 
-@pytest.mark.skip(reason='pylenium.json needs to be configured')
-def test_loading_extension_to_browser(py):
-    assert './Get CRX.crx' in py.config.driver.extension_paths
+def test_loading_extension_to_browser(py, project_root):
+    py.config.driver.extension_paths.append(f'{project_root}/tests/ui/Get CRX.crx')
     py.visit('chrome://extensions/')
     shadow1 = py.get('extensions-manager').open_shadow_dom()
     shadow2 = shadow1.get('extensions-item-list').open_shadow_dom()
-    ext_shadow_dom = shadow2.find('extensions-item')[1].open_shadow_dom()
+    ext_shadow_dom = shadow2.find('extensions-item').first().open_shadow_dom()
     assert ext_shadow_dom.get('#name-and-version').should().contain_text('Get CRX')
 
 
