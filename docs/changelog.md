@@ -4,6 +4,57 @@ description: Summary of notable changes and fixes.
 
 # Changelog
 
+## 1.10.0 - 2020-10-7
+
+### Overview
+
+Pylenium can now gather Web Performance metrics right from the browser and into your hands! Through Pylenium's Performance API, you can leverage the different Performance and Timing objects that each browser tracks and generates. Also, we have created some custom data points, like `Time to Interactive`, `Page Load Time`, and `Time to First Contentful Paint`!
+
+### Added
+
+* Performance API
+
+```python
+# Access the Performance API right from py
+perf = py.performance.get()
+```
+
+* WindowPerformance Object
+
+The main abstraction that holds all of these metrics and data points.
+
+```python
+# get the TTI
+tti = py.performance.get().time_to_interactive()
+```
+
+* Stopwatch Decorator
+
+The `performance.py` module includes a Stopwatch Decorator that you add to any function. This will log how long it takes for that function to complete!
+
+```python
+# 1. How long does it take to add an item to the cart?
+@stopwatch
+def add_item_to_cart(py):
+    py.get('#add-item').click()
+    py.get('#added-notification').should().be_visible()
+
+# 2. How long does it take to edit an item's available stock via the API and see it change in the UI?
+@stopwatch
+def update_available_stock(py, item, quantity):
+    payload = {'item': item, 'qty': quantity}
+    api.items.update(payload)
+    py.get(f'#available-stock-{item}').should().have_text(quantity)
+```
+
+* CONTRIBUTING.md
+* CODE_OF_CONDUCT.md
+
+
+### Linked Issues
+
+[Gather Web Performance data and log how long actions take](https://app.gitkraken.com/glo/view/card/c08c640de7754a2f9cd68034ffbd93a4)
+
 ## 1.9.7 - 2020-09-28
 
 ### Added

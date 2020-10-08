@@ -60,3 +60,13 @@ pipenv sync
 You must be using **Python 3.7** or greater!
 {% endhint %}
 
+## 4. Follow our Contributing Guide
+
+You're all set! Head on over to our [CONTRIBUTING GUIDE](../../CONTRIBUTING.md) for more information on:
+
+* Code of Conduct
+* Templates for Bugs, Enhancements, etc.
+* Guidelines for Pull Requests and suggestions
+* and more!
+
+Thank you for taking the time to contribute! We're excited to have you!
