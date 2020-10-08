@@ -3,6 +3,8 @@ import time
 from typing import Union, List, Optional
 
 from pydantic import BaseModel, Field
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 def stopwatch(func):
@@ -45,8 +47,14 @@ class Performance:
     def __init__(self, webdriver):
         self._webdriver = webdriver
 
+    def _wait(self, timeout=10):
+        return WebDriverWait(self._webdriver, timeout=timeout)
+
     def get(self):
         """ The main method used to generate a WebPerformance object from the current web page.
+
+        Notes:
+            Calling this method too soon may yield NoneTypes because the browser hasn't generated them yet.
 
         Examples:
             # Store the entire WebPerformance object and log it
@@ -55,8 +63,6 @@ class Performance:
 
             # Get a single data point from WebPerformance
             tti = py.performance.get().time_to_interactive()
-
-
         """
         return WebPerformance(
             time_origin=self.get_time_origin(),
@@ -71,23 +77,31 @@ class Performance:
         This is the high resolution timestamp of the start time of the performance measurement.
         """
         js = 'return window.performance.timeOrigin;'
-        return self._webdriver.execute_script(js)
+        time_origin = self._wait().until(lambda driver: driver.execute_script(js), 'Time Origin not generated yet')
+        return time_origin
 
     def get_navigation_timing(self):
         """ Return the PerformanceNavigationTiming object as a Python object. """
         js = 'return window.performance.getEntriesByType("navigation")[0];'
-        return NavigationTiming(**self._webdriver.execute_script(js))
+        navigation = self._wait().until(lambda driver: driver.execute_script(js), 'NavigationTiming not generated yet')
+        return NavigationTiming(**navigation)
 
     def get_paint_timing(self):
         """ Return the PerformancePaintTiming object as a Python object. """
         js = 'return window.performance.getEntriesByName("first-contentful-paint")[0];'
-        return PaintTiming(**self._webdriver.execute_script(js))
+        paint = self._wait().until(lambda driver: driver.execute_script(js), 'PaintTiming not generated yet')
+        return PaintTiming(**paint)
 
     def get_resources(self):
         """ Return a list of PerformanceResourceTiming objects as Python objects. """
         js = 'return window.performance.getEntriesByType("resource");'
-        resources = self._webdriver.execute_script(js)
-        return [ResourceTiming(**resource) for resource in resources]
+        try:
+            resources = self._wait().until(
+                lambda driver: driver.execute_script(js),
+                message='Resources not generated yet or there are none')
+            return [ResourceTiming(**resource) for resource in resources]
+        except TimeoutException:
+            return None  # because there were no Resources captured for the current web page
 
 
 class NavigationTiming(BaseModel):
@@ -192,9 +206,9 @@ class WebPerformance(BaseModel):
     * and more!
     """
     time_origin: float  # High resolution timestamp of the start time of the Performance measurement
-    navigation_timing: Optional[NavigationTiming]
-    paint_timing: Optional[PaintTiming]
-    resources: Optional[List[ResourceTiming]]
+    navigation_timing: NavigationTiming
+    paint_timing: PaintTiming
+    resources: List[ResourceTiming]
 
     def page_load_time(self) -> float:
         """ The time it takes for the page to load as experienced by the user. """
