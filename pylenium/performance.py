@@ -1,6 +1,6 @@
 import logging
 import time
-from typing import Union, List
+from typing import Union, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -192,9 +192,9 @@ class WebPerformance(BaseModel):
     * and more!
     """
     time_origin: float  # High resolution timestamp of the start time of the Performance measurement
-    navigation_timing: NavigationTiming
-    paint_timing: PaintTiming
-    resources: List[ResourceTiming]
+    navigation_timing: Optional[NavigationTiming]
+    paint_timing: Optional[PaintTiming]
+    resources: Optional[List[ResourceTiming]]
 
     def page_load_time(self) -> float:
         """ The time it takes for the page to load as experienced by the user. """
