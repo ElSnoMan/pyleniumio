@@ -2,6 +2,8 @@
 description: Web Test Automation made easy
 ---
 
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
+
 # Welcome to the Pylenium.io Docs
 
 ## The mission is simple

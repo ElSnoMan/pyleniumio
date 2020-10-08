@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_py_config_defaults(py_config):
     # driver settings
     assert py_config.driver.browser == 'chrome'
@@ -49,21 +46,3 @@ def test_py_config(py_config):
 
     # custom settings
     assert py_config.custom is not None
-
-
-@pytest.mark.skip(reason="local test only")
-def test_py_config_cli_log_level_off(py_config):
-    # cli_log_level = 'off'
-    assert py_config.logging.pylog_level == 'off'
-
-
-@pytest.mark.skip(reason="local test only")
-def test_py_config_cli_log_level_info(py_config):
-    # cli_log_level = 'info'
-    assert py_config.logging.pylog_level == 'info'
-
-
-@pytest.mark.skip(reason="local test only")
-def test_py_config_cli_log_level_debug(py_config):
-    # cli_log_level = 'debug'
-    assert py_config.logging.pylog_level == 'debug'
