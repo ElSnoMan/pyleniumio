@@ -12,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from pylenium import webdriver_factory, utils
 from pylenium.config import PyleniumConfig
 from pylenium.element import Element, Elements
+from pylenium.performance import Performance
 from pylenium.switch_to import SwitchTo
 from pylenium.wait import PyleniumWait
 
@@ -222,6 +223,11 @@ class Pylenium:
     def webdriver(self) -> WebDriver:
         """ The current instance of Selenium's `WebDriver` API. """
         return self.init_webdriver() if self._webdriver is None else self._webdriver
+
+    @property
+    def performance(self) -> Performance:
+        """ The Pylenium Performance API. """
+        return Performance(self.webdriver)
 
     def title(self) -> str:
         """ The current page's title. """
