@@ -1,4 +1,3 @@
-import pytest
 from selenium.webdriver.common.keys import Keys
 
 
@@ -97,6 +96,15 @@ def test_switch_to_frame_then_back(py):
     py.switch_to.frame('mce_0_ifr').get('#tinymce').type('bar')
     assert py.get('#tinymce').text() == 'foobar'
     assert py.switch_to.parent_frame().contains('An iFrame').tag_name() == 'h3'
+
+
+def test_switch_to_frame_by_element(py):
+    py.visit('http://the-internet.herokuapp.com/iframe')
+    iframe = py.get('#mce_0_ifr')
+    py.switch_to.frame_by_element(iframe).get('#tinymce').clear().type('foo')
+    assert py.switch_to.default_content().contains('An iFrame').tag_name() == 'h3'
+    py.switch_to.frame_by_element(iframe).get('#tinymce').type('bar')
+    assert py.get('#tinymce').text() == 'foobar'
 
 
 def test_have_url(py):
