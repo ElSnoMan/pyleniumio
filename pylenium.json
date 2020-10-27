@@ -1,6 +1,6 @@
 {
   "driver": {
-    "browser": "firefox",
+    "browser": "chrome",
     "remote_url": "",
     "wait_time": 10,
     "page_load_wait_time": 0,
