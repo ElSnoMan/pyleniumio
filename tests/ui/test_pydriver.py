@@ -1,4 +1,7 @@
+import os
 from selenium.webdriver.common.keys import Keys
+from pylenium.a11y import PyleniumAxe
+from pylenium.driver import Pylenium
 
 
 def test_jit_webdriver(py):
@@ -134,3 +137,18 @@ def test_should_not_find_xpath(py):
 def test_should_not_contain(py):
     py.visit('https://google.com')
     assert py.should().not_contain('foobar')
+
+
+def test_axe_run(py: Pylenium):
+    py.visit('https://qap.dev')
+    axe = PyleniumAxe(py.webdriver)
+    report = axe.run(name='a11y.json')
+    number_of_violations = len(report.violations)
+    assert number_of_violations < 10, f'{number_of_violations} violation(s) found'
+
+
+def test_axe_fixture(axe):
+    axe.webdriver.get('https://qap.dev')
+    file_name = 'a11y.json'
+    axe.run(name=file_name)
+    assert os.path.exists(file_name)
