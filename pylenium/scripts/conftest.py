@@ -31,6 +31,7 @@ from pytest_reportportal import RPLogger, RPLogHandler
 
 from pylenium.driver import Pylenium
 from pylenium.config import PyleniumConfig, TestCase
+from pylenium.a11y import PyleniumAxe
 
 
 def make_dir(filepath) -> bool:
@@ -217,6 +218,12 @@ def py(test_case, py_config, request, rp_logger):
     except TypeError:
         rp_logger.info('Report Portal is not connected to this test run.')
     py.quit()
+
+
+@pytest.fixture(scope='function')
+def axe(py) -> PyleniumAxe:
+    """ The aXe A11y audit tool as a fixture. """
+    return PyleniumAxe(py.webdriver)
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
