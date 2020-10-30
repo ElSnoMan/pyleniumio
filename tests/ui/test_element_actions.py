@@ -1,3 +1,7 @@
+from pylenium import jquery
+from pylenium.driver import Pylenium
+
+
 URL = 'http://the-internet.herokuapp.com'
 
 
@@ -32,9 +36,10 @@ def test_drag_to_with_element(py):
 
 def test_jquery(py):
     py.visit('https://amazon.com')
-    py.load_jquery('3.5.1')
+    jquery.inject(py.webdriver, version='3.5.1')
     assert py.execute_script('return jQuery.expando;') is not None
     assert py.execute_script('return $.expando;') is not None
+    assert jquery.exists(py.webdriver) == '3.5.1'
 
 
 def test_hover(py):
