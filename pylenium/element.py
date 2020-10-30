@@ -1,3 +1,4 @@
+from pylenium import jquery
 import time
 from typing import List, Tuple, Optional
 
@@ -7,8 +8,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebElement
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support import expected_conditions as ec
-
-from pylenium import utils
 
 
 class ElementWait:
@@ -43,6 +42,7 @@ class ElementWait:
 
 class ElementsShould:
     """ Expectations for the current list of elements, if any. """
+
     def __init__(self, py, elements: 'Elements', timeout: int, ignored_exceptions: list = None):
         self._py = py
         self._elements = elements
@@ -171,6 +171,7 @@ class ElementsShould:
 
 class ElementShould:
     """ Expectations for the current element that is already in the DOM. """
+
     def __init__(self, py, element: 'Element', timeout: int, ignored_exceptions: list = None):
         self._py = py
         self._element = element
@@ -536,7 +537,7 @@ class ElementShould:
             self._py.log.critical('.should().not_be_focused()')
             raise AssertionError('Element had focus')
 
-    def disappear(self) -> 'Pylenium':
+    def disappear(self):
         """ An expectation that the element eventually disappears from the DOM.
 
         Returns:
@@ -653,6 +654,7 @@ class ElementShould:
 
 class Elements(List['Element']):
     """ Represents a list of DOM elements. """
+
     def __init__(self, py, web_elements, locator: Optional[Tuple]):
         self._list = [Element(py, element, None) for element in web_elements]
         self._py = py
@@ -748,6 +750,7 @@ class Elements(List['Element']):
 
 class Element:
     """ Represents a DOM element. """
+
     def __init__(self, py, web_element: WebElement, locator: Optional[Tuple]):
         self._py = py
         self._webelement = web_element,
@@ -783,7 +786,8 @@ class Element:
     def text(self) -> str:
         """ Gets the InnerText of this element. """
         text = self.webelement.text
-        self.py.log.info(f'  [STEP] .text() - Get the text of this element ``{text}``')
+        self.py.log.info(
+            f'  [STEP] .text() - Get the text of this element ``{text}``')
         return text
 
     # EXPECTATIONS #
@@ -851,7 +855,7 @@ class Element:
         if type_ != 'checkbox' and type_ != 'radio':
             raise ValueError('Element is not a checkbox or radio button.')
 
-        self.py.log.info(f'  [STEP] Check if this checkbox or radio button element is checked')
+        self.py.log.info('  [STEP] Check if this checkbox or radio button element is checked')
         return self.py.execute_script('return arguments[0].checked;', self.webelement)
 
     def is_displayed(self) -> bool:
@@ -951,7 +955,7 @@ class Element:
         self.webelement.clear()
         return self
 
-    def click(self, force=False) -> 'Pylenium':
+    def click(self, force=False):
         """ Clicks the element.
 
         Args:
@@ -967,7 +971,7 @@ class Element:
             self.webelement.click()
         return self.py
 
-    def deselect(self, value) -> 'Pylenium':
+    def deselect(self, value):
         """ Deselects an `<option>` within a multi `<select>` element.
 
         Args:
@@ -985,7 +989,7 @@ class Element:
 
         select = Select(self.webelement)
         if not select.is_multiple:
-            raise NotImplementedError(f'Deselect can only be performed on multi-select elements.')
+            raise NotImplementedError('Deselect can only be performed on multi-select elements.')
 
         try:
             select.deselect_by_visible_text(value)
@@ -994,7 +998,7 @@ class Element:
         finally:
             return self.py
 
-    def double_click(self) -> 'Pylenium':
+    def double_click(self):
         """ Double clicks the element.
 
         Returns:
@@ -1004,12 +1008,11 @@ class Element:
         ActionChains(self.py.webdriver).double_click(self.webelement).perform()
         return self.py
 
-    def drag_to(self, css: str, jquery_version='3.5.1') -> 'Element':
+    def drag_to(self, css: str) -> 'Element':
         """ Drag the current element to another element given its CSS selector.
 
         Args:
             css: The CSS selector of the element to drag to.
-            jquery_version: The version of jQuery to use for this action.
 
         Returns:
             The current element.
@@ -1019,21 +1022,14 @@ class Element:
         """
         self.py.log.info('  [STEP] .drag_to() - Drag this element to another element')
         to_element = self.py.get(css).webelement
-        self.py.load_jquery(jquery_version)
-        dnd_javascript = utils.read_script_from_file('drag_and_drop.js')
-        self.py.execute_script(
-            dnd_javascript + "$(arguments[0]).simulateDragDrop({ dropTarget: arguments[1] });",
-            self.webelement,
-            to_element
-        )
+        jquery.drag_and_drop(self.py.webdriver, self.webelement, to_element)
         return self
 
-    def drag_to_element(self, to_element: 'Element', jquery_version='3.5.1') -> 'Element':
+    def drag_to_element(self, to_element: 'Element') -> 'Element':
         """ Drag the current element to the given element.
 
         Args:
             to_element: The Element to drag to.
-            jquery_version: The version of jQuery to use for this action.
 
         Returns:
             The current element.
@@ -1043,16 +1039,10 @@ class Element:
             py.get('#draggable-card').drag_to_element(column)
         """
         self.py.log.info('  [STEP] .drag_to_element() - Drag this element to another element')
-        self.py.load_jquery(jquery_version)
-        dnd_javascript = utils.read_script_from_file('drag_and_drop.js')
-        self.py.execute_script(
-            dnd_javascript + "$(arguments[0]).simulateDragDrop({ dropTarget: arguments[1] });",
-            self.webelement,
-            to_element.webelement
-        )
+        jquery.drag_and_drop(self.py.webdriver, self.webelement, to_element.webelement)
         return self
 
-    def hover(self) -> 'Pylenium':
+    def hover(self):
         """ Hovers the element.
 
         Returns:
@@ -1062,7 +1052,7 @@ class Element:
         ActionChains(self.py.webdriver).move_to_element(self.webelement).perform()
         return self.py
 
-    def right_click(self) -> 'Pylenium':
+    def right_click(self):
         """ Right clicks the element.
 
         Returns:
@@ -1086,7 +1076,8 @@ class Element:
         """
         self.py.log.info('  [STEP] .select() - Select an option in this element')
         if self.webelement.tag_name != 'select':
-            raise ValueError(f'Can only perform Select on <select> elements. Current tag name: {self.webelement.tag_name}')
+            raise ValueError(
+                f'Can only perform Select on <select> elements. Current tag name: {self.webelement.tag_name}')
         try:
             Select(self.webelement).select_by_visible_text(value)
         except NoSuchElementException:
@@ -1096,7 +1087,7 @@ class Element:
         finally:
             return self
 
-    def select_many(self, values: list) -> 'Pylenium':
+    def select_many(self, values: list):
         """ Selects multiple `<options>` within a `<select>` element.
 
         Args:
@@ -1110,11 +1101,12 @@ class Element:
         """
         self.py.log.info('  [STEP] .select_many() - Select many options in this element')
         if self.webelement.tag_name != 'select':
-            raise ValueError(f'Can only perform Select on <select> elements. Current tag name: {self.webelement.tag_name}')
+            raise ValueError(
+                f'Can only perform Select on <select> elements. Current tag name: {self.webelement.tag_name}')
 
         select = Select(self.webelement)
         if not select.is_multiple:
-            raise NotImplementedError(f'This <select> only allows a single option. Use .select() instead.')
+            raise NotImplementedError('This <select> only allows a single option. Use .select() instead.')
 
         try:
             for val in values:
@@ -1125,7 +1117,7 @@ class Element:
         finally:
             return self.py
 
-    def submit(self) -> 'Pylenium':
+    def submit(self):
         """ Submits the form.
 
             * Meant for <form> elements. May not have an effect on other types.
@@ -1319,7 +1311,7 @@ class Element:
 
     def scroll_into_view(self) -> 'Element':
         """ Scroll this element into view. """
-        self.py.log.info(f'  [STEP] .scroll_into_view() - Scroll this element into view')
+        self.py.log.info('  [STEP] .scroll_into_view() - Scroll this element into view')
         self.py.webdriver.execute_script('arguments[0].scrollIntoView(true);', self.webelement)
         return self
 

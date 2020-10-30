@@ -9,7 +9,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
-from pylenium import webdriver_factory, utils
+from pylenium import webdriver_factory
 from pylenium.config import PyleniumConfig
 from pylenium.element import Element, Elements
 from pylenium.performance import Performance
@@ -186,6 +186,7 @@ class Pylenium:
         * IE
         * Opera
     """
+
     def __init__(self, config: PyleniumConfig):
         self.config = config
         self.log = logging.getLogger(__name__)
@@ -203,8 +204,8 @@ class Pylenium:
                           f'browserName: {caps["browserName"]}, browserVersion: {caps["browserVersion"]}, '
                           f'platformName: {caps["platformName"]}, session_id: {self._webdriver.session_id}')
         except:
-            self.log.warning(f'webdriver.capabilities did not have a key that Pylenium was expecting. '
-                             f'Is your driver executable the right version?')
+            self.log.warning('webdriver.capabilities did not have a key that Pylenium was expecting. '
+                             'Is your driver executable the right version?')
 
         # Default instance of PyleniumWait
         self._wait = PyleniumWait(self, self._webdriver, self.config.driver.wait_time, ignored_exceptions=None)
@@ -270,9 +271,9 @@ class Pylenium:
         """
         self.log.info(f'[STEP] py.go() - Go {direction} {number} in browser history')
         if direction == 'back':
-            self.webdriver.execute_script(f'window.history.go(arguments[0])', number * -1)
+            self.webdriver.execute_script('window.history.go(arguments[0])', number * -1)
         elif direction == 'forward':
-            self.webdriver.execute_script(f'window.history.go(arguments[0])', number)
+            self.webdriver.execute_script('window.history.go(arguments[0])', number)
         else:
             raise ValueError(f'direction was invalid. Must be `forward` or `back` but was {direction}')
         return self
@@ -441,25 +442,6 @@ class Pylenium:
     # UTILITIES #
     #############
 
-    def load_jquery(self, version: str = '3.5.1', timeout=None) -> 'Pylenium':
-        """ Load jQuery onto the current page if it doesn't already exist.
-
-        Args:
-            version: The version of jQuery to load. Default version = 3.5.1
-            timeout: The number of seconds to give this command to complete.
-
-        Examples:
-            py.load_jquery('3.5.1')
-        """
-        self.log.info('[STEP] .load_jquery() - Load jQuery onto the current page')
-        jquery_url = f'https://code.jquery.com/jquery-{version}.min.js'
-        load_jquery = utils.read_script_from_file('load_jquery.js')
-        self.webdriver.execute_async_script(load_jquery, jquery_url)
-        self.wait(timeout=timeout) \
-            .until(lambda _: self.execute_script('return typeof(jQuery) !== "undefined";'),
-                   message='jQuery was "undefined" which means it did not load within timeout.')
-        return self
-
     def screenshot(self, filename: str) -> str:
         """ Take a screenshot of the current Window.
 
@@ -489,7 +471,8 @@ class Pylenium:
         self.webdriver.execute_script(js, x, y)
         return self
 
-    def wait(self, timeout: int = None, use_py: bool = False, ignored_exceptions: list = None) -> Union[WebDriverWait, PyleniumWait]:
+    def wait(self, timeout: int = None, use_py: bool = False,
+             ignored_exceptions: list = None) -> Union[WebDriverWait, PyleniumWait]:
         """ The Wait object with the given timeout in seconds.
 
         If timeout=None or timeout=0,
@@ -651,11 +634,12 @@ class Pylenium:
             py.viewport(1440, 900) # macbook-15 size
             py.viewport(375, 667)  # iPhone X size
         """
-        self.log.info(f'[STEP] py.viewport() - Viewport set to width={width}, height={height}, orientation={orientation}')
+        self.log.info(
+            f'[STEP] py.viewport() - Viewport set to width={width}, height={height}, orientation={orientation}')
         if orientation == 'portrait':
             self.webdriver.set_window_size(width, height)
         elif orientation == 'landscape':
             self.webdriver.set_window_size(height, width)
         else:
-            raise ValueError(f'Orientation must be `portrait` or `landscape`.')
+            raise ValueError('Orientation must be `portrait` or `landscape`.')
         return self
