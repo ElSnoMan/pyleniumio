@@ -4,6 +4,42 @@ description: Summary of notable changes and fixes.
 
 # Changelog
 
+# 1.11.0 - 2020-10-30
+
+## Overview
+
+Pylenium can now do Accessibility (a11y) Testing and Audits using aXe! Easily generate JSON reports to share and export or write assertions against it directly in your tests.
+
+## Added
+
+### aXe integration
+There are two ways to start using aXe in your tests:
+
+* `PyleniumAxe` class from `pylenium.a11y` module
+* `axe` fixture (recommended)
+
+```python
+def test_axe_fixture(py, axe):
+    py.visit('https://qap.dev')
+    # save the axe report as a file
+    report = axe.run(name='a11y_audit.json')
+    # and/or use the report directly in the test(s)
+    assert len(report.violations) == 0
+```
+
+In the above example, we are using Pylenium to navigate to the website and then `axe` to run the audit, generate the report, and check that we have zero violations!
+
+### iframes
+The main change here is the ability to to drag and drop within iframes. Pylenium uses jQuery to perform this action, but we need to inject jQuery if the page doesn't already have it. However, in V1 of our jQuery implementation, it would only inject into the main document and not within each iframe. This is now fixed!
+
+* Pylenium's jQuery V2 now comes in its own module and injects into all iframes of the page
+* `py.switch_to` now comes with a `py.switch_to.frame_by_element()` which is useful when the iframe does not have an `id` or `name` attribute
+
+```python
+iframe = py.get('iframe')
+py.switch_to.frame_by_element(iframe)
+```
+
 ## 1.10.0 - 2020-10-7
 
 ### Overview
@@ -615,6 +651,3 @@ py.config.custom['foo']  # => yields "bar"
 
 * Official release of V1 to the Autobots class
 * The core functionality of Pylenium
-
-
-
