@@ -32,7 +32,7 @@ In the above example, we are using Pylenium to navigate to the website and then 
 
 #### iframes
 
-The main change here is the ability to to drag and drop within iframes. Pylenium uses jQuery to perform this action, but we need to inject jQuery if the page doesn't already have it. However, in V1 of our jQuery implementation, it would only inject into the main document and not within each iframe. This is now fixed!
+The main change here is the ability to drag and drop within iframes. Pylenium uses jQuery to perform this action, but we need to inject jQuery if the page doesn't already have it. However, in V1 of our jQuery implementation, it would only inject into the main document and not within each iframe. This is now fixed!
 
 * Pylenium's jQuery V2 now comes in its own module and injects into all iframes of the page
 * `py.switch_to` now comes with a `py.switch_to.frame_by_element()` which is useful when the iframe does not have an `id` or `name` attribute
