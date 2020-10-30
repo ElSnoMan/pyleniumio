@@ -12,7 +12,7 @@ This GitHub Guide is simple and concise! It goes over:
 * Clone and add to your Fork
 * Submitting a Pull Request \(PR\)
 
-{% embed url="https://guides.github.com/activities/forking/" %}
+{% embed url="https://guides.github.com/activities/forking/" caption="" %}
 
 ## 2. Virtual Environment
 
@@ -26,13 +26,13 @@ Follow the Pylenium guide for venvs and pytest here: [Virtual Environments](../g
 
 Pipenv is the package manager that is used for Pylenium. Please take a moment to read this guide to understand how to use it and the Pipfiles.
 
-{% embed url="https://realpython.com/pipenv-guide/" %}
+{% embed url="https://realpython.com/pipenv-guide/" caption="" %}
 
 ### Install pipenv globally
 
 {% tabs %}
 {% tab title="Mac \| Linux" %}
-```
+```text
 pip3 install pipenv
 ```
 {% endtab %}
@@ -54,15 +54,13 @@ pipenv sync
 ```
 {% endcode %}
 
-
-
 {% hint style="warning" %}
 You must be using **Python 3.7** or greater!
 {% endhint %}
 
 ## 4. Follow our Contributing Guide
 
-You're all set! Head on over to our [CONTRIBUTING GUIDE](../../CONTRIBUTING.md) for more information on:
+You're all set! Head on over to our [CONTRIBUTING GUIDE](https://github.com/ElSnoMan/pyleniumio/tree/d887dd0028538e9416fe3fe284a75ab30a2dc744/CONTRIBUTING.md) for more information on:
 
 * Code of Conduct
 * Templates for Bugs, Enhancements, etc.
@@ -70,3 +68,4 @@ You're all set! Head on over to our [CONTRIBUTING GUIDE](../../CONTRIBUTING.md) 
 * and more!
 
 Thank you for taking the time to contribute! We're excited to have you!
+

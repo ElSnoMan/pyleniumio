@@ -4,19 +4,22 @@ description: Summary of notable changes and fixes.
 
 # Changelog
 
-# 1.11.0 - 2020-10-30
+## Changelog
 
-## Overview
+### 1.11.0 - 2020-10-30
 
-Pylenium can now do Accessibility (a11y) Testing and Audits using aXe! Easily generate JSON reports to share and export or write assertions against it directly in your tests.
+#### Overview
 
-## Added
+Pylenium can now do Accessibility \(a11y\) Testing and Audits using aXe! Easily generate JSON reports to share and export or write assertions against it directly in your tests.
 
-### aXe integration
+#### Added
+
+#### aXe integration
+
 There are two ways to start using aXe in your tests:
 
 * `PyleniumAxe` class from `pylenium.a11y` module
-* `axe` fixture (recommended)
+* `axe` fixture \(recommended\)
 
 ```python
 def test_axe_fixture(py, axe):
@@ -29,7 +32,8 @@ def test_axe_fixture(py, axe):
 
 In the above example, we are using Pylenium to navigate to the website and then `axe` to run the audit, generate the report, and check that we have zero violations!
 
-### iframes
+#### iframes
+
 The main change here is the ability to to drag and drop within iframes. Pylenium uses jQuery to perform this action, but we need to inject jQuery if the page doesn't already have it. However, in V1 of our jQuery implementation, it would only inject into the main document and not within each iframe. This is now fixed!
 
 * Pylenium's jQuery V2 now comes in its own module and injects into all iframes of the page
@@ -40,13 +44,13 @@ iframe = py.get('iframe')
 py.switch_to.frame_by_element(iframe)
 ```
 
-## 1.10.0 - 2020-10-7
+### 1.10.0 - 2020-10-7
 
-### Overview
+#### Overview
 
 Pylenium can now gather Web Performance metrics right from the browser and into your hands! Through Pylenium's Performance API, you can leverage the different Performance and Timing objects that each browser tracks and generates. Also, we have created some custom data points, like `Time to Interactive`, `Page Load Time`, and `Time to First Contentful Paint`!
 
-### Added
+#### Added
 
 * Performance API
 
@@ -84,16 +88,15 @@ def update_available_stock(py, item, quantity):
 ```
 
 * CONTRIBUTING.md
-* CODE_OF_CONDUCT.md
+* CODE\_OF\_CONDUCT.md
 
-
-### Linked Issues
+#### Linked Issues
 
 [Gather Web Performance data and log how long actions take](https://app.gitkraken.com/glo/view/card/c08c640de7754a2f9cd68034ffbd93a4)
 
-## 1.9.7 - 2020-09-28
+### 1.9.7 - 2020-09-28
 
-### Added
+#### Added
 
 * Github Actions CI to Pylenium repo
 * Pylenium CLI: `pylenium version` is now `pylenium --version`
@@ -112,22 +115,22 @@ from pylenium.driver import Pylenium
 
 So make sure you update this import statement if you were using the previous version!
 
-### Fixes
+#### Fixes
 
 * pytest version 6.1.0 \(released in September 2020\) causes issues within Pylenium's conftest.py. Changed Pipfile to use previous version until a solution is found
 * `is_checked()` now works for Radio Buttons and Checkboxes
 
-## 1.9.0 - 2020-06-24
+### 1.9.0 - 2020-06-24
 
 > Changes were made to the `conftest.py` file, so make sure to run `pylenium init -c` after upgrading to `1.9.0` to overwrite it with the latest. Not doing this will likely result in `ModuleNotFoundErrors`
 
-### Report Portal \(RP\)
+#### Report Portal \(RP\)
 
 RP is now natively supported by Pylenium! If you are not already familiar with Report Portal, I highly suggest you check it out. It gives you robust reporting and categorizing of your test runs and results and is backed with machine learning! [https://reportportal.io](https://reportportal.io)
 
 We had very basic logging and reporting, but we wanted to provide a better and more robust reporting solution. After a lot of research, we landed on RP. They are not only free and Open Source, but they also have a great community, Slack group, and YouTube channel with different demos and presentations to help you take your reporting to the next level. This level of modern support was crucial in our decision and we hope you enjoy it!
 
-#### Added
+**Added**
 
 * `pylenium init` now also creates a default `pytest.ini` file at your Project Root. This contains values to easily connect with RP.
 * `pylenium portal` [CLI Commands](cli/report-portal.md) to quickly setup your RP instance
@@ -147,7 +150,7 @@ pylenium portal up
 
 That's it! You'll get helpful hints as you execute each command so you know where to go and how to login. Happy reporting!
 
-#### Fixes
+**Fixes**
 
 * `get_xpath` and `find_xpath` functions were not behaving as expected. This has been fixed, but we have also renamed them to
   * `getx()`
@@ -155,9 +158,9 @@ That's it! You'll get helpful hints as you execute each command so you know wher
 * `AttributeError` was raised if there were more than one `pytest_runtest_makereport` fixtures in the project.
 * Logging now uses the built-in `logging` python package, but screenshots are still saved to the `test_results` directory.
 
-## 1.8.2 - 2020-05-21
+### 1.8.2 - 2020-05-21
 
-### Changed
+#### Changed
 
 * **`Element.should().not_exist()` --&gt; `Element.should().disappear()`**
 
@@ -205,21 +208,21 @@ py.get(TOGGLE).should().not_have_attr('aria-checked', None)
 py.get(TOGGLE).should().be_checked()
 ```
 
-#### Solution
+**Solution**
 
 Make the existing expectations not require the `value` argument.
 
 * `should().have_attr(name, value=None)`
 * `should().not_have_attr(name, value=None)`
 
-### Fixed
+#### Fixed
 
 * `drag_and_drop.js` was not included in the pylenium installation. Now it is!
 * Some typos
 
-## 1.8.0 - 2020-05-11
+### 1.8.0 - 2020-05-11
 
-### Added
+#### Added
 
 This is a bigger change that sets us up for things we want to do with better reporting and BDD functionality. There may be some breaking changes depending how you wrote your tests.
 
@@ -227,7 +230,7 @@ For example, the property of `Element.text` is now a function `Element.text()` a
 
 Make sure you run your tests after upgrading to catch errors like `str is not invocable`. They should be easy to fix.
 
-#### PyleniumShould
+**PyleniumShould**
 
 The use case of checking that an element is NOT on the page or DOM was much more common than anticipated. I have changed how the `.find()` and `.find_xpath()` functions behave to help with this, but there are now three easy to use "should" commands as well.
 
@@ -240,14 +243,14 @@ The use case of checking that an element is NOT on the page or DOM was much more
 py.should().not_find('#hidden-element')
 ```
 
-#### Driver
+**Driver**
 
 Having these as properties was actually messing people up as they used Pylenium. Because almost all of the commands are functions, it was common that someone would try `py.url()` or `py.title()` only to see the test fail saying that `str is not invocable`. Changing these to functions feels more natural.
 
 * `.url` property changed to `.url()` function
 * `.title` property changed to `.title()` function
 
-#### XPaths
+**XPaths**
 
 Removed the `.xpath()` function from _Pylenium_ and _Element_ and replaced with `get` and `find` options. The `.xpath()` function _could_ return an empty list, a single element, or a list of 2 or more elements. The flexibility was pretty "clever", but it was not intuitive to work with. Separating it into two distinct functions to match the CSS versions of `get()` and `.find()` made more sense.
 
@@ -262,13 +265,13 @@ py.get_xpath('//input[@name="q"]')
 py.find_xpath('//li')
 ```
 
-#### Find Elements
+**Find Elements**
 
 The `.find()` and `.find_xpath()` functions on the _Pylenium_ and _Element_ objects will now return an empty list if none are found rather than throwing an exception. Dealing with an empty list is easier and cleaner than having to handle an exception.
 
 However, this is not the case If the timeout is set to `0` \(zero\). The next section goes into more detail.
 
-#### Immediate Poll with `timeout=0`
+**Immediate Poll with timeout=0**
 
 There are times when you don't want to use an awesome wait and a timeout of 1 second isn't good enough. For all of the _Find Element_ commands, you can now set the timeout to `0` \(zero\) to poll the DOM immediately as if you were using Selenium with no wait.
 
@@ -306,7 +309,7 @@ py.get('#button', timeout=30).click()
 py.get('#button', timeout=0).click()
 ```
 
-#### Element and Elements
+**Element and Elements**
 
 Changed some properties to functions for the same reasons as the props in Driver.
 
@@ -314,7 +317,7 @@ Changed some properties to functions for the same reasons as the props in Driver
 * `Element.tag_name` property changed to `Element.tag_name()` function
 * `Element.text` property changed to `Element.text()` function
 
-#### ElementsShould
+**ElementsShould**
 
 _Pylenium_ and _Element_ have their own Should classes for expectations. Most of our assertions and checks are done against them, but there were enough use cases against the length of the Elements that I wanted to include them to make it easier. Now when you have a list of elements \(Elements\), you can use `.should()`:
 
@@ -324,13 +327,13 @@ _Pylenium_ and _Element_ have their own Should classes for expectations. Most of
 * `be_greater_than()`
 * `be_less_than()`
 
-## 1.7.7 - 2020-05-08
+### 1.7.7 - 2020-05-08
 
-### Added
+#### Added
 
 Pylenium CLI
 
-### Details
+#### Details
 
 After a fresh install of pyleniumio, you now need to initialize pylenium using the Pylenium CLI:
 
@@ -350,7 +353,7 @@ This will create the `conftest.py` file needed by Pylenium as well as the defaul
 Run this command at the Project Root so Pylenium is globally accessible by all files/tests in your project.
 {% endhint %}
 
-### Purpose
+#### Purpose
 
 Originally, Pylenium would copy a conftest.py file and overwrite any existing conftest.py files the user had at the Project Root. This was a necessary side effect with how `setup.py` was working. With `pylenium init`, you now have the option to create or overwrite these files rather than needing to start from scratch.
 
@@ -358,16 +361,16 @@ Originally, Pylenium would copy a conftest.py file and overwrite any existing co
 
 This also removes the requirement of the user being in the context of a virtual environment. Although this is still 100% recommended, `pylenium init` can be executed in or out of the venv.
 
-## 1.6.2 - 2020-05-07
+### 1.6.2 - 2020-05-07
 
-### Added
+#### Added
 
 * `options.add_extension()`
 * `Element.open_shadow_dom()`
 
-### Details
+#### Details
 
-#### Add Extension
+**Add Extension**
 
 You can now easily add extensions to your browser sessions by either using the `--extensions` CLI argument and passing in a list of file paths, or you can also do this in the `pylenium.json`
 
@@ -379,7 +382,7 @@ You can now easily add extensions to your browser sessions by either using the `
 }
 ```
 
-#### Shadow DOM
+**Shadow DOM**
 
 Shadow DOMs are a bit tricky, but you can now find elements within them by using the `Element.open_shadow_dom()` command. Check out this example using `chrome://extensions`:
 
@@ -392,14 +395,14 @@ def test_loading_extension_to_browser(py):
     assert extension_shadow_dom.get('#name-and-version').should().contain_text('Get CRX')
 ```
 
-## 1.6.1 - 2020-05-01
+### 1.6.1 - 2020-05-01
 
-### Added
+#### Added
 
 * `drag_to( css )`
 * `drag_to_element( to_element )`
 
-### Details
+#### Details
 
 `Element.drag_to( css )` will drag the current element to the element with the given CSS.
 
@@ -422,17 +425,17 @@ to_element = py.get('#drop-here')
 from_element.drag_to_element(to_element)
 ```
 
-## 1.6.0 - 2020-04-28
+### 1.6.0 - 2020-04-28
 
-### Added
+#### Added
 
 * Page Load Wait Time
 * Test Case Name into Capabilities for frameworks like Selenoid
 * Add Experimental Options via `pylenium.json`
 
-### Details
+#### Details
 
-#### Page Load Wait Time
+**Page Load Wait Time**
 
 By default, the Page Load timeout is `0` just like Selenium. However, there were cases where users wanted to control this globally or as needed per test case. You can now do this a few different ways:
 
@@ -453,11 +456,11 @@ By default, the Page Load timeout is `0` just like Selenium. However, there were
 py.set_page_load_timeout(10)
 ```
 
-#### Test Case Name into Capabilities
+**Test Case Name into Capabilities**
 
 This was primarily for other frameworks like Selenoid and Zalenium that used this name to label the tests in their runners. For example, in Selenoid, you can filter tests by name. Before this change, the tests were given an unhelpful, generic name instead of the proper test name. That's fixed now :\)
 
-#### Add Experimental Options
+**Add Experimental Options**
 
 For users that want to use some of the experimental options for browsers, you can now do this within `pylenium.json`. This is a list of dictionaries \(key-value pairs\) that you want to include globally.
 
@@ -470,9 +473,9 @@ For users that want to use some of the experimental options for browsers, you ca
 }
 ```
 
-## 1.5.4 - 2020-04-27
+### 1.5.4 - 2020-04-27
 
-### Added
+#### Added
 
 * `WebDriverFactory().build_capabilities()`
 * capabilities is a single dictionary instead of a list of dictionaries
@@ -501,14 +504,14 @@ Also, with the refactor it became very clear that a single dictionary of capabil
 ```
 {% endcode %}
 
-## 1.5.2 - 2020-04-24
+### 1.5.2 - 2020-04-24
 
-### Added
+#### Added
 
 * `EdgeChromiumDriver`
 * `Customize DesiredCapabilities`
 
-### Details
+#### Details
 
 * `EdgeChromiumDriver`
 
@@ -548,14 +551,14 @@ Also, with the refactor it became very clear that a single dictionary of capabil
 ```
 {% endcode %}
 
-## 1.4.1 - 2020-04-17
+### 1.4.1 - 2020-04-17
 
-### Added
+#### Added
 
 * `webdriver_manager`
 * `configure pylenium.json`
 
-### Details
+#### Details
 
 * `webdriver_manager`
 
@@ -600,14 +603,14 @@ py.config.custom.get('foo')  # => yields "bar"
 py.config.custom['foo']  # => yields "bar"
 ```
 
-## 1.3.0 - 2020-04-05
+### 1.3.0 - 2020-04-05
 
-### Fixed
+#### Fixed
 
 * Updated the tests in the examples directory
 * Fixed an issue when using `PyleniumWait`
 
-### Added
+#### Added
 
 * `py.should()` - A collection of expectations for the current driver \( [\#15](https://github.com/ElSnoMan/pyleniumio/issues/15) \)
 * `Element.should()` - A collection of expectations for the current element \( [\#36](https://github.com/ElSnoMan/pyleniumio/issues/36) \)
@@ -615,39 +618,40 @@ py.config.custom['foo']  # => yields "bar"
 * `Element.is_enabled()`
 * `Elements.is_empty()`
 
-## 1.2.10 - 2020-03-24
+### 1.2.10 - 2020-03-24
 
-### Added
+#### Added
 
 * `Element.select(value)` - value can now be the index of the option
 
-## 1.2.9 - 2020-03-23
+### 1.2.9 - 2020-03-23
 
-### Added
+#### Added
 
 * `py.scroll_to(x, y)` - Scroll x and y pixels on the page
 * `Element.scroll_into_view()` - Scroll the element into the viewport
 * `Element.right_click()` - Right click on the element
 
-## 1.2.8 - 2020-03-21
+### 1.2.8 - 2020-03-21
 
-### Fixed
+#### Fixed
 
 * `DesiredCapabilities` error if user had an old version of chromedriver
 * `py.switch_to.frame()` wasn't switching to frame properly
 
-### Added
+#### Added
 
 * **`PyleniumWait`**
 * **Pylenium Commands &gt; wait** -  doc with Usage examples
 
-### Changed
+#### Changed
 
 * Custom timeouts to some commands, like `.get()`, to override global wait\_time in pylenium.json
 
-## 1.2.7 - 2020-03-17
+### 1.2.7 - 2020-03-17
 
-### Added
+#### Added
 
 * Official release of V1 to the Autobots class
 * The core functionality of Pylenium
+

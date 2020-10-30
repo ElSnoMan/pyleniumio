@@ -33,6 +33,7 @@
 
 ## Fixtures
 
+* [axe](fixtures/axe.md)
 * [fake](fixtures/fake.md)
 * [api \(aka requests\)](fixtures/requests.md)
 

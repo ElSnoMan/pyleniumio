@@ -2,11 +2,13 @@
 description: Web Test Automation made easy
 ---
 
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
-
 # Welcome to the Pylenium.io Docs
 
-## The mission is simple
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://github.com/ElSnoMan/pyleniumio/tree/0bd684d227127daf2eccd2f284b849d4a91e3cb5/docs/code_of_conduct.md)
+
+## Welcome to the Pylenium.io Docs
+
+### The mission is simple
 
 > Bring the best of Selenium, Cypress and Python into one package.
 
@@ -19,7 +21,7 @@ This means:
 * Leverage the awesome Python language
 * and more!
 
-### Test Example
+#### Test Example
 
 Let's use this simple scenario to show the difference between using `Selenium` and `Pylenium`:
 
@@ -65,7 +67,7 @@ def test_carlos_is_on_leadership_page_with_selenium(driver_setup):
 ```
 {% endcode %}
 
-### Purpose
+#### Purpose
 
 I teach courses and do trainings for both **Selenium** and **Cypress**, but Selenium, out of the box, _feels_ clunky. When you start at a new place, you almost always need to "setup" the framework from scratch all over again. Instead of getting right to creating meaningful tests, you end up spending most of your time building a custom framework, maintaining it, and having to teach others to use it.
 
@@ -83,7 +85,7 @@ What if we tried to get the best from both worlds and combine it with an amazing
 
 **Pylenium** looks to bring more Cypress-like bindings and techniques to Selenium \(like automatic waits\) and still leverage Selenium's power along with the ease-of-use and power of **Python**.
 
-## Quick Start
+### Quick Start
 
 {% hint style="success" %}
 If you are new to Selenium or Python, do the [Getting Started steps 1-4](getting-started/virtual-environments.md)
@@ -97,7 +99,7 @@ You can also watch the Getting Started video with Pylenium's creator, Carlos Kid
 You don't need to worry about installing any driver binaries like `chromedriver`. **Pylenium** does this all for you automatically :\)
 {% endhint %}
 
-### 1. Install **pyleniumio**
+#### 1. Install **pyleniumio**
 
 {% code title="Terminal $" %}
 ```python
@@ -109,7 +111,7 @@ pipenv install pyleniumio
 ```
 {% endcode %}
 
-### 2. Initialize Pylenium
+#### 2. Initialize Pylenium
 
 {% code title="Terminal $ " %}
 ```text
@@ -129,7 +131,7 @@ This creates three files:
 
 By default, Pylenium uses Chrome browser. You have to install Chrome or update the `pylenium.json` file to use the browser of your choice.
 
-### 3. Write a test
+#### 3. Write a test
 
 Create a directory called `tests` and then a test file called `test_google.py`
 
@@ -157,7 +159,7 @@ def test_google_search(py):
 ```
 {% endcode %}
 
-### 4. Run the Test
+#### 4. Run the Test
 
 This will depend on your IDE, but you can always run tests from the CLI:
 
