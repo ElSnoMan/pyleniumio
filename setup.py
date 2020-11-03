@@ -1,14 +1,6 @@
 from setuptools import setup, find_packages
+from pylenium.scripts.setup_tools import get_install_requirements
 import pylenium as app
-import toml
-
-
-def get_install_requirements() -> list:
-    """ Parses a pipfile and returns a list of package names along with a version if applicable """
-    pipfile = toml.load('Pipfile')
-    packages = pipfile.get('packages').items()
-    return ["{0}{1}".format(pkg, ver) if ver != "*"
-            else pkg for pkg, ver in packages]
 
 
 setup(
@@ -23,7 +15,7 @@ setup(
     description='The best of Selenium and Cypress in a single Python Package',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    install_requires=get_install_requirements(),
+    install_requires=get_install_requirements('Pipfile'),
     data_files=[('', [
         'pylenium/scripts/pylenium.json',
         'pylenium/scripts/pytest.ini',
