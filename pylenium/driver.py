@@ -3,7 +3,7 @@ from typing import List, Union
 
 import requests
 from faker import Faker
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
@@ -609,7 +609,10 @@ class Pylenium:
     def maximize_window(self) -> 'Pylenium':
         """ Maximizes the current Window. """
         self.log.info('py.maximize_window() - Maximize window')
-        self.webdriver.maximize_window()
+        try:
+            self.webdriver.maximize_window()
+        except WebDriverException as e:
+            self.log.error(f'unable to maximize window: {e.msg}')
         return self
 
     def set_page_load_timeout(self, timeout: int) -> 'Pylenium':
