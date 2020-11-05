@@ -612,7 +612,7 @@ class Pylenium:
         try:
             self.webdriver.maximize_window()
         except WebDriverException as e:
-            self.log.warning(f'py.maximize_window() - FAILED: {e.msg}')
+            self.log.error(f'unable to maximize window: {e.msg}')
         return self
 
     def set_page_load_timeout(self, timeout: int) -> 'Pylenium':
