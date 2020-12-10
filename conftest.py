@@ -265,3 +265,36 @@ def pytest_addoption(parser):
         '--extensions', action='store',
         default='', help='Comma-separated list of extension paths. Ex. "*.crx, *.crx"'
     )
+
+
+@pytest.fixture(scope='function')
+def py_with_config(test_case, py_config, request, rp_logger):
+    """ Initialize a Pylenium driver for each test with test specific options / extensions via the line
+
+    Pass in this `py_with_config` fixture into the test function with the driver options.  Here's an example for incognito mode for chrome
+
+    Examples:
+        @pytest.mark.parametrize('py_with_config', [{"options": ["incognito"], "extension": ["extension_name.crx"]}], indirect=True)
+        def test_go_to_google(py_with_config):
+            py_with_config.visit('https://google.com')
+            assert 'Google' in py_with_config.title()
+    """
+    py_config.driver.options.extend(request.param["options"])
+    py_config.driver.extension_paths.extend(request.param["extension"])
+    py = Pylenium(py_config)
+    yield py
+    try:
+        if request.node.report.failed:
+            # if the test failed, execute code in this block
+            if py_config.logging.screenshots_on:
+                screenshot = py.screenshot(f'{test_case.file_path}/test_failed.png')
+                with open(screenshot, "rb") as image_file:
+                    rp_logger.info("Test Failed - Attaching Screenshot",
+                                   attachment={"name": "test_failed.png",
+                                               "data": image_file,
+                                               "mime": "image/png"})
+    except AttributeError:
+        rp_logger.error('Unable to access request.node.report.failed, unable to take screenshot.')
+    except TypeError:
+        rp_logger.info('Report Portal is not connected to this test run.')
+    py.quit()
