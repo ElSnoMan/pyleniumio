@@ -109,7 +109,7 @@ def test_run(project_root, request) -> str:
 
     for test in session.items:
         # make the test_result directory for each test
-        make_dir(f'{test_results_dir}/{test.name}')
+        make_dir(f'{test_results_dir}/{test.originalname}')
 
     return test_results_dir
 
