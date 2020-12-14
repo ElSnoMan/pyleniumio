@@ -16,6 +16,7 @@ class DriverConfig(BaseModel):
     experimental_options: List[dict] = None
     extension_paths: List[str] = None
     version: str = 'latest'
+    local_path: str = ''
 
 
 class LoggingConfig(BaseModel):
