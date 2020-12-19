@@ -173,3 +173,20 @@ def test_element_invalid_css_property_name(py):
     element = py.contains('Click Me')
     assert element.css_value('bg-color') == ''
     assert element.css_value('length') is None
+
+
+def test_getx_nested_element(py):
+    py.visit('https://demoqa.com/automation-practice-form')
+    container = py.getx('//*[@id="subjectsContainer"]')
+    element = container.getx('.//input')
+    element_id = element.get_attribute('id')
+    assert element_id == 'subjectsInput'
+   
+
+def test_findx_nested_element(py):
+    py.visit('https://demoqa.com/automation-practice-form')
+    container = py.getx('//*[@id="hobbiesWrapper"]')
+    elements = container.findx('.//input')
+    assert len(elements) == 3
+    for element in elements:
+        assert element.get_attribute('type') == 'checkbox'
