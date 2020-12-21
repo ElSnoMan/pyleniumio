@@ -1231,7 +1231,7 @@ class Element:
                 lambda _: self.webelement.find_element(by, xpath),
                 f'Could not find any elements with the xpath ``{xpath}``'
             )
-        return Element(self, elements, locator=(by, xpath))
+        return Element(self.py, elements, locator=(by, xpath))
 
     def findx(self, xpath: str, timeout: int = None) -> 'Elements':
         """ Finds the DOM elements that matches the `xpath` selector.
@@ -1256,7 +1256,7 @@ class Element:
                 )
         except TimeoutException:
             elements = []
-        return Elements(self, elements, locator=(by, xpath))
+        return Elements(self.py, elements, locator=(by, xpath))
 
     def children(self) -> Elements:
         """ Gets the Child elements. """
