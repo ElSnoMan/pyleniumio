@@ -4,7 +4,7 @@ test_results
 test_env
 tests/data
 data
-
+poetry.lock
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
