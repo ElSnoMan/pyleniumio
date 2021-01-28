@@ -198,8 +198,6 @@ def build_edge(version: str,
         driver = WebDriverFactory().build_edge('latest', ['headless', 'incognito'], None)
     """
     caps = build_capabilities(Browser.EDGE, capabilities)
-    options = build_options(Browser.EDGE, browser_options, experimental_options, extension_paths).to_capabilities()
-    caps.update(options)
     if local_path:
         return webdriver.Edge(local_path, capabilities=caps)
     return webdriver.Edge(EdgeChromiumDriverManager(version=version).install(),  capabilities=caps)

@@ -20,31 +20,36 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+
     -
       name: Install dependencies
       run: |
-        pip install pipenv
-        # install non-dev dependencies from Pipfile
-        pipenv install --skip-lock
+        pip install poetry
+        # install dependencies from pyproject.toml
+        poetry install
         # install flake8 for linting step
-        pipenv install flake8 --skip-lock
+        poetry add flake8
+
     -
       name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        pipenv run flake8 ./tests --count --select=E9,F63,F7,F82 --show-source --statistics
+        poetry run flake8 ./tests --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        pipenv run flake8 ./tests --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        poetry run flake8 ./tests --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
     -
       name: Run Unit Tests
       run: |
-        pipenv run pytest tests/unit
+        poetry run pytest tests/unit
     -
+
       name: Start Selenoid Server
       # You may pin to the exact commit or the version.
       # uses: Xotabu4/selenoid-github-action@abe532e06774138cf8c38c5dac461071de092504
       uses: Xotabu4/selenoid-github-action@v1
+
     -
       name: Run UI Tests
       run: |
-        pipenv run pytest tests/ui -n 2 --remote_url "http://localhost:4444/wd/hub"
+        poetry run pytest tests/ui -n 2 --remote_url "http://localhost:4444/wd/hub"
