@@ -65,7 +65,7 @@ Default is empty or**`""`**
 This is used to connect to things like **Selenium Grid.**
 
 {% hint style="success" %}
-Check out [Run Tests in Containers](../testing/run-tests-in-containers.md) for an example of how to do this locally with **Docker**
+Check out [Run Tests in Containers](../guides/run-tests-in-containers.md) for an example of how to do this locally with **Docker**
 {% endhint %}
 
 {% code title="pylenium.json" %}

@@ -10,10 +10,10 @@
 * [3. Project Structure with pytest](getting-started/project-structure-with-pytest.md)
 * [4. Writing Tests with Pylenium](getting-started/writing-tests-with-pylenium.md)
 
-## Testing
+## Guides
 
-* [Run Tests in Parallel](testing/run-tests-in-parallel.md)
-* [Run Tests in Containers](testing/run-tests-in-containers.md)
+* [Run Tests in Parallel](guides/run-tests-in-parallel.md)
+* [Run Tests in Containers](guides/run-tests-in-containers.md)
 
 ## CLI
 
