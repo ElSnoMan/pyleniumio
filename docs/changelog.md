@@ -4,6 +4,23 @@ description: Summary of notable changes and fixes.
 
 # Changelog
 
+## 1.12.2 - 2021-28-01
+
+### Overview
+
+Microsoft's Edge Browser can be used on Macs now, but we hadn't tested it locally on a Mac before. One of our amazing users did and they found a bug! This should now be fixed 😄
+
+### Fixes
+
+Removed `options` from `webdriver_factory.build_edge()` since it isn't needed and was causing the `MicrosoftEdgeDriver` to raise an error.
+
+### Contributors
+
+For anyone looking to contribute, we have changed using `pipenv` as our package manager to `poetry`.
+
+* You can find out more about `poetry` by visiting their website: [https://python-poetry.org](https://python-poetry.org)
+* You can see how to setup your machine for Python Development with `poetry` with my [Video on YouTube](https://youtu.be/547Jr26duHQ)
+
 ## 1.11.0 - 2020-10-30
 
 ### Overview
