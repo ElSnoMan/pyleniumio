@@ -126,8 +126,8 @@ Execute this command at your Project Root
 This creates three files:
 
 * `conftest.py` - This has the fixtures needed for Pylenium.
-* `pylenium.json` - This is the [configuration ](https://github.com/ElSnoMan/pyleniumio/tree/142e2f8c4dea3a551cde77074432715c7f45ee63/configuration/pylenium.json.md)file for Pylenium.
-* `pytest.ini` - This is the configuration file for pytest and is used to connect to [ReportPortal](https://github.com/ElSnoMan/pyleniumio/tree/142e2f8c4dea3a551cde77074432715c7f45ee63/cli/report-portal.md)
+* `pylenium.json` - This is the [configuration ](https://github.com/ElSnoMan/pyleniumio/blob/master/pylenium.json)file for Pylenium.
+* `pytest.ini` - This is the configuration file for pytest and is used to connect to [ReportPortal](https://reportportal.io/)
 
 By default, Pylenium uses Chrome browser. You have to install Chrome or update the `pylenium.json` file to use the browser of your choice.
 
