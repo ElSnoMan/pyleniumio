@@ -71,7 +71,22 @@ def test_carlos_is_on_leadership(py):
 {% endcode %}
 
 {% hint style="info" %}
-When you get an element from locators \( `.get()`, `.contains()`, `.find()`, or `.xpath()`\), you can perform actions against the element like `.click()`, `.type()` and `.hover()`
+When you get an Element from locator methods:
+
+* `.get()  | .getx()`
+* `.find() | .findx()`
+* `.contains()`
+
+you can perform actions against the element like:
+
+* `.click()`
+* `.type()`
+* `.hover()`
+* `and more!`
+{% endhint %}
+
+{% hint style="success" %}
+Make sure to check out the many commands available in Pylenium
 {% endhint %}
 
 * Click the **Leadership** link in the menu
@@ -137,5 +152,35 @@ def test_carlos_is_on_leadership_page_with_selenium(driver):
     assert driver.find_element(By.XPATH, "//*[contains(text(), 'Carlos Kidman')]")
 ```
 
+## Another Test Example
 
+Let's write another test that searches for `Pylenium` and makes sure the results page contains that term in the title.
+
+1. Navigate to Google.com
+2. Type `Pylenium` into the search field
+3. Submit the search
+4. Assert the results page contains the title
+
+```python
+def test_google_search(py):
+    py.visit('https://google.com')
+    py.get('[name="q"]').type('Pylenium')
+    py.get('[name="btnK"]').submit()
+    assert py.should().contain_title('Pylenium')
+```
+
+You've already seen different Element commands like `.visit()`, `.type()` and `.submit()`,  but there is also a _Should_ object for:
+
+* [Element](../element-commands/should.md)
+* [Elements](../element-commands/should.md)
+* [Pylenium](../pylenium-commands/should.md)
+
+In the example above, `py.should()` uses an Explicit Wait to wait until the "driver" detects that the current page's title contains `"Pylenium"`. 
+
+* If the title contains `"Pylenium"` within the specified timeout, then it returns `True` and passes the assertion
+* If the title does not meet the expectation within the specified timeout, then it returns `False` and fails the assertion
+
+{% hint style="success" %}
+You can leverage these _Should_ expectations to easily wait for conditions or write assertions!
+{% endhint %}
 
