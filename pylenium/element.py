@@ -972,31 +972,25 @@ class Element:
         return self.py
 
     def deselect(self, value):
-        """ Deselects an `<option>` within a multi `<select>` element.
+        """ Deselects all `<option>` within a multi `<select>` element that match the given value.
 
         Args:
-            value: The value or text content of the `<option>` to be deselected.
+            value: The value or text content of the `<option>` elements to be deselected.
 
         Raises:
-            `ValueError` if this element is not a `<select>`
+            * `UnexpectedTagNameException` if this element is not a `<select>`
+            * `NoSuchElementException` if a matching `<option>` element is not found.
 
         Returns:
-            The current instance of Pylenium so you can chain another command.
+            This dropdown element so you can chain another command.
         """
-        self.py.log.info('  [STEP] .deselect() - Deselect this element')
-        if self.webelement.tag_name != 'select':
-            raise ValueError(f'Can only perform Deselect on <select> elements. Tag name: {self.webelement.tag_name}')
-
+        self.py.log.info('  [STEP] .deselect() - Deselect options from a dropdown element')
         select = Select(self.webelement)
-        if not select.is_multiple:
-            raise NotImplementedError('Deselect can only be performed on multi-select elements.')
-
         try:
             select.deselect_by_visible_text(value)
         except NoSuchElementException:
             select.deselect_by_value(value)
-        finally:
-            return self.py
+        return self
 
     def double_click(self):
         """ Double clicks the element.
@@ -1063,7 +1057,7 @@ class Element:
         return self.py
 
     def select(self, value) -> 'Element':
-        """ Selects an `<option>` within a `<select>` element.
+        """ DEPRECATED: Selects an `<option>` within a `<select>` element.
 
         Args:
             value: The value, text content or index of the `<option>` to be selected.
@@ -1074,6 +1068,8 @@ class Element:
         Returns:
             This element so you can chain another command if needed.
         """
+        self.py.log.warning(
+            'DEPRECATED: This method will be removed in a future release. Please use .select_by_*() instead.')
         self.py.log.info('  [STEP] .select() - Select an option in this element')
         if self.webelement.tag_name != 'select':
             raise ValueError(
@@ -1087,8 +1083,64 @@ class Element:
         finally:
             return self
 
+    def select_by_index(self, index: int) -> 'Element':
+        """ Select an `<option>` element within a `<select>` dropdown given its index.
+
+        This is not done by counting the options, but by examining their index attributes.
+
+        Args:
+            index: The index position of the `<option>` to be selected.
+
+        Raises:
+            * `UnexpectedTagNameException` if the dropdown is not a `<select>` element.
+            * `NoSuchElementException` if the `<option>` with the given index doesn't exist.
+
+        Returns:
+            The dropdown element so you can chain another command if needed.
+        """
+        self.py.log.info('  [STEP] .select_by_index() - Select an <option> element in this dropdown')
+        dropdown = Select(self.webelement)
+        dropdown.select_by_index(index)
+        return self
+
+    def select_by_text(self, text: str) -> 'Element':
+        """ Selects all `<option>` elements within a `<select>` dropdown given the option's text.
+
+        Args:
+            text: The text within the `<option>` to be selected.
+
+        Raises:
+            * `UnexpectedTagNameException` if the dropdown is not a `<select>` element.
+            * `NoSuchElementException` if the `<option>` with the given text doesn't exist.
+
+        Returns:
+            The dropdown element so you can chain another command if needed.
+        """
+        self.py.log.info('  [STEP] .select_by_text() - Select all <option> elements in this dropdown')
+        dropdown = Select(self.webelement)
+        dropdown.select_by_visible_text(text)
+        return self
+
+    def select_by_value(self, value) -> 'Element':
+        """ Selects all `<option>` elements within a `<select>` dropdown given the option's value.
+
+        Args:
+            value: The value within the `<option>` to be selected.
+
+        Raises:
+            * `UnexpectedTagNameException` if the dropdown is not a `<select>` element.
+            * `NoSuchElementException` if the `<option>` with the given value doesn't exist.
+
+        Returns:
+            The dropdown element so you can chain another command if needed.
+        """
+        self.py.log.info('  [STEP] .select_by_value() - Select all <option> elements in this dropdown')
+        dropdown = Select(self.webelement)
+        dropdown.select_by_value(value)
+        return self
+
     def select_many(self, values: list):
-        """ Selects multiple `<options>` within a `<select>` element.
+        """ DEPRECATED: Selects multiple `<options>` within a `<select>` element.
 
         Args:
             values: The list of values or text contents of the `<option>` to be selected.
@@ -1099,23 +1151,17 @@ class Element:
         Returns:
             The current instance of Pylenium so you can chain another command.
         """
+        self.py.log.warning(
+            'DEPRECATED: This method will be removed in a future release. Please use .select_by_*() instead.')
         self.py.log.info('  [STEP] .select_many() - Select many options in this element')
-        if self.webelement.tag_name != 'select':
-            raise ValueError(
-                f'Can only perform Select on <select> elements. Current tag name: {self.webelement.tag_name}')
-
         select = Select(self.webelement)
-        if not select.is_multiple:
-            raise NotImplementedError('This <select> only allows a single option. Use .select() instead.')
-
         try:
             for val in values:
                 select.select_by_visible_text(val)
         except NoSuchElementException:
             for val in values:
                 select.select_by_value(val)
-        finally:
-            return self.py
+        return self.py
 
     def submit(self):
         """ Submits the form.
