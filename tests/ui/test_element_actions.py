@@ -1,24 +1,58 @@
+import pytest
+from selenium.common.exceptions import NoSuchElementException
 from pylenium import jquery
 from pylenium.driver import Pylenium
+from pylenium.element import Element
 
 
-URL = 'http://the-internet.herokuapp.com'
+THE_INTERNET = 'https://the-internet.herokuapp.com'
+
+
+@pytest.fixture
+def dropdown(py: Pylenium) -> Element:
+    py.visit(f'{THE_INTERNET}/dropdown')
+    return py.get('#dropdown')
 
 
 def test_check_single_box(py):
-    py.visit(f'{URL}/checkboxes')
+    py.visit(f'{THE_INTERNET}/checkboxes')
     assert py.get('[type="checkbox"]').check().should().be_checked()
     assert py.get('[type="checkbox"]').uncheck().is_checked() is False
 
 
 def test_check_many_boxes(py):
-    py.visit(f'{URL}/checkboxes')
+    py.visit(f'{THE_INTERNET}/checkboxes')
     assert py.find('[type="checkbox"]').check(allow_selected=True).are_checked()
 
 
-def test_select_dropdown(py):
-    py.visit(f'{URL}/dropdown')
-    py.get('#dropdown').select('2')
+def test_select_by_index_fails_if_option_not_available(dropdown: Element):
+    with pytest.raises(NoSuchElementException):
+        dropdown.select_by_index(3)
+
+
+def test_select_by_text_fails_if_option_not_available(dropdown: Element):
+    with pytest.raises(NoSuchElementException):
+        dropdown.select_by_value('Option 3')
+
+
+def test_select_by_value_fails_if_option_not_available(dropdown: Element):
+    with pytest.raises(NoSuchElementException):
+        dropdown.select_by_value('3')
+
+
+def test_select_by_index(dropdown: Element):
+    dropdown.select_by_index(1)
+    assert dropdown.getx('./option[2]').should().be_selected()
+
+
+def test_select_by_text(dropdown: Element):
+    dropdown.select_by_text('Option 1')
+    assert dropdown.getx('./option[2]').should().be_selected()
+
+
+def test_select_by_value(dropdown: Element):
+    dropdown.select_by_value('2')
+    assert dropdown.getx('./option[3]').should().be_selected()
 
 
 def test_drag_to_with_selector(py):
