@@ -4,6 +4,24 @@ description: Summary of notable changes and fixes.
 
 # Changelog
 
+## 1.12.3 - 2021-14-04
+
+### Overview
+
+`.select()` and `.select_many()` worked pretty well as expected. However, they wouldn't fail as expected! Because we were trying to combine all the "select strategies" in a single function, it made it harder to test and debug _and_ hid some exceptions... like when an `<option>` didn't exist... whoops!
+
+Now, each strategy has been pulled out into its own method and positive and negative tests have been added to make sure it works 😉
+
+* `.select_by_index(index: int)`
+* `.select_by_text(text: str)`
+* `.select_by_value(value)`
+
+### Changes
+
+* New `.select_by_*()` methods exist on the `Element` object. Just remember that the dropdowns have to be a `<select>` element!
+* `.select()` and `.select_many()` still exist, but show a `DEPRECATED` warning. We will be removing them in a future release
+* Our docs have a new home! We are still using GitBook, but we now have the official `docs.pylenium.io` domain! Check it out 😄
+
 ## 1.12.2 - 2021-28-01
 
 ### Overview
