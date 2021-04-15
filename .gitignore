@@ -137,3 +137,5 @@ dmypy.json
 .pyre/
 
 Pipfile.lock
+
+.pypyrc
