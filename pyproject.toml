@@ -7,7 +7,6 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-selenium = "^3.141.0"
 webdriver-manager = "^3.3.0"
 pydantic = "^1.7.3"
 Faker = "^5.8.0"
@@ -19,6 +18,7 @@ pytest-reportportal = "^5.0.7"
 pytest-xdist = "^2.2.0"
 pytest-parallel = "^0.1.0"
 axe-selenium-python = "^2.1.6"
+selenium = "^3.141.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.8.4"

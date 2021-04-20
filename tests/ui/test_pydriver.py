@@ -1,5 +1,4 @@
 import os
-from selenium.webdriver.common.keys import Keys
 from pylenium.a11y import PyleniumAxe
 from pylenium.driver import Pylenium
 
@@ -24,7 +23,7 @@ def test_execute_script(py: Pylenium):
 
 def test_google_search(py: Pylenium):
     py.visit('https://google.com')
-    py.get("[name='q']").type('puppies', Keys.ENTER)
+    py.get("[name='q']").type('puppies', py.Keys.ENTER)
     assert py.should().contain_title('puppies')
 
 
@@ -55,7 +54,7 @@ def test_viewport(py: Pylenium):
 
 def test_get_xpath(py: Pylenium):
     py.visit('https://google.com')
-    py.getx('//*[@name="q"]').type('QA at the Point', Keys.ENTER)
+    py.getx('//*[@name="q"]').type('QA at the Point', py.Keys.ENTER)
     assert py.should().contain_title('QA at the Point')
 
 

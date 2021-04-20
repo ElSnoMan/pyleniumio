@@ -4,6 +4,7 @@ from typing import List, Union
 import requests
 from faker import Faker
 from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
@@ -192,6 +193,7 @@ class Pylenium:
         self.log = logging.getLogger(__name__)
         self.fake = Faker()
         self.request = requests
+        self.Keys = Keys
         self._webdriver = None
         self._wait = None
 
