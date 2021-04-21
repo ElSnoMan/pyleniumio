@@ -29,6 +29,12 @@ def test_carlos_is_on_leadership(py):
 ```
 
 ```python
+from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
 # define your setup and teardown fixture
 @pytest.fixture
 def driver():
@@ -37,18 +43,18 @@ def driver():
     driver.quit()
 
 
-def test_carlos_is_on_leadership_page_with_selenium(driver_setup):
+def test_carlos_is_on_leadership_page_with_selenium(driver):
     wait = WebDriverWait(driver, timeout=10)
     driver.get('https://qap.dev')
-    
+
     # hover About link
     about_link = driver.find_element(By.CSS_SELECTOR, "a[href='/about']")
     actions = ActionChains(driver)
     actions.move_to_element(about_link).perform()
-    
+
     # click Leadership link in About menu
-    wait.until(EC.element_visible(By.CSS_SELECTOR, "a[href='/leadership'][class^='Header-nav']")).click()
-    
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "a[href='/leadership'][class^='Header-nav']"))).click()
+
     # check if 'Carlos Kidman' is on the page
     assert wait.until(lambda _: driver.find_element(By.XPATH, "//*[contains(text(), 'Carlos Kidman')]"))
 ```
@@ -116,4 +122,3 @@ python -m pytest tests/test_google.py
 ```
 
 You're all set! You should see the browser open and complete the commands we had in the test :\)
-
