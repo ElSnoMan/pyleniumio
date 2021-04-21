@@ -24,7 +24,7 @@ Here are all of the current settings \(and their defaults\) you can configure ri
     "version": "latest"
   },
 
-  "logging":{
+  "logging": {
     "screenshots_on": true,
     "pylog_level": "info"
   },
@@ -35,7 +35,7 @@ Here are all of the current settings \(and their defaults\) you can configure ri
     "height": 900,
     "orientation": "portrait"
   },
-  
+
   "custom": {}
 }
 ```
@@ -111,4 +111,3 @@ py.config.custom['environment']['url']
 # Get the first item in the list of clusters
 py.config.custom['environment']['clusters'][0]
 ```
-

@@ -12,7 +12,7 @@
     "local_path": ""
   },
 
-  "logging":{
+  "logging": {
     "screenshots_on": true,
     "pylog_level": "info"
   },
