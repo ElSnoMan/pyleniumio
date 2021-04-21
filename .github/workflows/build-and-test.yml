@@ -6,8 +6,12 @@ name: Build and Test Pylenium
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+    - 'docs/**'
   pull_request:
     branches: [ main ]
+    paths-ignore:
+    - 'docs/**'
 
 jobs:
   build:
