@@ -23,6 +23,7 @@ import logging
 import os
 import shutil
 import sys
+from pathlib import Path
 
 import pytest
 import requests
@@ -34,34 +35,21 @@ from pylenium.config import PyleniumConfig, TestCase
 from pylenium.a11y import PyleniumAxe
 
 
-def make_dir(filepath) -> bool:
-    """ Make a directory.
-
-    Returns:
-        True if successful, False if not.
-    """
-    try:
-        os.mkdir(filepath)
-        return True
-    except FileExistsError:
-        return False
-
-
 @pytest.fixture(scope='function')
 def fake() -> Faker:
-    """ A basic instance of Faker to make test data."""
+    """A basic instance of Faker to make test data."""
     return Faker()
 
 
 @pytest.fixture(scope='function')
 def api():
-    """ A basic instance of Requests to make HTTP API calls. """
+    """A basic instance of Requests to make HTTP API calls."""
     return requests
 
 
 @pytest.fixture(scope="session")
 def rp_logger(request):
-    """ Report Portal Logger """
+    """Report Portal Logger"""
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     # Create handler for Report Portal if the service has been
@@ -83,7 +71,7 @@ def rp_logger(request):
 
 @pytest.fixture(scope='session', autouse=True)
 def project_root() -> str:
-    """ The Project (or Workspace) root as a filepath.
+    """The Project (or Workspace) root as a filepath.
 
     * This conftest.py file should be in the Project Root if not already.
     """
@@ -92,7 +80,7 @@ def project_root() -> str:
 
 @pytest.fixture(scope='session', autouse=True)
 def test_run(project_root, request) -> str:
-    """ Creates the `/test_results` directory to store the results of the Test Run.
+    """Creates the `/test_results` directory to store the results of the Test Run.
 
     Returns:
         The `/test_results` directory as a filepath (str).
@@ -103,20 +91,19 @@ def test_run(project_root, request) -> str:
     if os.path.exists(test_results_dir):
         # delete /test_results from previous Test Run
         shutil.rmtree(test_results_dir, ignore_errors=True)
-    if not os.path.exists(test_results_dir):
-        # create /test_results for this Test Run
-        make_dir(test_results_dir)
+
+    Path(test_results_dir).mkdir(parents=True, exist_ok=True)
 
     for test in session.items:
         # make the test_result directory for each test
-        make_dir(f'{test_results_dir}/{test.name}')
+        Path(f'{test_results_dir}/{test.name}').mkdir(parents=True, exist_ok=True)
 
     return test_results_dir
 
 
 @pytest.fixture(scope='session')
 def py_config(project_root, request) -> PyleniumConfig:
-    """ Initialize a PyleniumConfig for each test
+    """Initialize a PyleniumConfig for each test
 
     1. This starts by deserializing the user-created pylenium.json from the Project Root.
     2. If that file is not found, then proceed with Pylenium Defaults.
@@ -174,7 +161,7 @@ def py_config(project_root, request) -> PyleniumConfig:
 
 @pytest.fixture(scope='function')
 def test_case(test_run, py_config, request) -> TestCase:
-    """ Manages data pertaining to the currently running Test Function or Case.
+    """Manages data pertaining to the currently running Test Function or Case.
 
         * Creates the test-specific logger.
 
@@ -192,7 +179,7 @@ def test_case(test_run, py_config, request) -> TestCase:
 
 @pytest.fixture(scope='function')
 def py(test_case, py_config, request, rp_logger):
-    """ Initialize a Pylenium driver for each test.
+    """Initialize a Pylenium driver for each test.
 
     Pass in this `py` fixture into the test function.
 
@@ -209,10 +196,10 @@ def py(test_case, py_config, request, rp_logger):
             if py_config.logging.screenshots_on:
                 screenshot = py.screenshot(f'{test_case.file_path}/test_failed.png')
                 with open(screenshot, "rb") as image_file:
-                    rp_logger.info("Test Failed - Attaching Screenshot",
-                                   attachment={"name": "test_failed.png",
-                                               "data": image_file,
-                                               "mime": "image/png"})
+                    rp_logger.info(
+                        "Test Failed - Attaching Screenshot",
+                        attachment={"name": "test_failed.png", "data": image_file, "mime": "image/png"},
+                    )
     except AttributeError:
         rp_logger.error('Unable to access request.node.report.failed, unable to take screenshot.')
     except TypeError:
@@ -222,13 +209,13 @@ def py(test_case, py_config, request, rp_logger):
 
 @pytest.fixture(scope='function')
 def axe(py) -> PyleniumAxe:
-    """ The aXe A11y audit tool as a fixture. """
+    """The aXe A11y audit tool as a fixture."""
     return PyleniumAxe(py.webdriver)
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """ Yield each test's outcome so we can handle it in other fixtures. """
+    """Yield each test's outcome so we can handle it in other fixtures."""
     outcome = yield
     report = outcome.get_result()
     if report.when == 'call':
@@ -237,31 +224,28 @@ def pytest_runtest_makereport(item, call):
 
 
 def pytest_addoption(parser):
+    parser.addoption('--browser', action='store', default='', help='The lowercase browser name: chrome | firefox')
+    parser.addoption('--remote_url', action='store', default='', help='Grid URL to connect tests to.')
+    parser.addoption('--screenshots_on', action='store', default='', help="Should screenshots be saved? true | false")
+    parser.addoption('--pylog_level', action='store', default='', help="Set the pylog_level: 'off' | 'info' | 'debug'")
     parser.addoption(
-        '--browser', action='store', default='', help='The lowercase browser name: chrome | firefox'
+        '--options',
+        action='store',
+        default='',
+        help='Comma-separated list of Browser Options. Ex. "headless, incognito"',
     )
     parser.addoption(
-        '--remote_url', action='store', default='', help='Grid URL to connect tests to.'
+        '--caps',
+        action='store',
+        default='',
+        help='List of key-value pairs. Ex. \'{"name": "value", "boolean": true}\'',
     )
     parser.addoption(
-        '--screenshots_on', action='store', default='', help="Should screenshots be saved? true | false"
+        '--page_load_wait_time',
+        action='store',
+        default='',
+        help='The amount of time to wait for a page load before raising an error. Default is 0.',
     )
     parser.addoption(
-        '--pylog_level', action='store', default='', help="Set the pylog_level: 'off' | 'info' | 'debug'"
-    )
-    parser.addoption(
-        '--options', action='store',
-        default='', help='Comma-separated list of Browser Options. Ex. "headless, incognito"'
-    )
-    parser.addoption(
-        '--caps', action='store',
-        default='', help='List of key-value pairs. Ex. \'{"name": "value", "boolean": true}\''
-    )
-    parser.addoption(
-        '--page_load_wait_time', action='store',
-        default='', help='The amount of time to wait for a page load before raising an error. Default is 0.'
-    )
-    parser.addoption(
-        '--extensions', action='store',
-        default='', help='Comma-separated list of extension paths. Ex. "*.crx, *.crx"'
+        '--extensions', action='store', default='', help='Comma-separated list of extension paths. Ex. "*.crx, *.crx"'
     )

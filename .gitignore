@@ -139,3 +139,5 @@ dmypy.json
 Pipfile.lock
 
 .pypyrc
+
+a11y.json
