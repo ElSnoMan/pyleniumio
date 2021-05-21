@@ -10,9 +10,9 @@ def test_jit_webdriver(py: Pylenium):
 
 
 def test_py_request(py: Pylenium):
-    response = py.request.get('https://statsroyale.com/api/cards')
+    response = py.request.get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
     assert response.ok
-    assert response.json()[0]['name']
+    assert response.json()['success']
 
 
 def test_execute_script(py: Pylenium):
@@ -35,7 +35,7 @@ def test_cookies(py: Pylenium):
         'name': 'foo',
         'path': '/',
         'secure': True,
-        'value': 'bar'
+        'value': 'bar',
     }
     py.visit('https://google.com')
 

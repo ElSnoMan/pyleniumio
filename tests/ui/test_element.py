@@ -1,6 +1,5 @@
 import pytest
 from pylenium.driver import Pylenium
-from selenium.common.exceptions import ElementNotInteractableException
 
 
 THE_INTERNET = 'https://the-internet.herokuapp.com'
