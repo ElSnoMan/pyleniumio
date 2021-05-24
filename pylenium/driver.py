@@ -24,7 +24,7 @@ class PyleniumShould:
         self._wait: PyleniumWait = self._py.wait(timeout=timeout, use_py=True, ignored_exceptions=ignored_exceptions)
 
     def have_title(self, title: str) -> 'Pylenium':
-        """ An expectation that the title matches the given title.
+        """An expectation that the title matches the given title.
 
         Args:
             title: The title to match.
@@ -47,7 +47,7 @@ class PyleniumShould:
             raise AssertionError(f'Expected Title: ``{title}`` - Actual Title: ``{self._py.title()}``')
 
     def contain_title(self, string: str) -> 'Pylenium':
-        """ An expectation that the title contains the given string.
+        """An expectation that the title contains the given string.
 
         Args:
             string: The case-sensitive string for the title to contain.
@@ -70,7 +70,7 @@ class PyleniumShould:
             raise AssertionError(f'Expected ``{string}`` to be in ``{self._py.title()}``')
 
     def have_url(self, url: str) -> 'Pylenium':
-        """ An expectation that the URL matches the given url.
+        """An expectation that the URL matches the given url.
 
         Args:
             url: The url to match.
@@ -93,7 +93,7 @@ class PyleniumShould:
             raise AssertionError(f'Expected URL: ``{url}`` - Actual URL: ``{self._py.url()}``')
 
     def contain_url(self, string: str) -> 'Pylenium':
-        """ An expectation that the URL contains the given string.
+        """An expectation that the URL contains the given string.
 
         Args:
             string: The case-sensitive string for the url to contain.
@@ -116,7 +116,7 @@ class PyleniumShould:
             raise AssertionError(f'Expected ``{string}`` to be in ``{self._py.url()}``')
 
     def not_find(self, css: str) -> bool:
-        """ An expectation that there are no elements with the given CSS in the DOM.
+        """An expectation that there are no elements with the given CSS in the DOM.
 
         Args:
             css: The CSS selector.
@@ -136,7 +136,7 @@ class PyleniumShould:
             raise AssertionError(f'Found element with css: ``{css}``')
 
     def not_findx(self, xpath: str) -> bool:
-        """ An expectation that there are no elements with the given XPATH in the DOM.
+        """An expectation that there are no elements with the given XPATH in the DOM.
 
         Args:
             xpath: The XPATH selector.
@@ -156,7 +156,7 @@ class PyleniumShould:
             raise AssertionError(f'Found element with xpath: ``{xpath}``')
 
     def not_contain(self, text: str) -> bool:
-        """ An expectation that there are no elements with the given text in the DOM.
+        """An expectation that there are no elements with the given text in the DOM.
 
         Args:
             text: The text to contain.
@@ -177,7 +177,7 @@ class PyleniumShould:
 
 
 class Pylenium:
-    """ The Pylenium API.
+    """The Pylenium API.
 
     V1.5.1+: Chrome is the default local browser
 
@@ -198,16 +198,20 @@ class Pylenium:
         self._wait = None
 
     def init_webdriver(self):
-        """ Initialize WebDriver using the Pylenium Config. """
+        """Initialize WebDriver using the Pylenium Config."""
         self._webdriver = webdriver_factory.build_from_config(self.config)
         caps = self._webdriver.capabilities
         try:
-            self.log.info(f'Capabilities: '
-                          f'browserName: {caps["browserName"]}, browserVersion: {caps["browserVersion"]}, '
-                          f'platformName: {caps["platformName"]}, session_id: {self._webdriver.session_id}')
+            self.log.info(
+                f'Capabilities: '
+                f'browserName: {caps["browserName"]}, browserVersion: {caps["browserVersion"]}, '
+                f'platformName: {caps["platformName"]}, session_id: {self._webdriver.session_id}'
+            )
         except:
-            self.log.warning('webdriver.capabilities did not have a key that Pylenium was expecting. '
-                             'Is your driver executable the right version?')
+            self.log.warning(
+                'webdriver.capabilities did not have a key that Pylenium was expecting. '
+                'Is your driver executable the right version?'
+            )
 
         # Default instance of PyleniumWait
         self._wait = PyleniumWait(self, self._webdriver, self.config.driver.wait_time, ignored_exceptions=None)
@@ -224,21 +228,21 @@ class Pylenium:
 
     @property
     def webdriver(self) -> WebDriver:
-        """ The current instance of Selenium's `WebDriver` API. """
+        """The current instance of Selenium's `WebDriver` API."""
         return self.init_webdriver() if self._webdriver is None else self._webdriver
 
     @property
     def performance(self) -> Performance:
-        """ The Pylenium Performance API. """
+        """The Pylenium Performance API."""
         return Performance(self.webdriver)
 
     def title(self) -> str:
-        """ The current page's title. """
+        """The current page's title."""
         self.log.info('[STEP] py.title() - Get the current page title')
         return self.webdriver.title
 
     def url(self) -> str:
-        """ The current page's URL. """
+        """The current page's URL."""
         self.log.info('[STEP] py.url() - Get the current page URL')
         return self.webdriver.current_url
 
@@ -246,7 +250,7 @@ class Pylenium:
     ##############
 
     def visit(self, url: str) -> 'Pylenium':
-        """ Navigate to the given URL.
+        """Navigate to the given URL.
 
         Returns:
             `py` so you can chain another command if needed.
@@ -256,7 +260,7 @@ class Pylenium:
         return self
 
     def go(self, direction: str, number: int = 1) -> 'Pylenium':
-        """ Navigate forward or back.
+        """Navigate forward or back.
 
         This command executes `window.history.go(number)`
 
@@ -281,7 +285,7 @@ class Pylenium:
         return self
 
     def reload(self) -> 'Pylenium':
-        """ Reloads the current window. """
+        """Reloads the current window."""
         self.log.info('[STEP] py.reload() - Reload the current page')
         self.webdriver.refresh()
         return self
@@ -290,7 +294,7 @@ class Pylenium:
     #################
 
     def contains(self, text: str, timeout: int = None) -> Element:
-        """ Get the DOM element containing the `text`.
+        """Get the DOM element containing the `text`.
 
         * If timeout=None (default), use the default wait_time.
         * If timeout > 0, override the default wait_time.
@@ -310,13 +314,12 @@ class Pylenium:
             element = self.webdriver.find_element(*locator)
         else:
             element = self.wait(timeout).until(
-                lambda x: x.find_element(*locator),
-                f'Could not find element with the text ``{text}``'
+                lambda x: x.find_element(*locator), f'Could not find element with the text ``{text}``'
             )
         return Element(self, element, locator)
 
     def get(self, css: str, timeout: int = None) -> Element:
-        """ Get the DOM element that matches the `css` selector.
+        """Get the DOM element that matches the `css` selector.
 
         * If timeout=None (default), use the default wait_time.
         * If timeout > 0, override the default wait_time.
@@ -336,13 +339,12 @@ class Pylenium:
             element = self.webdriver.find_element(by, css)
         else:
             element = self.wait(timeout).until(
-                lambda x: x.find_element(by, css),
-                f'Could not find element with the CSS ``{css}``'
+                lambda x: x.find_element(by, css), f'Could not find element with the CSS ``{css}``'
             )
         return Element(self, element, locator=(by, css))
 
     def find(self, css: str, timeout: int = None) -> Elements:
-        """ Finds all DOM elements that match the `css` selector.
+        """Finds all DOM elements that match the `css` selector.
 
         * If timeout=None (default), use the default wait_time.
         * If timeout > 0, override the default wait_time.
@@ -360,18 +362,17 @@ class Pylenium:
 
         try:
             if timeout == 0:
-                elements = self.webdriver.find_element(by, css)
+                elements = self.webdriver.find_elements(by, css)
             else:
                 elements = self.wait(timeout).until(
-                    lambda x: x.find_elements(by, css),
-                    f'Could not find any elements with the CSS ``{css}``'
+                    lambda x: x.find_elements(by, css), f'Could not find any elements with the CSS ``{css}``'
                 )
         except TimeoutException:
             elements = []
         return Elements(self, elements, locator=(by, css))
 
     def getx(self, xpath: str, timeout: int = None) -> Element:
-        """ Finds the DOM element that match the `xpath` selector.
+        """Finds the DOM element that match the `xpath` selector.
 
         * If timeout=None (default), use the default wait_time.
         * If timeout > 0, override the default wait_time.
@@ -391,13 +392,12 @@ class Pylenium:
             element = self.webdriver.find_element(by, xpath)
         else:
             element = self.wait(timeout).until(
-                lambda x: x.find_element(by, xpath),
-                f'Could not find an element with xpath: ``{xpath}``'
+                lambda x: x.find_element(by, xpath), f'Could not find an element with xpath: ``{xpath}``'
             )
         return Element(self, element, locator=(by, xpath))
 
     def findx(self, xpath: str, timeout: int = None) -> Elements:
-        """ Finds the DOM elements that match the `xpath` selector.
+        """Finds the DOM elements that match the `xpath` selector.
 
         * If timeout=None (default), use the default wait_time.
         * If timeout > 0, override the default wait_time.
@@ -418,8 +418,7 @@ class Pylenium:
                 elements = self.webdriver.find_elements(by, xpath)
             else:
                 elements = self.wait(timeout).until(
-                    lambda x: x.find_elements(by, xpath),
-                    f'Could not find an element with xpath: ``{xpath}``'
+                    lambda x: x.find_elements(by, xpath), f'Could not find an element with xpath: ``{xpath}``'
                 )
         except TimeoutException:
             elements = []
@@ -429,7 +428,7 @@ class Pylenium:
     ################
 
     def should(self, timeout: int = 0, ignored_exceptions: list = None) -> PyleniumShould:
-        """ A collection of expectations for this driver.
+        """A collection of expectations for this driver.
 
         Examples:
             py.should().contain_title('QA at the Point')
@@ -445,7 +444,7 @@ class Pylenium:
     #############
 
     def screenshot(self, filename: str) -> str:
-        """ Take a screenshot of the current Window.
+        """Take a screenshot of the current Window.
 
         Args:
             filename: the filepath including the filename and extension (like `.png`)
@@ -458,7 +457,7 @@ class Pylenium:
         return filename
 
     def scroll_to(self, x, y) -> 'Pylenium':
-        """ Scroll to a location on the page.
+        """Scroll to a location on the page.
 
         Args:
             x: The number of pixels to scroll horizontally.
@@ -473,9 +472,10 @@ class Pylenium:
         self.webdriver.execute_script(js, x, y)
         return self
 
-    def wait(self, timeout: int = None, use_py: bool = False,
-             ignored_exceptions: list = None) -> Union[WebDriverWait, PyleniumWait]:
-        """ The Wait object with the given timeout in seconds.
+    def wait(
+        self, timeout: int = None, use_py: bool = False, ignored_exceptions: list = None
+    ) -> Union[WebDriverWait, PyleniumWait]:
+        """The Wait object with the given timeout in seconds.
 
         If timeout=None or timeout=0,
         return the default instance of wait, else return a new instance of WebDriverWait or PyleniumWait.
@@ -504,7 +504,7 @@ class Pylenium:
     ###########
 
     def delete_cookie(self, name):
-        """ Deletes the cookie with the given name.
+        """Deletes the cookie with the given name.
 
         Examples:
             `py.delete_cookie('cookie_name')`
@@ -513,12 +513,12 @@ class Pylenium:
         self.webdriver.delete_cookie(name)
 
     def delete_all_cookies(self):
-        """ Delete all cookies in the current session. """
+        """Delete all cookies in the current session."""
         self.log.info('py.delete_all_cookies() - Delete all cookies')
         self.webdriver.delete_all_cookies()
 
     def get_cookie(self, name) -> dict:
-        """ Get the cookie with the given name.
+        """Get the cookie with the given name.
 
         Returns:
             The cookie if found, else None.
@@ -530,12 +530,12 @@ class Pylenium:
         return self.webdriver.get_cookie(name)
 
     def get_cookies(self):
-        """ Get all cookies. """
+        """Get all cookies."""
         self.log.info('py.get_cookies() - Get all cookies')
         return self.webdriver.get_cookies()
 
     def set_cookie(self, cookie: dict):
-        """ Adds a cookie to your current session.
+        """Adds a cookie to your current session.
 
         Args:
             cookie: A dictionary object, with required keys: "name" and "value";
@@ -550,7 +550,7 @@ class Pylenium:
         self.webdriver.add_cookie(cookie)
 
     def execute_script(self, javascript: str, *args):
-        """ Executes javascript in the current window or frame.
+        """Executes javascript in the current window or frame.
 
         Args:
             javascript: The script string to execute.
@@ -567,7 +567,7 @@ class Pylenium:
         return self.webdriver.execute_script(javascript, *args)
 
     def execute_async_script(self, javascript: str, *args):
-        """ Executes javascript asynchronously in the current window or frame.
+        """Executes javascript asynchronously in the current window or frame.
 
         Args:
             javascript: The script string to execute.
@@ -583,7 +583,7 @@ class Pylenium:
         return self.webdriver.execute_async_script(javascript, *args)
 
     def quit(self):
-        """ Quits the driver.
+        """Quits the driver.
 
         Closes any and every associated window.
         """
@@ -595,21 +595,21 @@ class Pylenium:
 
     @property
     def switch_to(self) -> SwitchTo:
-        """ Switch between contexts like Windows or Frames. """
+        """Switch between contexts like Windows or Frames."""
         return SwitchTo(self)
 
     @property
     def window_handles(self) -> List[str]:
-        """ Returns the handles of all Windows in the current session. """
+        """Returns the handles of all Windows in the current session."""
         return self.webdriver.window_handles
 
     @property
     def window_size(self) -> dict:
-        """ Gets the width and height of the current Window. """
+        """Gets the width and height of the current Window."""
         return self.webdriver.get_window_size()
 
     def maximize_window(self) -> 'Pylenium':
-        """ Maximizes the current Window. """
+        """Maximizes the current Window."""
         self.log.info('py.maximize_window() - Maximize window')
         try:
             self.webdriver.maximize_window()
@@ -618,7 +618,7 @@ class Pylenium:
         return self
 
     def set_page_load_timeout(self, timeout: int) -> 'Pylenium':
-        """ Set the amount of time to wait for a page load to complete before throwing an error.
+        """Set the amount of time to wait for a page load to complete before throwing an error.
 
         Args:
             timeout: The time to wait for.
@@ -626,8 +626,8 @@ class Pylenium:
         self.webdriver.set_page_load_timeout(timeout)
         return self
 
-    def viewport(self, width: int, height: int,  orientation: str = 'portrait') -> 'Pylenium':
-        """ Control the size and orientation of the current context's browser window.
+    def viewport(self, width: int, height: int, orientation: str = 'portrait') -> 'Pylenium':
+        """Control the size and orientation of the current context's browser window.
 
         Args:
             width: The width in pixels
@@ -640,7 +640,8 @@ class Pylenium:
             py.viewport(375, 667)  # iPhone X size
         """
         self.log.info(
-            f'[STEP] py.viewport() - Viewport set to width={width}, height={height}, orientation={orientation}')
+            f'[STEP] py.viewport() - Viewport set to width={width}, height={height}, orientation={orientation}'
+        )
         if orientation == 'portrait':
             self.webdriver.set_window_size(width, height)
         elif orientation == 'landscape':
