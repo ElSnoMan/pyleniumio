@@ -95,8 +95,13 @@ def test_run(project_root, request) -> str:
     Path(test_results_dir).mkdir(parents=True, exist_ok=True)
 
     for test in session.items:
-        # make the test_result directory for each test
-        Path(f'{test_results_dir}/{test.name}').mkdir(parents=True, exist_ok=True)
+        try:
+            # make the test_result directory for each test
+            Path(f'{test_results_dir}/{test.name}').mkdir(parents=True, exist_ok=True)
+        except FileExistsError:
+            # race condition can occur between checking file existence and
+            # creating the file when using pytest with multiple workers
+            pass
 
     return test_results_dir
 
