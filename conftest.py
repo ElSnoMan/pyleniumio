@@ -92,15 +92,18 @@ def test_run(project_root, request) -> str:
         # delete /test_results from previous Test Run
         shutil.rmtree(test_results_dir, ignore_errors=True)
 
-    Path(test_results_dir).mkdir(parents=True, exist_ok=True)
+    try:
+        # race condition can occur between checking file existence and
+        # creating the file when using pytest with multiple workers
+        Path(test_results_dir).mkdir(parents=True, exist_ok=True)
+    except FileExistsError:
+        pass
 
     for test in session.items:
         try:
             # make the test_result directory for each test
             Path(f'{test_results_dir}/{test.name}').mkdir(parents=True, exist_ok=True)
         except FileExistsError:
-            # race condition can occur between checking file existence and
-            # creating the file when using pytest with multiple workers
             pass
 
     return test_results_dir
