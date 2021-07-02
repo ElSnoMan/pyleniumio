@@ -125,6 +125,7 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
         return build_firefox(
             config.driver.version,
             config.driver.options,
+            config.driver.capabilities,
             config.driver.experimental_options,
             config.driver.extension_paths,
             config.driver.local_path)
@@ -205,6 +206,7 @@ def build_edge(version: str,
 
 def build_firefox(version: str,
                   browser_options: List[str],
+                  capabilities: dict,
                   experimental_options: Optional[List[dict]],
                   extension_paths: Optional[List[str]],
                   local_path: Optional[str]) -> WebDriver:
@@ -213,6 +215,7 @@ def build_firefox(version: str,
     Args:
         version: The desired version of Firefox.
         browser_options: The list of options/arguments to include.
+        capabilities: The dict of capabilities to include.
         experimental_options: The list of experimental options to include.
         extension_paths: The list of extensions to add to the browser.
         local_path: The path to the driver binary.
@@ -220,9 +223,10 @@ def build_firefox(version: str,
     Examples:
         driver = WebDriverFactory().build_firefox('latest', ['headless', 'incognito'], None)
     """
+    caps = build_capabilities(Browser.FIREFOX, capabilities)
     options = build_options(Browser.FIREFOX, browser_options, experimental_options, extension_paths)
     if local_path:
-        return webdriver.Firefox(executable_path=local_path, options=options)
+        return webdriver.Firefox(executable_path=local_path, options=options, capabilities=caps)
     return webdriver.Firefox(executable_path=GeckoDriverManager(version=version).install(), options=options)
 
 
