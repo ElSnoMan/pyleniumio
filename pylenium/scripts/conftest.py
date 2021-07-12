@@ -151,10 +151,6 @@ def py_config(project_root, request) -> PyleniumConfig:
         config.driver.page_load_wait_time = int(cli_page_wait_time)
 
     # Logging Settings
-    cli_pylog_level = request.config.getoption('--pylog_level')
-    if cli_pylog_level:
-        config.logging.pylog_level = cli_pylog_level
-
     cli_screenshots_on = request.config.getoption('--screenshots_on')
     if cli_screenshots_on:
         shots_on = True if cli_screenshots_on.lower() == 'true' else False
