@@ -1374,3 +1374,18 @@ class Element:
         self.py.log.info('  [STEP] .open_shadow_dom() - Open a Shadow DOM and return the Root element')
         shadow_element = self.py.execute_script("return arguments[0].shadowRoot", self.webelement)
         return Element(self.py, shadow_element, locator=None)
+
+    def highlight(self, effect_time=1, color="red", border=5) -> 'Element':
+        """Highlights (blinks) a Selenium Webdriver element"""
+
+        def apply_style(s):
+            self.py.execute_script("arguments[0].setAttribute('style', arguments[1]);",
+                                  self.webelement, s)
+
+        original_style = self.webelement.get_attribute('style')
+        apply_style("border: {0}px solid {1};".format(border, color))
+        time.sleep(effect_time)
+        apply_style(original_style)
+
+
+        return self
