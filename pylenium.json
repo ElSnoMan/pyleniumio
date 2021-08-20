@@ -9,6 +9,7 @@
     "version": "latest",
     "experimental_options": null,
     "extension_paths": [],
+    "webdriver_kwargs": {},
     "local_path": ""
   },
   "logging": {

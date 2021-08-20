@@ -15,6 +15,7 @@ class DriverConfig(BaseModel):
     capabilities: dict = {}
     experimental_options: List[dict] = None
     extension_paths: List[str] = None
+    webdriver_kwargs: dict = None
     version: str = 'latest'
     local_path: str = ''
 

@@ -27,6 +27,7 @@ Supported Drivers:
     "experimental_options": null,
     "capabilities": {},
     "extension_paths": [],
+    "webdriver_kwargs": {},
     "version": "latest"
   }
 ```
@@ -210,6 +211,22 @@ Default is empty or `[]`
 {
     "driver": {
         "extension_paths": ["path_to_crx.crx", "other-path.crx"]
+    }
+}
+```
+
+### webdriver_kwargs
+
+Arbitrary keyword arguments to pass to the Selenium webdriver.
+
+{% hint style="info" %}
+Default is empty or `{}`
+{% endhint %}
+
+```javascript
+{
+    "driver": {
+        "webdriver_kwargs": {"service_log_path": "webdriver.log"}
     }
 }
 ```

@@ -21,6 +21,7 @@ Here are all of the current settings \(and their defaults\) you can configure ri
     "experimental_options": null,
     "capabilities": {},
     "extension_paths": [],
+    "webdriver_kwargs": {},
     "version": "latest"
   },
 
