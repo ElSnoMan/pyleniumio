@@ -63,9 +63,8 @@ def test_element_should_not_be_clickable(py: Pylenium):
 
 
 def test_element_should_be_visible(py: Pylenium):
-    py.visit('http://book.theautomatedtester.co.uk/chapter1')
-    py.get('#loadajax').click()
-    assert py.get('#ajaxdiv').should().be_visible()
+    py.visit(f"{DEMO_QA}/buttons")
+    assert py.contains("Click Me").should().be_visible()
 
 
 def test_element_should_be_hidden(py: Pylenium):
