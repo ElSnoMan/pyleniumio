@@ -6,7 +6,7 @@ authors = ["Carlos <carlos@qap.dev>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 webdriver-manager = "^3.3.0"
 pydantic = "^1.7.3"
 requests = "^2.25.1"
@@ -17,7 +17,7 @@ pytest-reportportal = "^5.0.7"
 pytest-xdist = "^2.2.0"
 pytest-parallel = "^0.1.0"
 axe-selenium-python = "^2.1.6"
-selenium = "^3.141.0"
+selenium = "^4.0.0"
 Faker = "^8.2.1"
 
 [tool.poetry.dev-dependencies]
