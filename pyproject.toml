@@ -21,10 +21,10 @@ selenium = "^4.0.0"
 Faker = "^8.2.1"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^3.8.4"
 black = "^21.5b1"
 poethepoet = "^0.10.0"
 pytest-cov = "^2.12.0"
+flake8 = "4.0.1"
 
 [tool.black]
 line-length = 119
