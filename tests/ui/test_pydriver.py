@@ -1,4 +1,5 @@
 import os
+import pytest
 from pylenium.a11y import PyleniumAxe
 from pylenium.driver import Pylenium
 
@@ -11,8 +12,15 @@ def test_jit_webdriver(py: Pylenium):
     assert py._webdriver is not None
 
 
-def test_chrome_headless(py: Pylenium):
-    py.config.driver.browser = "chrome"
+@pytest.mark.parametrize(
+    "browser",
+    [
+        "chrome",
+        # "edge",
+    ],
+)
+def test_browser_options(py: Pylenium, browser):
+    py.config.driver.browser = browser
     py.config.driver.options = ["--headless"]
     py.visit("https://google.com")
     assert py.should().contain_title("Google")

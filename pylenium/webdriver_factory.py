@@ -1,15 +1,15 @@
 """ Factory to build WebDrivers. """
-from pylenium import driver
 from typing import List, Optional
 
 from selenium import webdriver
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.edge.service import Service as EdgeService
+from selenium.webdriver.edge.options import Options as EdgeOptions
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import IEDriverManager, EdgeChromiumDriverManager
 from webdriver_manager.opera import OperaDriverManager
-from selenium.webdriver.edge.options import Options
 from pylenium.config import PyleniumConfig
 
 
@@ -81,9 +81,9 @@ def build_options(
     elif browser == Browser.OPERA:
         options = webdriver.ChromeOptions()
     elif browser == Browser.EDGE:
-        options = Options()
+        options = EdgeOptions()
     else:
-        raise ValueError(f"{browser} is not supported. https://elsnoman.gitbook.io/pylenium/configuration/driver")
+        raise ValueError(f"{browser} is not supported.")
 
     for option in browser_options:
         if option.startswith("--"):
@@ -168,9 +168,7 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
             config.driver.webdriver_kwargs,
         )
     else:
-        raise ValueError(
-            f"{config.driver.browser} is not supported. https://elsnoman.gitbook.io/pylenium/configuration/driver"
-        )
+        raise ValueError(f"{config.driver.browser} is not supported.")
 
 
 def build_chrome(
@@ -228,10 +226,14 @@ def build_edge(
         driver = WebDriverFactory().build_edge('latest', ['headless', 'incognito'], None)
     """
     caps = build_capabilities(Browser.EDGE, capabilities)
+    options = build_options(Browser.EDGE, browser_options, experimental_options, extension_paths)
     if local_path:
-        return webdriver.Edge(local_path, capabilities=caps, **(webdriver_kwargs or {}))
+        return webdriver.Edge(service=EdgeService(local_path), capabilities=caps, options=options, **(webdriver_kwargs or {}))
     return webdriver.Edge(
-        EdgeChromiumDriverManager(version=version).install(), capabilities=caps, **(webdriver_kwargs or {})
+        service=EdgeService(EdgeChromiumDriverManager(version=version).install()),
+        capabilities=caps,
+        options=options,
+        **(webdriver_kwargs or {}),
     )
 
 
