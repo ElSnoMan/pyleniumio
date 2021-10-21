@@ -68,8 +68,8 @@ def test_element_should_be_visible(py: Pylenium):
 
 
 def test_element_should_be_hidden(py: Pylenium):
-    py.visit('https://deckshop.pro')
-    assert py.get('#smartHelp').should().be_hidden()
+    py.visit(f"{THE_INTERNET}/hovers")
+    assert py.get("[href='/users/1']").should().be_hidden()
 
 
 def test_element_should_be_focused(py: Pylenium):

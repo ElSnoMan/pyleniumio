@@ -17,8 +17,8 @@ pytest-reportportal = "^5.0.7"
 pytest-xdist = "^2.2.0"
 pytest-parallel = "^0.1.0"
 axe-selenium-python = "^2.1.6"
-selenium = "^4.0.0"
 Faker = "^8.2.1"
+selenium = "4.0.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.5b1"
@@ -27,8 +27,7 @@ pytest-cov = "^2.12.0"
 flake8 = "4.0.1"
 
 [tool.black]
-line-length = 119
-skip-string-normalization = true
+line-length = 120
 
 [tool.poe.tasks]
 test-unit = { "cmd" = "pytest tests/unit --cov=. --cov-report term-missing -n 4", "help" = "Run Unit Tests and get Code Coverage Report" }
