@@ -1,13 +1,21 @@
 import os
 from pylenium.a11y import PyleniumAxe
 from pylenium.driver import Pylenium
-from tests.ui.test_element import THE_INTERNET
+
+THE_INTERNET = "https://the-internet.herokuapp.com"
 
 
 def test_jit_webdriver(py: Pylenium):
     assert py._webdriver is None
     assert py.webdriver is not None
     assert py._webdriver is not None
+
+
+def test_chrome_headless(py: Pylenium):
+    py.config.driver.browser = "chrome"
+    py.config.driver.options = ["--headless"]
+    py.visit("https://google.com")
+    assert py.should().contain_title("Google")
 
 
 def test_py_request(py: Pylenium):
@@ -60,7 +68,7 @@ def test_get_xpath(py: Pylenium):
 
 
 def test_find_xpath(py: Pylenium):
-    py.visit("https://the-internet.herokuapp.com/checkboxes")
+    py.visit(f"{THE_INTERNET}/checkboxes")
     assert py.findx('//input[@type="checkbox"]').should().be_greater_than(1)
 
 
