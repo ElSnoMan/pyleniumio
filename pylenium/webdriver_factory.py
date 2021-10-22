@@ -228,7 +228,9 @@ def build_edge(
     caps = build_capabilities(Browser.EDGE, capabilities)
     options = build_options(Browser.EDGE, browser_options, experimental_options, extension_paths)
     if local_path:
-        return webdriver.Edge(service=EdgeService(local_path), capabilities=caps, options=options, **(webdriver_kwargs or {}))
+        return webdriver.Edge(
+            service=EdgeService(local_path), capabilities=caps, options=options, **(webdriver_kwargs or {})
+        )
     return webdriver.Edge(
         service=EdgeService(EdgeChromiumDriverManager(version=version).install()),
         capabilities=caps,

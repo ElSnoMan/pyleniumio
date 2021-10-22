@@ -8,18 +8,15 @@ from pylenium.element import Element, Elements
 
 
 class PyleniumWait:
-    """ The Pylenium version of Wait that returns Element and Elements objects."""
+    """The Pylenium version of Wait that returns Element and Elements objects."""
+
     def __init__(self, py, webdriver, timeout, ignored_exceptions: Optional[Tuple] = None):
         self._py = py
         self._webdriver = webdriver
-        self._wait = WebDriverWait(
-            driver=webdriver,
-            timeout=timeout,
-            ignored_exceptions=ignored_exceptions
-        )
+        self._wait = WebDriverWait(driver=webdriver, timeout=timeout, ignored_exceptions=ignored_exceptions)
 
     def sleep(self, seconds: int):
-        """ The test will sleep for the given number of seconds.
+        """The test will sleep for the given number of seconds.
 
         Args:
             seconds: The number of seconds to sleep for.
@@ -28,8 +25,8 @@ class PyleniumWait:
         """
         time.sleep(seconds)
 
-    def until(self, method, message=''):
-        """ Wait until the method returns a non-False value.
+    def until(self, method, message=""):
+        """Wait until the method returns a non-False value.
 
         * The method uses Selenium WebDriver
 
@@ -44,9 +41,9 @@ class PyleniumWait:
 
         Examples:
             # return an Element
-            py.wait().until(lambda x: x.find_element_by_id('foo'), 'element "foo" was not found')
+            py.wait().until(lambda x: x.find_element(By.ID, 'foo'), 'element "foo" was not found')
             # return Elements
-            py.wait().until(lambda x: x.find_elements_by_xpath('//a'))
+            py.wait().until(lambda x: x.find_elements(By.XPATH, '//a'))
             # return True
             py.wait(5).until(lambda x: x.title  == 'QA at the Point')
         """
@@ -60,8 +57,8 @@ class PyleniumWait:
                 pass  # not a list of WebElement
         return value
 
-    def until_not(self, method, message=''):
-        """ Wait until the method returns a False value.
+    def until_not(self, method, message=""):
+        """Wait until the method returns a False value.
 
         * The method uses Selenium WebDriver
 
@@ -88,8 +85,10 @@ class PyleniumWait:
                 pass  # not a list of WebElement
         return value
 
-    def build(self, timeout: int, use_py=False, ignored_exceptions: list = None) -> Union[WebDriverWait, 'PyleniumWait']:
-        """ Builds a WebDriverWait or PyleniumWait.
+    def build(
+        self, timeout: int, use_py=False, ignored_exceptions: list = None
+    ) -> Union[WebDriverWait, "PyleniumWait"]:
+        """Builds a WebDriverWait or PyleniumWait.
 
         Args:
             timeout: The number of seconds to wait for the condition to be True

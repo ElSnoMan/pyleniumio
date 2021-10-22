@@ -1,5 +1,6 @@
 import os
 import pytest
+from selenium.webdriver.common.by import By
 from pylenium.a11y import PyleniumAxe
 from pylenium.driver import Pylenium
 
@@ -88,7 +89,7 @@ def test_hover_and_click_to_page_transition(py: Pylenium):
 
 def test_pylenium_wait_until(py: Pylenium):
     py.visit("https://qap.dev")
-    element = py.wait(use_py=True).until(lambda x: x.find_element_by_css_selector('[href="/about"]'))
+    element = py.wait(use_py=True).until(lambda x: x.find_element(By.CSS_SELECTOR, '[href="/about"]'))
     assert element.tag_name() == "a"
     assert element.hover()
 
@@ -96,14 +97,14 @@ def test_pylenium_wait_until(py: Pylenium):
 def test_pylenium_wait_until_with_seconds(py: Pylenium):
     py.visit("https://qap.dev")
     py.wait(use_py=True).sleep(2)
-    element = py.wait(5, use_py=True).until(lambda x: x.find_element_by_css_selector('[href="/about"]'))
+    element = py.wait(5, use_py=True).until(lambda x: x.find_element(By.CSS_SELECTOR, '[href="/about"]'))
     assert element.tag_name() == "a"
     assert element.hover()
 
 
 def test_webdriver_wait_until(py: Pylenium):
     py.visit("https://qap.dev")
-    element = py.wait(5).until(lambda x: x.find_element_by_css_selector('[href="/about"]'))
+    element = py.wait(5).until(lambda x: x.find_element(By.CSS_SELECTOR, '[href="/about"]'))
     assert element.tag_name == "a"
 
 
