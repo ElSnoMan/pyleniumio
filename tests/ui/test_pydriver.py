@@ -39,10 +39,12 @@ def test_execute_script(py: Pylenium):
     assert py.execute_script("return arguments[0].parentNode;", webelement)
 
 
-def test_google_search(py: Pylenium):
-    py.visit("https://google.com")
-    py.get("[name='q']").type("puppies", py.Keys.ENTER)
-    assert py.should().contain_title("puppies")
+def test_new_window_and_tab(py: Pylenium):
+    py.switch_to.new_window()
+    assert len(py.window_handles) == 2
+
+    py.switch_to.new_tab()
+    assert len(py.window_handles) == 3
 
 
 def test_cookies(py: Pylenium):

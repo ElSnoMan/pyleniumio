@@ -22,7 +22,7 @@ class SwitchTo:
         self._py = pylenium
 
     def frame(self, name_or_id: str, timeout: int = 0):
-        """Switch the driver's context to the new frame given the name or id of the element.
+        """Switch the driver's context to a frame given the name or id of the element.
 
         Args:
             name_or_id: The frame's `id` or `name` attribute value
@@ -66,11 +66,21 @@ class SwitchTo:
         self._py.webdriver.switch_to.default_content()
         return self._py
 
+    def new_window(self):
+        """Open a new Browser Window and switch the driver's context (aka focus) to it."""
+        self._py.webdriver.switch_to.new_window("window")
+        return self._py
+
+    def new_tab(self):
+        """Open a new Browser Tab and switch the driver's context (aka focus) to it."""
+        self._py.webdriver.switch_to.new_window("tab")
+        return self._py
+
     def window(self, name_or_handle="", index=0):
-        """Switch the driver's context to the specified Window or Browser Tab.
+        """Switch the driver's context (aka focus) to the specified Browser Window or Browser Tab.
 
         Args:
-            name_or_handle: The name or window handle of the Window to switch to.
+            name_or_handle: The name or window handle of the Window or Tab to switch to.
             index: The index position of the Window Handle.
 
         * `index=0` would be the default content.
