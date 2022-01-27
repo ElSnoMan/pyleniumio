@@ -11,6 +11,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
 from pylenium import webdriver_factory
+from pylenium.cdp import CDP
 from pylenium.config import PyleniumConfig
 from pylenium.element import Element, Elements
 from pylenium.performance import Performance
@@ -235,6 +236,11 @@ class Pylenium:
     def performance(self) -> Performance:
         """The Pylenium Performance API."""
         return Performance(self.webdriver)
+
+    @property
+    def cdp(self) -> CDP:
+        """The Chrome DevTools Protocol API."""
+        return CDP(self.webdriver)
 
     def title(self) -> str:
         """The current page's title."""

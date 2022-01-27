@@ -122,9 +122,10 @@ def test_element_property(py: Pylenium):
 
 
 def test_element_should_disappear(py: Pylenium):
-    spinner = "#serverSideDataTable_processing"
-    py.visit("https://www.copart.com/lotSearchResults/?free=true&query=nissan")
-    assert py.get(spinner).should().disappear()
+    py.visit(f"{THE_INTERNET}/dynamic_loading/1")
+    py.get("#start > button").click()
+    assert py.get("#loading").should().disappear()
+    assert py.get("#finish").should().have_text("Hello World!")
 
 
 def test_element_has_attribute(py: Pylenium):
