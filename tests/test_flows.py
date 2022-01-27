@@ -1,21 +1,28 @@
-
-def test_add_to_cart(py):
-    py.visit('https://jane.com')
-    py.get('[data-testid="deal-image"]').click()
-
-    for dropdown in py.find('select'):
-        dropdown.select(1)
-
-    py.get('[data-testid="add-to-bag"]', timeout=1).click()
-    assert py.contains("$00.11")
+import pytest
+from pylenium.driver import Pylenium
 
 
-def test_add_to_cart_xpath(py):
-    py.visit('https://jane.com')
-    py.getx('//*[@data-testid="deal-image"]').click()
+@pytest.fixture
+def sauce(py: Pylenium) -> Pylenium:
+    """Login to saucedemo.com as standard user."""
+    py.visit("https://www.saucedemo.com/")
+    py.get("#user-name").type("standard_user")
+    py.get("#password").type("secret_sauce")
+    py.get("#login-button").click()
+    yield py
+    py.get("#react-burger-menu-btn").click()
+    py.get("#logout_sidebar_link").should().be_visible().click()
 
-    for dropdown in py.findx('//select'):
-        dropdown.select(1)
 
-    py.getx('//*[@data-testid="add-to-bag"]', timeout=1).click()
-    assert py.contains("$00.11")
+def test_add_to_cart_css(sauce: Pylenium):
+    """Add an item to the cart. The number badge on the cart icon should increment as expected."""
+    sauce.get("[id*='add-to-cart']").click()
+    assert sauce.get("a.shopping_cart_link").should().have_text("1")
+
+
+def test_add_to_cart_xpath(sauce: Pylenium):
+    """Add 6 different items to the cart. There should be 6 items in the cart."""
+    for button in sauce.findx("//*[contains(@id, 'add-to-cart')]"):
+        button.click()
+    sauce.getx("//a[@class='shopping_cart_link']").click()
+    assert sauce.findx("//*[@class='cart_item']").should().have_length(6)

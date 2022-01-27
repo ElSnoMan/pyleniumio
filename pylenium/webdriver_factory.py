@@ -2,6 +2,7 @@
 from typing import List, Optional
 
 from selenium import webdriver
+from selenium.webdriver import Chrome
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.edge.service import Service as EdgeService
@@ -178,7 +179,7 @@ def build_chrome(
     extension_paths: Optional[List[str]],
     local_path: Optional[str],
     webdriver_kwargs: Optional[dict],
-) -> WebDriver:
+) -> Chrome:
     """Build a ChromeDriver.
 
     Args:
@@ -194,12 +195,18 @@ def build_chrome(
     """
     options = build_options(Browser.CHROME, browser_options, experimental_options, extension_paths)
     if local_path:
-        return webdriver.Chrome(service=ChromeService(local_path), options=options, **(webdriver_kwargs or {}))
-    return webdriver.Chrome(
-        service=ChromeService(ChromeDriverManager(version=version).install()),
-        options=options,
-        **(webdriver_kwargs or {}),
-    )
+        driver = webdriver.Chrome(service=ChromeService(local_path), options=options, **(webdriver_kwargs or {}))
+    else:
+        driver = webdriver.Chrome(
+            service=ChromeService(ChromeDriverManager(version=version).install()),
+            options=options,
+            **(webdriver_kwargs or {}),
+        )
+
+    # enable Performance Metrics from Chrome Dev Tools
+    driver.execute_cdp_cmd("Performance.enable", {})
+
+    return driver
 
 
 def build_edge(
