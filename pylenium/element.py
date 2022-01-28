@@ -1056,33 +1056,6 @@ class Element:
         ActionChains(self.py.webdriver).context_click(self.webelement).perform()
         return self.py
 
-    def select(self, value) -> 'Element':
-        """ DEPRECATED: Selects an `<option>` within a `<select>` element.
-
-        Args:
-            value: The value, text content or index of the `<option>` to be selected.
-
-        Raises:
-            `ValueError` if this element is not a `<select>`.
-
-        Returns:
-            This element so you can chain another command if needed.
-        """
-        self.py.log.warning(
-            'DEPRECATED: This method will be removed in a future release. Please use .select_by_*() instead.')
-        self.py.log.info('  [STEP] .select() - Select an option in this element')
-        if self.webelement.tag_name != 'select':
-            raise ValueError(
-                f'Can only perform Select on <select> elements. Current tag name: {self.webelement.tag_name}')
-        try:
-            Select(self.webelement).select_by_visible_text(value)
-        except NoSuchElementException:
-            Select(self.webelement).select_by_value(value)
-        except BaseException:
-            Select(self.webelement).select_by_index(value)
-        finally:
-            return self
-
     def select_by_index(self, index: int) -> 'Element':
         """ Select an `<option>` element within a `<select>` dropdown given its index.
 
@@ -1138,30 +1111,6 @@ class Element:
         dropdown = Select(self.webelement)
         dropdown.select_by_value(value)
         return self
-
-    def select_many(self, values: list):
-        """ DEPRECATED: Selects multiple `<options>` within a `<select>` element.
-
-        Args:
-            values: The list of values or text contents of the `<option>` to be selected.
-
-        Raises:
-            `ValueError` if this element is not a `<select>`.
-
-        Returns:
-            The current instance of Pylenium so you can chain another command.
-        """
-        self.py.log.warning(
-            'DEPRECATED: This method will be removed in a future release. Please use .select_by_*() instead.')
-        self.py.log.info('  [STEP] .select_many() - Select many options in this element')
-        select = Select(self.webelement)
-        try:
-            for val in values:
-                select.select_by_visible_text(val)
-        except NoSuchElementException:
-            for val in values:
-                select.select_by_value(val)
-        return self.py
 
     def submit(self):
         """ Submits the form.
