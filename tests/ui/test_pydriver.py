@@ -72,17 +72,6 @@ def test_viewport(py: Pylenium):
     assert {"width": 1280, "height": 800} == py.window_size
 
 
-def test_get_xpath(py: Pylenium):
-    py.visit("https://google.com")
-    py.getx('//*[@name="q"]').type("QA at the Point", py.Keys.ENTER)
-    assert py.should().contain_title("QA at the Point")
-
-
-def test_find_xpath(py: Pylenium):
-    py.visit(f"{THE_INTERNET}/checkboxes")
-    assert py.findx('//input[@type="checkbox"]').should().be_greater_than(1)
-
-
 def test_hover_and_click_to_page_transition(py: Pylenium):
     py.visit("https://qap.dev")
     py.get('a[href="/about"]').hover().get('a[href="/leadership"][class*=Header]').click()
@@ -138,15 +127,7 @@ def test_loading_extension_to_browser(py: Pylenium, project_root):
 def test_should_not_find(py: Pylenium):
     py.visit("https://google.com")
     assert py.should().not_find("select")
-
-
-def test_should_not_find_xpath(py: Pylenium):
-    py.visit("https://google.com")
     assert py.should().not_findx("//select")
-
-
-def test_should_not_contain(py: Pylenium):
-    py.visit("https://google.com")
     assert py.should().not_contain("foobar")
 
 
