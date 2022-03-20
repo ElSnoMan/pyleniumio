@@ -275,7 +275,7 @@ def build_firefox(
         return webdriver.Firefox(
             executable_path=local_path, options=options, capabilities=caps, **(webdriver_kwargs or {})
         )
-    return webdriver.Firefox(GeckoDriverManager(version=version).install(), options=options, **(webdriver_kwargs or {}))
+    return webdriver.Firefox(executable_path=GeckoDriverManager(version=version).install(), options=options, **(webdriver_kwargs or {}))
 
 
 def build_ie(
