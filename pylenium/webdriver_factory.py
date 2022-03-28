@@ -7,6 +7,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import IEDriverManager, EdgeChromiumDriverManager
@@ -124,6 +125,7 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
         return build_chrome(
             config.driver.version,
             config.driver.options,
+            config.driver.capabilities,
             config.driver.experimental_options,
             config.driver.extension_paths,
             config.driver.local_path,
@@ -153,6 +155,7 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
         return build_opera(
             config.driver.version,
             config.driver.options,
+            config.driver.capabilities,
             config.driver.experimental_options,
             config.driver.extension_paths,
             config.driver.local_path,
@@ -175,6 +178,7 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
 def build_chrome(
     version: str,
     browser_options: List[str],
+    capabilities: Optional[dict],
     experimental_options: Optional[List[dict]],
     extension_paths: Optional[List[str]],
     local_path: Optional[str],
@@ -185,6 +189,7 @@ def build_chrome(
     Args:
         version: The desired version of Chrome.
         browser_options: The list of options/arguments to include.
+        capabilities: The dict of capabilities to include.
         experimental_options: The list of experimental options to include.
         extension_paths: The list of extensions to add to the browser.
         local_path: The path to the driver binary.
@@ -194,6 +199,10 @@ def build_chrome(
         driver = WebDriverFactory().build_chrome('latest', ['headless', 'incognito'])
     """
     options = build_options(Browser.CHROME, browser_options, experimental_options, extension_paths)
+    caps = build_capabilities(Browser.CHROME, capabilities)
+    for cap in caps:
+        options.set_capability(cap, caps[cap])
+
     if local_path:
         driver = webdriver.Chrome(service=ChromeService(local_path), options=options, **(webdriver_kwargs or {}))
     else:
@@ -273,9 +282,14 @@ def build_firefox(
     options = build_options(Browser.FIREFOX, browser_options, experimental_options, extension_paths)
     if local_path:
         return webdriver.Firefox(
-            executable_path=local_path, options=options, capabilities=caps, **(webdriver_kwargs or {})
+            service=FirefoxService(local_path), capabilities=caps, options=options, **(webdriver_kwargs or {})
         )
-    return webdriver.Firefox(executable_path=GeckoDriverManager(version=version).install(), options=options, **(webdriver_kwargs or {}))
+    return webdriver.Firefox(
+        service=FirefoxService(GeckoDriverManager(version=version).install()),
+        capabilities=caps,
+        options=options,
+        **(webdriver_kwargs or {}),
+    )
 
 
 def build_ie(
@@ -316,6 +330,7 @@ def build_ie(
 def build_opera(
     version: str,
     browser_options: List[str],
+    capabilities: Optional[dict],
     experimental_options: Optional[List[dict]],
     extension_paths: Optional[List[str]],
     local_path: Optional[str],
@@ -326,6 +341,7 @@ def build_opera(
     Args:
         version: The desired version of Opera.
         browser_options: The list of options/arguments to include.
+        capabilities: The dict of capabilities to include.
         experimental_options: The list of experimental options to include.
         extension_paths: The list of extensions to add to the browser.
         local_path: The path to the driver binary.
@@ -335,6 +351,10 @@ def build_opera(
         driver = WebDriverFactory().build_opera('latest', ['--start-maximized'], None)
     """
     options = build_options(Browser.OPERA, browser_options, experimental_options, extension_paths)
+    caps = build_capabilities(Browser.OPERA, capabilities)
+    for cap in caps:
+        options.set_capability(cap, caps[cap])
+
     if local_path:
         return webdriver.Opera(executable_path=local_path, options=options, **(webdriver_kwargs or {}))
     return webdriver.Opera(OperaDriverManager(version=version).install(), options=options, **(webdriver_kwargs or {}))

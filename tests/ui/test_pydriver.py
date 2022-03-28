@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from pylenium.a11y import PyleniumAxe
 from pylenium.driver import Pylenium
 
+
 THE_INTERNET = "https://the-internet.herokuapp.com"
 
 
@@ -115,6 +116,7 @@ def test_have_url(py: Pylenium):
     py.should().have_url("https://www.qap.dev/")
 
 
+@pytest.mark.skipif(os.environ.get("CI") == "true", reason="Skip on CI")
 def test_loading_extension_to_browser(py: Pylenium, project_root):
     py.config.driver.extension_paths.append(f"{project_root}/tests/ui/Get CRX.crx")
     py.visit("chrome://extensions/")
