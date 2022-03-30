@@ -130,24 +130,23 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
         "options": config.driver.options,
         "capabilities": config.driver.capabilities,
         "experimental_options": config.driver.experimental_options,
-        "seleniumwire_options": config.driver.seleniumwire_options,
         "extension_paths": config.driver.extension_paths,
         "webdriver_kwargs": config.driver.webdriver_kwargs,
     }
 
-    # Start with SeleniumWire drivers
     if remote_url:
         # version is passed in as {"browserVersion": version} in capabilities
         return build_remote(browser, remote_url, **_config)
 
+    # Start with SeleniumWire drivers
     # Set fields for the rest of the non-remote drivers
     _config["version"] = config.driver.version
     _config["local_path"] = config.driver.local_path
 
     if browser == Browser.CHROME:
-        return build_chrome(**_config)
+        return build_chrome(seleniumwire_options=config.driver.seleniumwire_options, **_config)
     if browser == Browser.FIREFOX:
-        return build_firefox(**_config)
+        return build_firefox(seleniumwire_options=config.driver.seleniumwire_options, **_config)
 
     # Then non-SeleniumWire drivers
     del _config["seleniumwire_options"]
@@ -349,7 +348,6 @@ def build_remote(
     options: Optional[List[str]],
     capabilities: Optional[Dict],
     experimental_options: Optional[List[Dict]],
-    seleniumwire_options: Optional[Dict],
     extension_paths: Optional[List[str]],
     webdriver_kwargs: Optional[Dict],
 ):
@@ -361,7 +359,6 @@ def build_remote(
         browser_options: The list of options/arguments to include.
         capabilities: The dict of capabilities to include.
         experimental_options: The list of experimental options to include.
-        seleniumwire_options: The dict of seleniumwire options to include.
         extension_paths: The list of extensions to add to the browser.
         webdriver_kwargs: additional keyword arguments to pass.
 
@@ -371,15 +368,13 @@ def build_remote(
     Returns:
         The instance of WebDriver once the connection is successful
     """
-    wire_options = seleniumwire_options or {}
     caps = build_capabilities(browser, capabilities)
     browser_options = build_options(browser, options, experimental_options, extension_paths)
     for cap in caps:
         browser_options.set_capability(cap, caps[cap])
 
-    return wire_driver.Remote(
+    return webdriver.Remote(
         command_executor=remote_url,
         options=browser_options,
-        seleniumwire_options=wire_options,
         **(webdriver_kwargs or {}),
     )
