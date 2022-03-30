@@ -374,10 +374,11 @@ def build_remote(
     wire_options = seleniumwire_options or {}
     caps = build_capabilities(browser, capabilities)
     browser_options = build_options(browser, options, experimental_options, extension_paths)
+    for cap in caps:
+        browser_options.set_capability(cap, caps[cap])
 
     return wire_driver.Remote(
         command_executor=remote_url,
-        desired_capabilities=caps,
         options=browser_options,
         seleniumwire_options=wire_options,
         **(webdriver_kwargs or {}),
