@@ -1,29 +1,30 @@
 [tool.poetry]
 name = "pyleniumio"
-version = "1.12.8"
+version = "1.14.4"
 description = "The best of Selenium and Cypress in a single Python Package"
 authors = ["Carlos <carlos@qap.dev>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-webdriver-manager = "^3.3.0"
-pydantic = "^1.7.3"
-requests = "^2.25.1"
+webdriver-manager = "3.5.4"
+pydantic = "1.9.0"
+requests = "2.27.1"
 click = "^7.1.2"
 pyfiglet = "^0.8.post1"
 pytest = "<6.1.0"
-pytest-reportportal = "^5.0.7"
-pytest-xdist = "^2.2.0"
-pytest-parallel = "^0.1.0"
+pytest-reportportal = "5.0.12"
+pytest-xdist = "2.4.0"
+pytest-parallel = "0.1.1"
 axe-selenium-python = "^2.1.6"
-Faker = "^8.2.1"
+Faker = "8.16.0"
 selenium = "4.1.0"
+selenium-wire = "4.6.3"
 
 [tool.poetry.dev-dependencies]
-black = "^21.5b1"
+black = "21.12b0"
 poethepoet = "^0.10.0"
-pytest-cov = "^2.12.0"
+pytest-cov = "2.12.1"
 flake8 = "4.0.1"
 
 [tool.black]

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from pydantic import BaseModel
 
@@ -7,21 +7,22 @@ from pydantic import BaseModel
 
 
 class DriverConfig(BaseModel):
-    browser: str = 'chrome'
-    remote_url: str = ''
+    browser: str = "chrome"
+    remote_url: str = ""
     wait_time: int = 10
     page_load_wait_time: int = 0
     options: List[str] = []
-    capabilities: dict = {}
-    experimental_options: List[dict] = None
+    capabilities: Dict = {}
+    experimental_options: List[Dict] = None
+    seleniumwire_options: Dict = {}
     extension_paths: List[str] = None
-    webdriver_kwargs: dict = None
-    version: str = 'latest'
-    local_path: str = ''
+    webdriver_kwargs: Dict = None
+    version: str = "latest"
+    local_path: str = ""
 
 
 class LoggingConfig(BaseModel):
-    pylog_level: str = 'info'
+    pylog_level: str = "debug"
     screenshots_on: bool = True
 
 
@@ -29,7 +30,7 @@ class ViewportConfig(BaseModel):
     maximize: bool = True
     width: int = 1440
     height: int = 900
-    orientation: str = 'portrait'
+    orientation: str = "portrait"
 
 
 class PyleniumConfig(BaseModel):
@@ -41,6 +42,7 @@ class PyleniumConfig(BaseModel):
 
 # MODELS #
 ##########
+
 
 class TestCase(BaseModel):
     name: str

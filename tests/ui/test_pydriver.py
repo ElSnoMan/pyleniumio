@@ -28,12 +28,6 @@ def test_browser_options(py: Pylenium, browser):
     assert py.should().contain_title("Google")
 
 
-def test_py_request(py: Pylenium):
-    response = py.request.get("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1")
-    assert response.ok
-    assert response.json()["success"]
-
-
 def test_execute_script(py: Pylenium):
     py.visit("https://google.com")
     webelement = py.get("[name='q']").webelement
@@ -116,7 +110,7 @@ def test_have_url(py: Pylenium):
     py.should().have_url("https://www.qap.dev/")
 
 
-@pytest.mark.skipif(os.environ.get("CI") == "true", reason="Skip on CI")
+@pytest.mark.skip(reason="Unstable test as of Selenium 4")
 def test_loading_extension_to_browser(py: Pylenium, project_root):
     py.config.driver.extension_paths.append(f"{project_root}/tests/ui/Get CRX.crx")
     py.visit("chrome://extensions/")
