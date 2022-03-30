@@ -10,6 +10,7 @@
     "experimental_options": null,
     "extension_paths": [],
     "webdriver_kwargs": {},
+    "seleniumwire_options": {},
     "local_path": ""
   },
   "logging": {

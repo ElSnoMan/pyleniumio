@@ -1,7 +1,6 @@
 import logging
 from typing import List, Union
 
-import requests
 from faker import Faker
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.keys import Keys
@@ -36,7 +35,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info("[ASSERT] .should().have_title()")
+        self._py.log.debug("[ASSERT] .should().have_title()")
         try:
             value = self._wait.until(ec.title_is(title))
         except TimeoutException:
@@ -59,7 +58,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info("[ASSERT] .should().contain_title()")
+        self._py.log.debug("[ASSERT] .should().contain_title()")
         try:
             value = self._wait.until(ec.title_contains(string))
         except TimeoutException:
@@ -82,7 +81,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info("[ASSERT] .should().have_url()")
+        self._py.log.debug("[ASSERT] .should().have_url()")
         try:
             value = self._wait.until(ec.url_to_be(url))
         except TimeoutException:
@@ -105,7 +104,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info("[ASSERT] .should().contain_url()")
+        self._py.log.debug("[ASSERT] .should().contain_url()")
         try:
             value = self._wait.until(ec.url_contains(string))
         except TimeoutException:
@@ -128,7 +127,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info("[ASSERT] .should().not_find()")
+        self._py.log.debug("[ASSERT] .should().not_find()")
         try:
             self._wait.until_not(lambda x: x.find_element(By.CSS_SELECTOR, css))
             return True
@@ -148,7 +147,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info("[ASSERT] .should().not_find_xpath()")
+        self._py.log.debug("[ASSERT] .should().not_find_xpath()")
         try:
             self._wait.until_not(lambda x: x.find_element(By.XPATH, xpath))
             return True
@@ -168,7 +167,7 @@ class PyleniumShould:
         Raises:
             `AssertionError` if the condition is not met within the timeout.
         """
-        self._py.log.info("[ASSERT] .should().not_contain()")
+        self._py.log.debug("[ASSERT] .should().not_contain()")
         try:
             self._wait.until_not(lambda x: x.find_element(By.XPATH, f'//*[contains(text(), "{text}")]'))
             return True
@@ -193,7 +192,6 @@ class Pylenium:
         self.config = config
         self.log = logging.getLogger(__name__)
         self.fake = Faker()
-        self.request = requests
         self.Keys = Keys
         self._webdriver = None
         self._wait = None
@@ -203,7 +201,7 @@ class Pylenium:
         self._webdriver = webdriver_factory.build_from_config(self.config)
         caps = self._webdriver.capabilities
         try:
-            self.log.info(
+            self.log.debug(
                 f"Capabilities: "
                 f'browserName: {caps["browserName"]}, browserVersion: {caps["browserVersion"]}, '
                 f'platformName: {caps["platformName"]}, session_id: {self._webdriver.session_id}'
@@ -244,12 +242,12 @@ class Pylenium:
 
     def title(self) -> str:
         """The current page's title."""
-        self.log.info("[STEP] py.title() - Get the current page title")
+        self.log.debug("[STEP] py.title() - Get the current page title")
         return self.webdriver.title
 
     def url(self) -> str:
         """The current page's URL."""
-        self.log.info("[STEP] py.url() - Get the current page URL")
+        self.log.debug("[STEP] py.url() - Get the current page URL")
         return self.webdriver.current_url
 
     # NAVIGATION #
@@ -261,7 +259,7 @@ class Pylenium:
         Returns:
             `py` so you can chain another command if needed.
         """
-        self.log.info(f"[STEP] py.visit() - Visit URL: ``{url}``")
+        self.log.debug(f"[STEP] py.visit() - Visit URL: ``{url}``")
         self.webdriver.get(url)
         return self
 
@@ -281,7 +279,7 @@ class Pylenium:
         Returns:
             The current instance of Pylenium so you can chain commands.
         """
-        self.log.info(f"[STEP] py.go() - Go {direction} {number} in browser history")
+        self.log.debug(f"[STEP] py.go() - Go {direction} {number} in browser history")
         if direction == "back":
             self.webdriver.execute_script("window.history.go(arguments[0])", number * -1)
         elif direction == "forward":
@@ -292,7 +290,7 @@ class Pylenium:
 
     def reload(self) -> "Pylenium":
         """Reloads the current window."""
-        self.log.info("[STEP] py.reload() - Reload the current page")
+        self.log.debug("[STEP] py.reload() - Reload the current page")
         self.webdriver.refresh()
         return self
 
@@ -313,7 +311,7 @@ class Pylenium:
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
-        self.log.info(f"[STEP] py.contains() - Find the element with text: ``{text}``")
+        self.log.debug(f"[STEP] py.contains() - Find the element with text: ``{text}``")
         locator = (By.XPATH, f'//*[contains(text(), "{text}")]')
 
         if timeout == 0:
@@ -338,7 +336,7 @@ class Pylenium:
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
-        self.log.info(f"[STEP] py.get() - Find the element with css: ``{css}``")
+        self.log.debug(f"[STEP] py.get() - Find the element with css: ``{css}``")
         by = By.CSS_SELECTOR
 
         if timeout == 0:
@@ -364,7 +362,7 @@ class Pylenium:
             A list of the found elements.
         """
         by = By.CSS_SELECTOR
-        self.log.info(f"[STEP] py.find() - Find elements with css: ``{css}``")
+        self.log.debug(f"[STEP] py.find() - Find elements with css: ``{css}``")
 
         try:
             if timeout == 0:
@@ -392,7 +390,7 @@ class Pylenium:
             The first element that is found, even if multiple elements match the query.
         """
         by = By.XPATH
-        self.log.info(f"[STEP] py.getx() - Find the element with xpath: ``{xpath}``")
+        self.log.debug(f"[STEP] py.getx() - Find the element with xpath: ``{xpath}``")
 
         if timeout == 0:
             element = self.webdriver.find_element(by, xpath)
@@ -417,7 +415,7 @@ class Pylenium:
             A list of the found elements.
         """
         by = By.XPATH
-        self.log.info(f"[STEP] py.findx() - Find elements with xpath: ``{xpath}``")
+        self.log.debug(f"[STEP] py.findx() - Find elements with xpath: ``{xpath}``")
 
         try:
             if timeout == 0:
@@ -458,7 +456,7 @@ class Pylenium:
         Examples:
             py.screenshot('screenshots/home_page.png')
         """
-        self.log.info(f"[STEP] py.screenshot() - Save screenshot to: {filename}")
+        self.log.debug(f"[STEP] py.screenshot() - Save screenshot to: {filename}")
         self.webdriver.save_screenshot(filename)
         return filename
 
@@ -473,7 +471,7 @@ class Pylenium:
             # Scroll down 500 px
             py.scroll_to(0, 500)
         """
-        self.log.info(f"[STEP] py.scroll_to() - Scroll to ({x}, {y})")
+        self.log.debug(f"[STEP] py.scroll_to() - Scroll to ({x}, {y})")
         js = "window.scrollTo(arguments[0], arguments[1]);"
         self.webdriver.execute_script(js, x, y)
         return self
@@ -515,12 +513,12 @@ class Pylenium:
         Examples:
             `py.delete_cookie('cookie_name')`
         """
-        self.log.info(f"py.delete_cookie() - Delete cookie named: {name}")
+        self.log.debug(f"py.delete_cookie() - Delete cookie named: {name}")
         self.webdriver.delete_cookie(name)
 
     def delete_all_cookies(self):
         """Delete all cookies in the current session."""
-        self.log.info("py.delete_all_cookies() - Delete all cookies")
+        self.log.debug("py.delete_all_cookies() - Delete all cookies")
         self.webdriver.delete_all_cookies()
 
     def get_cookie(self, name) -> dict:
@@ -532,12 +530,12 @@ class Pylenium:
         Examples:
             py.get_cookie('cookie_name')
         """
-        self.log.info(f"py.get_cookie() - Get cookie with name: {name}")
+        self.log.debug(f"py.get_cookie() - Get cookie with name: {name}")
         return self.webdriver.get_cookie(name)
 
     def get_cookies(self):
         """Get all cookies."""
-        self.log.info("py.get_cookies() - Get all cookies")
+        self.log.debug("py.get_cookies() - Get all cookies")
         return self.webdriver.get_cookies()
 
     def set_cookie(self, cookie: dict):
@@ -552,7 +550,7 @@ class Pylenium:
             `py.set_cookie({'name' : 'foo', 'value' : 'bar', 'path' : '/'})`
             `py.set_cookie({'name' : 'foo', 'value' : 'bar', 'path' : '/', 'secure':True})`
         """
-        self.log.info(f'py.set_cookie() - Set a cookie with name={cookie["name"]} and value={cookie["value"]}')
+        self.log.debug(f'py.set_cookie() - Set a cookie with name={cookie["name"]} and value={cookie["value"]}')
         self.webdriver.add_cookie(cookie)
 
     def execute_script(self, javascript: str, *args):
@@ -569,7 +567,7 @@ class Pylenium:
             `py.execute_script('return document.title;')`
             `py.execute_script('return document.getElementById(arguments[0]);', element_id)`
         """
-        self.log.info("[STEP] py.execute_script() - Execute javascript into the Browser")
+        self.log.debug("[STEP] py.execute_script() - Execute javascript into the Browser")
         return self.webdriver.execute_script(javascript, *args)
 
     def execute_async_script(self, javascript: str, *args):
@@ -585,7 +583,7 @@ class Pylenium:
         Examples:
             `py.execute_async_script('return document.title;')`
         """
-        self.log.info("[STEP] py.execute_async_script() - Execute javascript asynchronously into the Browser")
+        self.log.debug("[STEP] py.execute_async_script() - Execute javascript asynchronously into the Browser")
         return self.webdriver.execute_async_script(javascript, *args)
 
     def quit(self):
@@ -593,7 +591,7 @@ class Pylenium:
 
         Closes any and every associated window.
         """
-        self.log.info("py.quit() - Quit Pylenium and close all windows from the browser")
+        self.log.debug("py.quit() - Quit Pylenium and close all windows from the browser")
         self.webdriver.quit()
 
     # WINDOW #
@@ -616,7 +614,7 @@ class Pylenium:
 
     def maximize_window(self) -> "Pylenium":
         """Maximizes the current Window."""
-        self.log.info("py.maximize_window() - Maximize window")
+        self.log.debug("py.maximize_window() - Maximize window")
         try:
             self.webdriver.maximize_window()
         except WebDriverException as e:
@@ -645,7 +643,7 @@ class Pylenium:
             py.viewport(1440, 900) # macbook-15 size
             py.viewport(375, 667)  # iPhone X size
         """
-        self.log.info(
+        self.log.debug(
             f"[STEP] py.viewport() - Viewport set to width={width}, height={height}, orientation={orientation}"
         )
         if orientation == "portrait":
