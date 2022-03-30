@@ -127,7 +127,6 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
     browser = config.driver.browser.lower()
     remote_url = config.driver.remote_url
     _config = {
-        "version": config.driver.version,
         "options": config.driver.options,
         "capabilities": config.driver.capabilities,
         "experimental_options": config.driver.experimental_options,
@@ -139,7 +138,12 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
 
     # Start with SeleniumWire drivers
     if remote_url:
+        # version is passed in as {"browserVersion": version} in capabilities
         return build_remote(browser, remote_url, **_config)
+
+    # Set version for the rest of the non-remote drivers
+    _config["version"] = config.driver.version
+
     if browser == Browser.CHROME:
         return build_chrome(**_config)
     if browser == Browser.FIREFOX:
