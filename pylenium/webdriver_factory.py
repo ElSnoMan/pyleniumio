@@ -132,7 +132,6 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
         "experimental_options": config.driver.experimental_options,
         "seleniumwire_options": config.driver.seleniumwire_options,
         "extension_paths": config.driver.extension_paths,
-        "local_path": config.driver.local_path,
         "webdriver_kwargs": config.driver.webdriver_kwargs,
     }
 
@@ -141,8 +140,9 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
         # version is passed in as {"browserVersion": version} in capabilities
         return build_remote(browser, remote_url, **_config)
 
-    # Set version for the rest of the non-remote drivers
+    # Set fields for the rest of the non-remote drivers
     _config["version"] = config.driver.version
+    _config["local_path"] = config.driver.local_path
 
     if browser == Browser.CHROME:
         return build_chrome(**_config)
