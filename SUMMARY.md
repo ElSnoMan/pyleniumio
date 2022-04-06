@@ -13,6 +13,7 @@
 
 * [Run Tests in Parallel](docs/guides/run-tests-in-parallel.md)
 * [Run Tests in Containers](docs/guides/run-tests-in-containers.md)
+* [Inspect Network Requests](guides/inspect-network-requests.md)
 
 ## CLI
 
