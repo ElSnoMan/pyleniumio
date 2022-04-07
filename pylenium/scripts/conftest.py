@@ -18,6 +18,7 @@ Examples:
         assert 'Google' in py.title()
 """
 
+import copy
 import json
 import logging
 import shutil
