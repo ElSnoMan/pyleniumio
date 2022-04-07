@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import List, Dict
 
 from pydantic import BaseModel
@@ -46,7 +47,7 @@ class PyleniumConfig(BaseModel):
 
 class TestCase(BaseModel):
     name: str
-    file_path: str
+    file_path: Path
 
     class Config:
         arbitrary_types_allowed = True
