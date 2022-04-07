@@ -21,7 +21,6 @@ Examples:
 import copy
 import json
 import logging
-import os
 import shutil
 import sys
 from pathlib import Path
@@ -71,48 +70,48 @@ def rp_logger(request):
 
 
 @pytest.fixture(scope="session", autouse=True)
-def project_root() -> str:
+def project_root() -> Path:
     """The Project (or Workspace) root as a filepath.
 
     * This conftest.py file should be in the Project Root if not already.
     """
-    return os.path.dirname(os.path.abspath(__file__))
+    return Path(__file__).absolute().parent
 
 
 @pytest.fixture(scope="session", autouse=True)
-def test_run(project_root, request) -> str:
+def test_run(project_root: Path, request) -> Path:
     """Creates the `/test_results` directory to store the results of the Test Run.
 
     Returns:
         The `/test_results` directory as a filepath (str).
     """
     session = request.node
-    test_results_dir = f"{project_root}/test_results"
+    test_results_dir = project_root.joinpath("test_results")
 
-    if os.path.exists(test_results_dir):
+    if test_results_dir.exists():
         # delete /test_results from previous Test Run
         shutil.rmtree(test_results_dir, ignore_errors=True)
 
     try:
         # race condition can occur between checking file existence and
         # creating the file when using pytest with multiple workers
-        Path(test_results_dir).mkdir(parents=True, exist_ok=True)
+        test_results_dir.mkdir(parents=True, exist_ok=True)
     except FileExistsError:
         pass
 
     for test in session.items:
         try:
             # make the test_result directory for each test
-            Path(f"{test_results_dir}/{test.name}").mkdir(parents=True, exist_ok=True)
+            test_results_dir.joinpath(test.name).mkdir(parents=True, exist_ok=True)
         except FileExistsError:
             pass
 
     return test_results_dir
 
 
-@pytest.fixture(scope="session")
-def _py_config(project_root, request) -> PyleniumConfig:
-    """Read the PyleniumConfig for the test session
+@pytest.fixture(scope="function")
+def py_config(project_root: Path, request) -> PyleniumConfig:
+    """Initialize a PyleniumConfig for each test
 
     1. This starts by deserializing the user-created pylenium.json from the Project Root.
     2. If that file is not found, then proceed with Pylenium Defaults.
@@ -120,7 +119,7 @@ def _py_config(project_root, request) -> PyleniumConfig:
     """
     try:
         # 1. Load pylenium.json in Project Root, if available
-        with open(f"{project_root}/pylenium.json") as file:
+        with project_root.joinpath("pylenium.json").open() as file:
             _json = json.load(file)
         config = PyleniumConfig(**_json)
     except FileNotFoundError:
@@ -171,16 +170,7 @@ def _py_config(project_root, request) -> PyleniumConfig:
 
 
 @pytest.fixture(scope="function")
-def py_config(_py_config) -> PyleniumConfig:
-    """Get a fresh copy of the PyleniumConfig for each test
-
-    See _py_config for how the initial configuration is read.
-    """
-    return copy.deepcopy(_py_config)
-
-
-@pytest.fixture(scope="function")
-def test_case(test_run, py_config, request) -> TestCase:
+def test_case(test_run: Path, py_config, request) -> TestCase:
     """Manages data pertaining to the currently running Test Function or Case.
 
         * Creates the test-specific logger.
@@ -192,13 +182,13 @@ def test_case(test_run, py_config, request) -> TestCase:
         An instance of TestCase.
     """
     test_name = request.node.name
-    test_result_path = f"{test_run}/{test_name}"
+    test_result_path = test_run.joinpath(test_name)
     py_config.driver.capabilities.update({"name": test_name})
     return TestCase(name=test_name, file_path=test_result_path)
 
 
 @pytest.fixture(scope="function")
-def py(test_case, py_config, request, rp_logger):
+def py(test_case: TestCase, py_config, request, rp_logger):
     """Initialize a Pylenium driver for each test.
 
     Pass in this `py` fixture into the test function.
@@ -214,7 +204,7 @@ def py(test_case, py_config, request, rp_logger):
         if request.node.report.failed:
             # if the test failed, execute code in this block
             if py_config.logging.screenshots_on:
-                screenshot = py.screenshot(f"{test_case.file_path}/test_failed.png")
+                screenshot = py.screenshot(str(test_case.file_path.joinpath("test_failed.png")))
                 with open(screenshot, "rb") as image_file:
                     rp_logger.info(
                         "Test Failed - Attaching Screenshot",
