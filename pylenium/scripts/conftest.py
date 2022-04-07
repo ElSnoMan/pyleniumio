@@ -18,6 +18,7 @@ Examples:
         assert 'Google' in py.title()
 """
 
+import copy
 import json
 import logging
 import os
@@ -109,9 +110,9 @@ def test_run(project_root, request) -> str:
     return test_results_dir
 
 
-@pytest.fixture(scope="function")
-def py_config(project_root, request) -> PyleniumConfig:
-    """Initialize a PyleniumConfig for each test
+@pytest.fixture(scope="session")
+def _py_config(project_root, request) -> PyleniumConfig:
+    """Read the PyleniumConfig for the test session
 
     1. This starts by deserializing the user-created pylenium.json from the Project Root.
     2. If that file is not found, then proceed with Pylenium Defaults.
@@ -167,6 +168,15 @@ def py_config(project_root, request) -> PyleniumConfig:
         config.driver.extension_paths = [ext.strip() for ext in cli_extensions.split(",")]
 
     return config
+
+
+@pytest.fixture(scope="function")
+def py_config(_py_config) -> PyleniumConfig:
+    """Get a fresh copy of the PyleniumConfig for each test
+
+    See _py_config for how the initial configuration is read.
+    """
+    return copy.deepcopy(_py_config)
 
 
 @pytest.fixture(scope="function")
