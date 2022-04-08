@@ -175,8 +175,7 @@ class ElementShould:
         self._element = element
         self._wait = ElementWait(element.webelement, timeout, ignored_exceptions)
 
-    # POSITIVE CONDITIONS #
-    #######################
+    # region POSITIVE CONDITIONS
 
     def be_clickable(self) -> "Element":
         """An expectation that the element is displayed and enabled so you can click it.
@@ -518,8 +517,9 @@ class ElementShould:
                 f"Expected value: ``{value}`` " f'- Actual value: ``{self._element.get_attribute("value")}``'
             )
 
-    # NEGATIVE CONDITIONS #
-    #######################
+    # endregion
+
+    # region NEGATIVE CONDITIONS
 
     def not_be_focused(self) -> "Element":
         """An expectation that the element is not focused.
@@ -655,6 +655,8 @@ class ElementShould:
         else:
             self._py.log.critical(".should().not_have_text()")
             raise AssertionError(f"Element had the text matching ``{text}``")
+
+    # endregion
 
 
 class Elements(List["Element"]):

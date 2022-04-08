@@ -212,6 +212,7 @@ def py(test_case: TestCase, py_config, request, rp_logger):
     try:
         if request.node.report.failed:
             # if the test failed, execute code in this block
+            py.execute_script("lambda-status=failed")
             if py_config.logging.screenshots_on:
                 screenshot = py.screenshot(str(test_case.file_path.joinpath("test_failed.png")))
                 with open(screenshot, "rb") as image_file:
@@ -219,6 +220,11 @@ def py(test_case: TestCase, py_config, request, rp_logger):
                         "Test Failed - Attaching Screenshot",
                         attachment={"name": "test_failed.png", "data": image_file, "mime": "image/png"},
                     )
+        elif request.node.report.passed:
+            # if the test passed, execute code in this block
+            py.execute_script("lambda-status=passed")
+        else:
+            pass
     except AttributeError:
         rp_logger.error("Unable to access request.node.report.failed, unable to take screenshot.")
     except TypeError:

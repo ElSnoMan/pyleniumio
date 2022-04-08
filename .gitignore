@@ -1,10 +1,16 @@
+# General
 .idea
-.vscode
 test_results
 test_env
 tests/data
 data
 poetry.lock
+
+# LambdaTest
+.hyperexecute
+logs
+.updatedhyperexecute.yaml
+hyperexecute-code*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,0 +1,23 @@
+---
+version: 0.1
+globalTimeout: 90
+testSuiteTimeout: 90
+testSuiteStep: 90
+concurrency: 3
+runson: linux
+autosplit: true
+
+pre:
+  - pip3 install poetry
+  - poetry install
+
+post:
+  - cat hyperexecute.yml
+
+testDiscovery:
+  type: raw
+  mode: dynamic
+  command: grep -nri 'class' tests/ui -ir --include=*.py | sed 's/:.*//'
+  # command: grep -nri "def test" tests/ui | sed 's/:.*//' | sort -u
+
+testRunnerCommand: poetry run pytest -s --verbose $test --remote_url "https://${LT_USERNAME }:${LT_ACCESS_KEY}@hub.lambdatest.com/wd/hub" --caps='{"build": "LOCAL", "name": "TEST_NAME", "platform": "Linux", "browserName": "Chrome", "version": "latest"}'
