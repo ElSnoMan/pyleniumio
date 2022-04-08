@@ -48,4 +48,5 @@ jobs:
           LT_USERNAME: ${{ secrets.LT_USERNAME }}
           LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
         run: |
+          chmod +x ./hyperexecute_linux
           ./hyperexecute_linux -i hyperexecute.yml
