@@ -21,6 +21,7 @@ Examples:
 import copy
 import json
 import logging
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -212,7 +213,8 @@ def py(test_case: TestCase, py_config, request, rp_logger):
     try:
         if request.node.report.failed:
             # if the test failed, execute code in this block
-            py.execute_script("lambda-status=failed")
+            if os.environ.get("LT_USERNAME"):
+                py.execute_script("lambda-status=failed")
             if py_config.logging.screenshots_on:
                 screenshot = py.screenshot(str(test_case.file_path.joinpath("test_failed.png")))
                 with open(screenshot, "rb") as image_file:
@@ -222,7 +224,8 @@ def py(test_case: TestCase, py_config, request, rp_logger):
                     )
         elif request.node.report.passed:
             # if the test passed, execute code in this block
-            py.execute_script("lambda-status=passed")
+            if os.environ.get("LT_USERNAME"):
+                py.execute_script("lambda-status=passed")
         else:
             pass
     except AttributeError:
