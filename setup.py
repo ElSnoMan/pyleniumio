@@ -24,7 +24,7 @@ setup(
         "Faker>=8.16.0",
         "requests>=2.27.1",
         "webdriver-manager>=3.5.4",
-        "click>=7.1.2",
+        "click>=7.1.2, <8.0.0",
         "pyfiglet>=0.8.post1",
         "axe-selenium-python>=2.1.6",
         "selenium-wire>=4.6.3",

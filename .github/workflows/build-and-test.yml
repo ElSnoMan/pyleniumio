@@ -43,11 +43,10 @@ jobs:
         run: |
           poetry run pytest tests/unit
 
-      - name: Start Selenoid Server
-        # You may pin to the exact commit or the version.
-        # uses: Xotabu4/selenoid-github-action@abe532e06774138cf8c38c5dac461071de092504
-        uses: Xotabu4/selenoid-github-action@v2
-
-      - name: Run UI Tests
-        run: |
-          poetry run pytest tests/ui -n 2 --remote_url "http://localhost:4444/wd/hub"
+      # - name: Run UI Tests
+      #   env:
+      #     LT_USERNAME: ${{ secrets.LT_USERNAME }}
+      #     LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
+      #   run: |
+      #     chmod +x ./hyperexecute_linux
+      #     ./hyperexecute_linux -i hyperexecute.yml

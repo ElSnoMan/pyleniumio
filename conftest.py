@@ -21,6 +21,7 @@ Examples:
 import copy
 import json
 import logging
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -109,9 +110,9 @@ def test_run(project_root: Path, request) -> Path:
     return test_results_dir
 
 
-@pytest.fixture(scope="function")
-def py_config(project_root: Path, request) -> PyleniumConfig:
-    """Initialize a PyleniumConfig for each test
+@pytest.fixture(scope="session")
+def _py_config(project_root, request) -> PyleniumConfig:
+    """Read the PyleniumConfig for the test session
 
     1. This starts by deserializing the user-created pylenium.json from the Project Root.
     2. If that file is not found, then proceed with Pylenium Defaults.
@@ -170,6 +171,15 @@ def py_config(project_root: Path, request) -> PyleniumConfig:
 
 
 @pytest.fixture(scope="function")
+def py_config(_py_config) -> PyleniumConfig:
+    """Get a fresh copy of the PyleniumConfig for each test
+
+    See _py_config for how the initial configuration is read.
+    """
+    return copy.deepcopy(_py_config)
+
+
+@pytest.fixture(scope="function")
 def test_case(test_run: Path, py_config, request) -> TestCase:
     """Manages data pertaining to the currently running Test Function or Case.
 
@@ -203,6 +213,8 @@ def py(test_case: TestCase, py_config, request, rp_logger):
     try:
         if request.node.report.failed:
             # if the test failed, execute code in this block
+            if os.environ.get("LT_USERNAME"):
+                py.execute_script("lambda-status=failed")
             if py_config.logging.screenshots_on:
                 screenshot = py.screenshot(str(test_case.file_path.joinpath("test_failed.png")))
                 with open(screenshot, "rb") as image_file:
@@ -210,6 +222,12 @@ def py(test_case: TestCase, py_config, request, rp_logger):
                         "Test Failed - Attaching Screenshot",
                         attachment={"name": "test_failed.png", "data": image_file, "mime": "image/png"},
                     )
+        elif request.node.report.passed:
+            # if the test passed, execute code in this block
+            if os.environ.get("LT_USERNAME"):
+                py.execute_script("lambda-status=passed")
+        else:
+            pass
     except AttributeError:
         rp_logger.error("Unable to access request.node.report.failed, unable to take screenshot.")
     except TypeError:

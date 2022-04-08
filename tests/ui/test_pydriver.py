@@ -14,15 +14,8 @@ def test_jit_webdriver(py: Pylenium):
     assert py._webdriver is not None
 
 
-@pytest.mark.parametrize(
-    "browser",
-    [
-        "chrome",
-        # "edge",
-    ],
-)
-def test_browser_options(py: Pylenium, browser):
-    py.config.driver.browser = browser
+@pytest.mark.skipif(os.environ.get("LT_USERNAME") is not None, reason="Doesn't work well with LambdaTest")
+def test_browser_options(py: Pylenium):
     py.config.driver.options = ["--headless"]
     py.visit("https://google.com")
     assert py.should().contain_title("Google")

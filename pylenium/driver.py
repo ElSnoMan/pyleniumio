@@ -294,8 +294,7 @@ class Pylenium:
         self.webdriver.refresh()
         return self
 
-    # FIND ELEMENTS #
-    #################
+    # region FIND ELEMENTS
 
     def contains(self, text: str, timeout: int = None) -> Element:
         """Get the DOM element containing the `text`.
@@ -427,6 +426,8 @@ class Pylenium:
         except TimeoutException:
             elements = []
         return Elements(self, elements, locator=(by, xpath))
+
+    # endregion
 
     # EXPECTATIONS #
     ################
