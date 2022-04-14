@@ -25,6 +25,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
+from typing import Dict, Optional
 
 import pytest
 import requests
@@ -170,12 +171,34 @@ def _py_config(project_root, request) -> PyleniumConfig:
     return config
 
 
+@pytest.fixture(scope="session")
+def lambdatest_config() -> Optional[Dict]:
+    """Read the LambdatestConfig for the test session.
+
+    I want to dynamically set these values:
+        * via CLI, but this currently doesn't work with LambdaTest
+        * via ENV variables, but this requires more setup on my (aka the user's) side
+    """
+    capabilities = None
+    if os.environ.get("LT_USERNAME") and os.environ.get("LT_ACCESS_KEY"):
+        capabilities = {
+            "build": os.environ.get("LT_BUILD_NAME"),
+            "name": os.environ.get("LT_TESTRUN_NAME"),
+            "platform": "Linux",
+            "browserName": "Chrome",
+            "version": "latest",
+        }
+    return capabilities
+
+
 @pytest.fixture(scope="function")
-def py_config(_py_config) -> PyleniumConfig:
+def py_config(_py_config, lambdatest_config) -> PyleniumConfig:
     """Get a fresh copy of the PyleniumConfig for each test
 
     See _py_config for how the initial configuration is read.
     """
+    if lambdatest_config:
+        _py_config.driver.capabilities = lambdatest_config
     return copy.deepcopy(_py_config)
 
 
