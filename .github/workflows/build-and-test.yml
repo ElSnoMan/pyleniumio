@@ -45,9 +45,10 @@ jobs:
 
       - name: Run UI Tests
         env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
           LT_USERNAME: ${{ secrets.LT_USERNAME }}
           LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
-          LT_BUILD_NAME: ${GITHUB_REF_NAME##*/}/${GITHUB_RUN_NUMBER}
+          LT_BUILD_NAME: ${{ env.BRANCH_NAME }}/${{ github.run_number }}
           LT_TESTRUN_NAME: GitHub Action
         run: |
           curl -o hyperexecute https://downloads.lambdatest.com/hyperexecute/linux/hyperexecute
