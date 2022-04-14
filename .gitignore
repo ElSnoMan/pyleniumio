@@ -11,6 +11,7 @@ poetry.lock
 logs
 .updatedhyperexecute.yaml
 hyperexecute-code*
+hyperexecuteupdate
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
