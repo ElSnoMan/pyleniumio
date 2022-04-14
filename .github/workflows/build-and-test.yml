@@ -48,5 +48,6 @@ jobs:
           LT_USERNAME: ${{ secrets.LT_USERNAME }}
           LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
         run: |
-          chmod +x ./hyperexecute_linux
-          ./hyperexecute_linux -i hyperexecute.yml -u $LT_USERNAME -k $LT_ACCESS_KEY
+          curl -o hyperexecute https://downloads.lambdatest.com/hyperexecute/linux/hyperexecute
+          chmod +x ./hyperexecute
+          ./hyperexecute -i hyperexecute.yml -u $LT_USERNAME -k $LT_ACCESS_KEY
