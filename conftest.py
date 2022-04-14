@@ -179,6 +179,7 @@ def lambdatest_config() -> Optional[Dict]:
         * via CLI, but this currently doesn't work with LambdaTest
         * via ENV variables, but this requires more setup on my (aka the user's) side
     """
+    capabilities = None
     if os.environ.get("LT_USERNAME") and os.environ.get("LT_ACCESS_KEY"):
         capabilities = {
             "build": os.environ.get("LT_BUILD_NAME"),
@@ -187,8 +188,7 @@ def lambdatest_config() -> Optional[Dict]:
             "browserName": "Chrome",
             "version": "latest",
         }
-    # tests/ui/test_element_actions.py:93:def test_checkbox_buttons(py): => test_checkbox_buttons
-    return capabilities or None
+    return capabilities
 
 
 @pytest.fixture(scope="function")
