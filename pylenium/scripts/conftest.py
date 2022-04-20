@@ -28,11 +28,10 @@ from pathlib import Path
 import pytest
 import requests
 from faker import Faker
-from pytest_reportportal import RPLogger, RPLogHandler
-
-from pylenium.driver import Pylenium
-from pylenium.config import PyleniumConfig, TestCase
 from pylenium.a11y import PyleniumAxe
+from pylenium.config import PyleniumConfig, TestCase
+from pylenium.driver import Pylenium
+from reportportal_client import RPLogger, RPLogHandler
 
 
 @pytest.fixture(scope="function")

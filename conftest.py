@@ -30,11 +30,11 @@ from typing import Dict, Optional
 import pytest
 import requests
 from faker import Faker
-from pytest_reportportal import RPLogger, RPLogHandler
+from reportportal_client import RPLogger, RPLogHandler
 
-from pylenium.driver import Pylenium
-from pylenium.config import PyleniumConfig, TestCase
 from pylenium.a11y import PyleniumAxe
+from pylenium.config import PyleniumConfig, TestCase
+from pylenium.driver import Pylenium
 
 
 @pytest.fixture(scope="function")
