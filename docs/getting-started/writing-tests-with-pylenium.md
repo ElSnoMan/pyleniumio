@@ -41,7 +41,7 @@ def test_carlos_is_on_leadership(py):
 ```
 {% endcode %}
 
-When you type `py.`, you should see an **auto-complete** or **IntelliSense** menu appear with the list of [Pylenium Commands](../pylenium-commands/commands.md) like `.visit()` and `.get()`
+When you type `py.`, you should see an **auto-complete** or **IntelliSense** menu appear with the list of [Pylenium Commands](../../driver-commands/commands.md) like `.visit()` and `.get()`
 
 {% hint style="warning" %}
 &#x20;Your IDE may not do this or you may be missing an Extension or Plugin.
@@ -171,9 +171,9 @@ def test_google_search(py):
 
 You've already seen different Element commands like `.visit()`, `.type()` and `.submit()`,  but there is also a _Should_ object for:
 
-* [Element](../../pylenium-commands/should-expected/should-1.md)
-* [Elements](../../pylenium-commands/should-expected/should-1.md)
-* [Pylenium](../../pylenium-commands/should-expected/should.md)
+* [Element](../../element-commands/should.md)
+* [Elements](../../element-commands/should.md)
+* [Pylenium](../../driver-commands/should.md)
 
 In the example above, `py.should()` uses an Explicit Wait to wait until the "driver" detects that the current page's title contains `"Pylenium"`.&#x20;
 

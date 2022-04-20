@@ -13,5 +13,5 @@ py.request
 ```
 
 {% hint style="success" %}
-This is a **command** and a **fixture**. More details in his doc: [**Fixtures > api**](../fixtures/requests.md)****
+This is a **command** and a **fixture**. More details in his doc: [**Fixtures > api**](../docs/fixtures/requests.md)****
 {% endhint %}
