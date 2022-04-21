@@ -1,35 +1,35 @@
 ---
-description: The command to get the first Element in a list of Elements.
+description: The command to get the last Element in a list of Elements.
 ---
 
-# first
+# last
 
 ## Syntax
 
 ```python
-Elements.first()
+Elements.last() -> Element
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-py.find('li').first()
+py.find("li").last()
 
 ---or--- # store in a variable
 
-element = py.xpath('//a').first()
+last = py.xpath("//a").last()
 
 ---or--- # chain an Element command
 
-py.get('ul > li').children().first().click()
+py.get("ul > li").children().last().click()
 ```
 {% endcode %}
 
 {% code title="incorrect usage" %}
 ```python
 # Errors, 'get' yields Element, not Elements
-py.get('ul > li').first()
+py.get("ul > li").last()
 ```
 {% endcode %}
 
@@ -39,7 +39,7 @@ py.get('ul > li').first()
 
 ## Yields
 
-* **(Element)** The first Element in the list of Elements
+* <mark style="color:orange;">**Element**</mark> - The last Element in a list of Elements
 
 ## Raises
 

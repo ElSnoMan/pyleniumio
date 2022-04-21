@@ -2,12 +2,12 @@
 description: How to find one or more elements in Pylenium
 ---
 
-# Find Elements
+# 🔍 Find Elements
 
 Pylenium provides 5 main ways to find elements:
 
-* [contains (find a single element by text)](contains.md)
-* [find (find a list of elements by CSS)](find.md)
-* [findx (find a list of elements by XPATH)](find\_xpath.md)
-* [get (find a single element by CSS)](get.md)
-* [getx (find a single element by XPATH)](get\_xpath.md)
+* [contains](contains.md)   get a <mark style="color:yellow;">single element</mark> by **TEXT**
+* [find](find.md)           find a <mark style="color:yellow;">list of elements</mark> by **CSS**
+* [findx](find\_xpath.md)         find a <mark style="color:yellow;">list of elements</mark> by **XPATH**
+* [get](get.md)            get a <mark style="color:yellow;">single element</mark> by **CSS**
+* [getx](get\_xpath.md)          get a <mark style="color:yellow;">single element</mark> by **XPATH**

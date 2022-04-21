@@ -8,50 +8,50 @@ description: A collection of expected conditions against an Element.
 
 ### Positive Conditions
 
-* `.be_checked()`
-* `.be_clickable()`
-* `.be_disabled()`
-* `.be_enabled()`
-* `.be_focused()`
-* `.be_hidden()`
-* `.be_selected()`
-* `.be_visible()`
-* `.contain_text(text: str, case_sensitive=True)`
-* `.disappear()`
-* `.have_attr(attr: str, value: Optional[str])`
-* `.have_class(class_name: str)`
-* `.have_prop(prop: str, value: str)`
-* `.have_text(text: str, case_sensitive=True)`
-* `.have_value(value: any)`
+* <mark style="color:purple;">`.be_checked()`</mark>
+* <mark style="color:purple;">`.be_clickable()`</mark>
+* <mark style="color:purple;">`.be_disabled()`</mark>
+* <mark style="color:purple;">`.be_enabled()`</mark>
+* <mark style="color:purple;">`.be_focused()`</mark>
+* <mark style="color:purple;">`.be_hidden()`</mark>
+* <mark style="color:purple;">`.be_selected()`</mark>
+* <mark style="color:purple;">`.be_visible()`</mark>
+* <mark style="color:purple;">`.contain_text(text: str, case_sensitive=True)`</mark>
+* <mark style="color:purple;">`.disappear()`</mark>
+* <mark style="color:purple;">`.have_attr(attr: str, value: Optional[str])`</mark>
+* <mark style="color:purple;">`.have_class(class_name: str)`</mark>
+* <mark style="color:purple;">`.have_prop(prop: str, value: str)`</mark>
+* <mark style="color:purple;">`.have_text(text: str, case_sensitive=True)`</mark>
+* <mark style="color:purple;">`.have_value(value: any)`</mark>
 
 ### Negative Conditions
 
-* `.not_be_focused()`
-* `.not_have_attr(attr: str, value: Optional[str])`
-* `.not_have_text(text: str, case_sensitive=True)`
-* `.not_have_value(value: any)`
+* <mark style="color:purple;">`.not_be_focused()`</mark>
+* <mark style="color:purple;">`.not_have_attr(attr: str, value: Optional[str])`</mark>
+* <mark style="color:purple;">`.not_have_text(text: str, case_sensitive=True)`</mark>
+* <mark style="color:purple;">`.not_have_value(value: any)`</mark>
 
 
 
 ## Syntax
 
 ```python
-# use the default wait_time
+# Use the default wait_time
 Element.should().<expectation>
 
 ---or---
 
-# customize the wait_time for this expectation
+# Customize the wait_time for this expectation
 Element.should(timeout: int).<expectation>
 
 ---or---
 
-# ignore exceptions that you expect to "get in the way"
+# Ignore exceptions that you expect to "get in the way"
 Element.should(ignored_exceptions: list).<expectation>
 
 ---or---
 
-# customize both fully
+# Customize both fully
 Element.should(timeout: int, ignored_exceptions: list).<expectation>
 ```
 
@@ -60,19 +60,19 @@ Element.should(timeout: int, ignored_exceptions: list).<expectation>
 {% code title="Is element displayed?" %}
 ```python
 def test_element_visible(py):
-    py.visit('https://qap.dev')
-    assert py.get('a[href="/about"]').should().be_visible()
+    py.visit("https://qap.dev")
+    assert py.get("a[href='/about']").should().be_visible()
 ```
 {% endcode %}
 
 {% code title="Does it have text?" %}
 ```python
 def test_element_has_correct_text(py):
-    py.visit('https://qap.dev')
-    assert py.get('a[href="/about"]').should().have_text('About')
+    py.visit("https://qap.dev")
+    assert py.get("a[href='/about']").should().have_text("About")
 ```
 {% endcode %}
 
 ## Yields
 
-* **(Element)** If the assertion passes, then the current Element is returned, else an **AssertionError** is raised if the condition is not met within the specified timeout.
+* <mark style="color:orange;">**Element**</mark> - If the assertion passes, then the current Element is returned, else an **AssertionError** is raised if the condition is not met within the specified timeout.

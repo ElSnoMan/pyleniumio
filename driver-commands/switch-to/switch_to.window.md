@@ -4,20 +4,20 @@ description: >-
   Tab.
 ---
 
-# switch\_to.window
+# window
 
 ## Syntax
 
 ```python
-py.switch_to.window(name_or_handle)
-py.switch_to.window(index)
+py.switch_to.window(name_or_handle: str) -> Pylenium
+py.switch_to.window(index: int) -> Pylenium
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-# switch to a Window by handle
+# Switch to a Window by handle
 windows = py.window_handles
 py.switch_to.window(name_or_handle=windows[1])
 ```
@@ -32,8 +32,8 @@ py.switch_to.window(index=1)
 
 ## Arguments
 
-* `name_or_handle='' (str)`- The **name** or **window handle** of the Window to switch to
-* `index=0 (int)` - The index position of the Window Handle
+* <mark style="color:purple;">`name_or_handle="" (str)`</mark> - The **name** or **window handle** of the Window to switch to
+* <mark style="color:purple;">`index=0 (int)`</mark> - The index position of the Window Handle
 
 {% hint style="info" %}
 **index=0** will switch to the default content
@@ -41,4 +41,4 @@ py.switch_to.window(index=1)
 
 ## Yields
 
-* **(Pylenium)** The current instance of Pylenium so you can chain commands
+* <mark style="color:orange;">**Pylenium**</mark> - The current instance of Pylenium so you can chain commands

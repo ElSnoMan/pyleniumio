@@ -2,7 +2,7 @@
 description: Web Test Automation made easy
 ---
 
-# Welcome to the Pylenium.io Docs
+# Welcome to Pylenium
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://github.com/ElSnoMan/pyleniumio/tree/0bd684d227127daf2eccd2f284b849d4a91e3cb5/docs/code\_of\_conduct.md)
 
@@ -110,6 +110,10 @@ pip install pyleniumio
 ---or---
 
 pipenv install pyleniumio
+
+---or---
+
+poetry add pyleniumio
 ```
 {% endcode %}
 

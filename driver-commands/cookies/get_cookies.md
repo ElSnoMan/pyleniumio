@@ -7,7 +7,7 @@ description: The command to get all cookies in the current browser session.
 ## Syntax
 
 ```python
-py.get_cookies()
+py.get_cookies() -> List[Dict]
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ py.get_cookies()
 ```python
 py.get_cookies()
 
----or--- # store in variable
+---or--- # store in a variable
 
 cookies = py.get_cookies()
 ```
@@ -28,7 +28,7 @@ cookies = py.get_cookies()
 
 ## Yields
 
-* **List\[dict]** A list of cookie objects. Each cookie object has the following properties:
+* <mark style="color:purple;">**`List[Dict]`**</mark> A list of cookie objects. Each cookie object has the following properties:
   * `name`
   * `value`
   * `path`
@@ -40,19 +40,19 @@ cookies = py.get_cookies()
 ## Examples
 
 ```python
-py.set_cookie({'name': 'foo', 'value': 'bar'})
+py.set_cookie({"name": "foo", "value": "bar"})
 
 cookie = py.get_cookies()[0]
 
-print(cookie['name'])      # 'foo'
-print(cookie.get('value')) # 'bar'
+print(cookie["name"])      # "foo"
+print(cookie.get("value")) # "bar"
 ```
 
 ```python
-py.set_cookie({'name': 'foo', 'value': 'bar'})
-py.set_cookie({'name': 'yes', 'value', 'please'})
+py.set_cookie({"name": "foo", "value": "bar"})
+py.set_cookie({"name": "yes", "value", "please"})
 
 for cookie in py.get_cookies():
-    print(cookie['name'])
-    print(cookie.get('value'))
+    print(cookie["name"])
+    print(cookie.get("value"))
 ```

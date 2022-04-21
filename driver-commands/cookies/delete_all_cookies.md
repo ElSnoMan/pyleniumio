@@ -7,7 +7,7 @@ description: The command to delete all cookies in the current browser session.
 ## Syntax
 
 ```python
-py.delete_all_cookies()
+py.delete_all_cookies() -> None
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ py.delete_all_cookies()
 {% code title="incorrect usage" %}
 ```python
 # Errors, 'delete_all_cookies' yields None
-py.delete_all_cookies().get()
+py.delete_all_cookies().get_cookie()
 ```
 {% endcode %}
 

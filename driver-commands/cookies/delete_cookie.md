@@ -7,27 +7,27 @@ description: The command to delete a cookie with the given name.
 ## Syntax
 
 ```python
-py.delete_cookie(name)
+py.delete_cookie(name: str) -> None
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-py.delete_cookie('foo')
+py.delete_cookie("foo")
 ```
 {% endcode %}
 
 {% code title="incorrect usage" %}
 ```python
 # Errors, 'delete_cookie' yields None
-py.delete_cookie('foo').get()
+py.delete_cookie("foo").get_cookie()
 ```
 {% endcode %}
 
 ## Arguments
 
-* `name (str)` - The name of the cookie
+* <mark style="color:purple;">`name (str)`</mark> - The name of the cookie
 
 ## Yields
 

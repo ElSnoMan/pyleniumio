@@ -8,14 +8,14 @@ description: A collection of expected conditions against a list of Elements
 
 ### Positive Conditions
 
-* `.be_empty()`
-* `.have_length(length: int)`
-* `.be_greater_than(length: int)`
-* `.be_less_than(length: int)`
+* <mark style="color:purple;">`.be_empty()`</mark>
+* <mark style="color:purple;">`.have_length(length: int)`</mark>
+* <mark style="color:purple;">`.be_greater_than(length: int)`</mark>
+* <mark style="color:purple;">`.be_less_than(length: int)`</mark>
 
 ### Negative Conditions
 
-* `.not_be_empty()`
+* <mark style="color:purple;">`.not_be_empty()`</mark>
 
 ## Syntax
 
@@ -44,8 +44,8 @@ Elements.should(timeout: int, ignored_exceptions: list).<expectation>
 {% code title=".has_length()" %}
 ```python
 def test_about_menu_has_3_links(py):
-    py.visit('https://qap.dev')
-    about = py.get('a[href="/about"]')
+    py.visit("https://qap.dev")
+    about = py.get("a[href='/about']")
     about.hover()
     assert about.find("a").should().have_length(3)
 ```
@@ -54,7 +54,7 @@ def test_about_menu_has_3_links(py):
 {% code title=".not_be_empty()" %}
 ```python
 def test_page_has_at_least_one_checkbox(py):
-    py.visit('https://the-internet.herokuapp.com/checkboxes')
-    assert py.find('[type="checkbox"]').should().not_be_empty()
+    py.visit("https://the-internet.herokuapp.com/checkboxes")
+    assert py.find("[type='checkbox']").should().not_be_empty()
 ```
 {% endcode %}
