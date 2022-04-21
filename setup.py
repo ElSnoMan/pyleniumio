@@ -20,7 +20,7 @@ setup(
         "pytest-xdist>=2.4.0",
         "pytest-parallel>=0.1.1",
         "pydantic>=1.9.0",
-        "pytest-reportportal>=5.0.12",
+        "pytest-reportportal>=5.1.0",
         "Faker>=8.16.0",
         "requests>=2.27.1",
         "webdriver-manager>=3.5.4",

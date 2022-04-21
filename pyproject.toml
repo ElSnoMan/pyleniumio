@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyleniumio"
-version = "1.15.3"
+version = "1.15.4"
 description = "The best of Selenium and Cypress in a single Python Package"
 authors = ["Carlos <carlos@qap.dev>"]
 license = "MIT"
@@ -13,7 +13,7 @@ requests = "2.27.1"
 click = "^7.1.2"
 pyfiglet = "^0.8.post1"
 pytest = "<6.1.0"
-pytest-reportportal = "5.0.12"
+pytest-reportportal = "5.1.0"
 pytest-xdist = "2.4.0"
 pytest-parallel = "0.1.1"
 axe-selenium-python = "^2.1.6"
