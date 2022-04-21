@@ -7,7 +7,7 @@ description: The command to quit the driver and close all associated windows.
 ## Syntax
 
 ```python
-py.quit()
+py.quit() -> None
 ```
 
 ## Usage

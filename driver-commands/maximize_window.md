@@ -7,15 +7,15 @@ description: The command the maximize the current window.
 ## Syntax
 
 ```python
-py.maximize_window()
+py.maximize_window() -> Pylenium
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-# by default, Pylenium will maximaze the window for you, but just in case...
-py.maximize_window().visit('https://qap.dev')
+# By default, Pylenium will maximize the window for you, but just in case...
+py.maximize_window().visit("https://qap.dev")
 ```
 {% endcode %}
 
@@ -25,4 +25,4 @@ py.maximize_window().visit('https://qap.dev')
 
 ## Yields
 
-* **(Pylenium)** The current instance of Pylenium so you can chain commands
+* <mark style="color:orange;">**Pylenium**</mark>** ** - The current instance of Pylenium so you can chain commands
