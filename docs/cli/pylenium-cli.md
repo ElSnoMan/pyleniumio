@@ -19,7 +19,7 @@ pylenium init
 {% endcode %}
 
 {% hint style="success" %}
-Make sure to run this command at the Project Root (aka Workspace)
+Make sure to run this command at the <mark style="color:yellow;">**Project Root**</mark> (aka Workspace)
 {% endhint %}
 
 {% hint style="info" %}
@@ -28,7 +28,7 @@ By default, this will not overwrite Pylenium files if they already exist.
 
 ## Overwrite conftest.py file
 
-You can overwrite an existing **conftest.py** file with the latest version by using the `-c` flag.
+You can overwrite an existing <mark style="color:orange;">**conftest.py**</mark> file with the latest version by using the `-c` flag.
 
 {% code title="Terminal $" %}
 ```bash
@@ -38,7 +38,7 @@ pylenium init -c
 
 ## Overwrite pylenium.json file
 
-You can overwrite an existing **pylenium.json** file with the latest defaults by using the `-p` flag.
+You can overwrite an existing <mark style="color:orange;">**pylenium.json**</mark> file with the latest defaults by using the `-p` flag.
 
 {% code title="Terminal $" %}
 ```bash
@@ -48,7 +48,7 @@ pylenium init -p
 
 ## Overwrite pytest.ini file
 
-You can overwrite an existing **pytest.ini** file with the latest defaults by using the `-i` flag.\\
+You can overwrite an existing <mark style="color:orange;">**pytest.ini**</mark> file with the latest defaults by using the `-i` flag.\\
 
 {% code title="Terminal $" %}
 ```bash

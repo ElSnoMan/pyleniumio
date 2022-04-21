@@ -5,7 +5,7 @@ description: CLI commands to easily setup and teardown your RP instance.
 # Report Portal
 
 {% hint style="success" %}
-Make sure to execute these commands in your Project Root.
+Make sure to execute these commands in your <mark style="color:yellow;">**Project Root**</mark>
 {% endhint %}
 
 ## portal download

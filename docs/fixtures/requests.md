@@ -6,7 +6,7 @@ description: A library for working with HTTP Clients and APIs.
 
 ## What is requests?
 
-**Requests** is an elegant and simple HTTP library for Python, built for human beings.
+<mark style="color:orange;">**Requests**</mark> is an elegant and simple HTTP library for Python, built for human beings.
 
 {% embed url="https://2.python-requests.org/en/master/" %}
 
@@ -31,7 +31,7 @@ import requests
 {% code title="api fixture" %}
 ```python
 def test_api_fixture(api):
-    response = api.request.get(f'{BASE_URL}/api/cards')
+    response = api.request.get(f"{BASE_URL}/api/cards")
 ```
 {% endcode %}
 
@@ -39,7 +39,7 @@ def test_api_fixture(api):
 ```python
 import requests
 
-response = requests.get(f'{BASE_URL}/api/cards')
+response = requests.get(f"{BASE_URL}/api/cards")
 ```
 {% endcode %}
 

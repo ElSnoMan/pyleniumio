@@ -6,19 +6,19 @@ description: Accessibility (A11y) Testing with aXe
 
 ## Usage
 
-The `axe` fixture is the recommended way to run A11y audits since it's so easy and straightforward.
+The <mark style="color:purple;">`axe`</mark> fixture is the recommended way to run A11y audits since it's so easy and straightforward.
 
 ```python
 def test_axe_fixture(py, axe):
-    py.visit('https://qap.dev')
+    py.visit("https://qap.dev")
     # save the axe report as a file
-    report = axe.run(name='a11y_audit.json')
+    report = axe.run(name="a11y_audit.json")
     # and/or use the report directly in the test(s)
     assert len(report.violations) == 0
 ```
 
 {% hint style="success" %}
-&#x20;You can generate the report as a JSON and/or use the`AxeReport` object directly.
+&#x20;You can generate the report as a JSON and/or use the <mark style="color:orange;">**AxeReport**</mark> object directly.
 {% endhint %}
 
 {% hint style="warning" %}
@@ -33,9 +33,9 @@ def run(name: str = None, context: Dict = None, options: Dict = None) -> AxeRepo
 
 ## Arguments
 
-* `name: str` The file path (including name and `.json` extension) of the report to save as a JSON
-* `context: Dict` The dictionary of page part(s), by CSS Selectors, to include or exclude in the audit
-* `options: Dict` The dictionary of aXe options to include in the audit
+* <mark style="color:purple;">`name: str`</mark> The file path (including name and `.json` extension) of the report to save as a JSON
+* <mark style="color:purple;">`context: Dict`</mark> The dictionary of page part(s), by CSS Selectors, to include or exclude in the audit
+* <mark style="color:purple;">`options: Dict`</mark> The dictionary of aXe options to include in the audit
 
 {% hint style="info" %}
 Visit the official aXe documentation for more information about the `context` and `options` arguments.
@@ -45,10 +45,10 @@ Visit the official aXe documentation for more information about the `context` an
 
 ## Yields
 
-* `AxeReport` object that represents the audit report in code
+* <mark style="color:orange;">**AxeReport**</mark> - object that represents the audit report in code
 
-If you include the `name` argument, then that report is also created at the specified file path.
+If you include the <mark style="color:purple;">`name`</mark> argument, then that report is also created at the specified file path.
 
 {% hint style="danger" %}
-If any of the directories in the path do not exist, then a `FileNotFound` error is raised.
+If any of the directories in the path do not exist, then a <mark style="color:red;">`FileNotFound`</mark> error is raised.
 {% endhint %}

@@ -6,10 +6,10 @@ description: The configuration file for Pylenium
 
 ## Configure with a JSON File
 
-If you don't want to use Pylenium's defaults but you don't want to configure it via the CLI, you can create a **`pylenium.json`** file at the Project Root (same directory as our `conftest.py` file) and do it with a JSON instead.
+If you don't want to use Pylenium's defaults but you don't want to configure it via the CLI, you can create a <mark style="color:orange;">**pylenium.json**</mark> file at the <mark style="color:yellow;">**Project Root**</mark> (same directory as our <mark style="color:orange;">**conftest.py**</mark> file) and do it with a JSON instead.
 
 {% hint style="info" %}
-`pylenium.json` is already created when using the `$ pylenium init` command
+<mark style="color:orange;">**pylenium.json**</mark> is already created when using the <mark style="color:purple;">`$ pylenium init`</mark> command
 {% endhint %}
 
 Here are all of the current settings (and their defaults) you can configure right now:
@@ -64,7 +64,7 @@ If I only wanted to change the browser to be `"firefox"`, then only include that
 ## Adding custom values
 
 {% hint style="info" %}
-You can add any objects within the **`custom`** object to be used by **`py.config`**
+You can add any objects within the <mark style="color:yellow;">**custom**</mark> object to be used by <mark style="color:orange;">**py.config**</mark>
 {% endhint %}
 
 Adding your own key/value pairs is easy:
@@ -80,11 +80,11 @@ Adding your own key/value pairs is easy:
 Now you can use it like any other dictionary in Python:
 
 ```python
-py.config.custom.get('env_url')
+py.config.custom.get("env_url")
 
 ---or---
 
-py.config.custom['env_url']
+py.config.custom["env_url"]
 ```
 
 ### Complex custom objects
@@ -108,11 +108,11 @@ It's still just a Python dictionary, so you can easily access them:
 
 ```python
 # Get the entire environment object
-py.config.custom.get('environment')
+py.config.custom.get("environment")
 
 # Get only the url
-py.config.custom['environment']['url']
+py.config.custom["environment"]["url"]
 
 # Get the first item in the list of clusters
-py.config.custom['environment']['clusters'][0]
+py.config.custom["environment"]["clusters"][0]
 ```

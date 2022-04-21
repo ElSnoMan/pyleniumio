@@ -14,7 +14,7 @@ Supported Drivers:
 * **Opera**
 * **Edge (Chromium)**
 
-&#x20;Let's take a look at the Driver Settings in `pylenium.json`
+&#x20;Let's take a look at the Driver Settings in <mark style="color:orange;">**pylenium.json**</mark>
 
 {% code title="pylenium.json" %}
 ```javascript
@@ -40,10 +40,10 @@ Let's break each one of these down so you know what they are for and how you can
 ### browser
 
 {% hint style="info" %}
-Default is **`"chrome"`**
+Default is <mark style="color:yellow;">**`chrome`**</mark>
 {% endhint %}
 
-This is the browser name - `"chrome"` or `"firefox"` or `"ie"` or `"opera"` or `"edge"`
+This is the browser name - <mark style="color:purple;">`"chrome"`</mark> or <mark style="color:purple;">`"firefox"`</mark> or <mark style="color:purple;">`"ie"`</mark> or <mark style="color:purple;">`"opera"`</mark> or <mark style="color:purple;">`"edge"`</mark>
 
 {% code title="pylenium.json" %}
 ```javascript
@@ -65,10 +65,10 @@ pytest tests --browser=firefox
 Default is empty or**`""`**
 {% endhint %}
 
-This is used to connect to things like **Selenium Grid.**
+This is used to connect to things like <mark style="color:yellow;">**Selenium Grid**</mark>**.**
 
 {% hint style="success" %}
-Check out [Run Tests in Containers](../guides/run-tests-in-containers.md) for an example of how to do this locally with **Docker**
+Check out [Run Tests in Containers](../guides/run-tests-in-containers.md) for an example of how to do this locally with <mark style="color:yellow;">**Docker**</mark>
 {% endhint %}
 
 {% code title="pylenium.json" %}
@@ -88,7 +88,7 @@ pytest tests --remote_url="http://localhost:4444/wd/hub"
 ### wait\_time
 
 {% hint style="info" %}
-Default is **`10`**
+Default is <mark style="color:yellow;">**`10`**</mark>
 {% endhint %}
 
 The global number of seconds for actions to wait for.
@@ -110,7 +110,7 @@ You cannot set this from the command line
 ### page\_load\_wait\_time
 
 {% hint style="info" %}
-Default is 0
+Default is <mark style="color:yellow;">**0**</mark>
 {% endhint %}
 
 The amount of time to wait for the page to load before raising an error.
@@ -159,10 +159,10 @@ pytest tests --options="headless, incognito"
 ### experimental\_options
 
 {% hint style="info" %}
-Default is `null` or `None`
+Default is <mark style="color:yellow;">**`null`**</mark> or <mark style="color:yellow;">**`None`**</mark>
 {% endhint %}
 
-A list of experimental options to include in the driver. These can only be added using `pylenium.json`
+A list of experimental options to include in the driver. These can only be added using <mark style="color:orange;">**pylenium.json**</mark>
 
 ```javascript
 {
@@ -220,7 +220,7 @@ Default is empty or `[]`
 ### version
 
 {% hint style="info" %}
-Default is **`"latest"`**
+Default is <mark style="color:yellow;">**`latest`**</mark>
 {% endhint %}
 
 The browser version to use.

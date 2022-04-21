@@ -10,7 +10,7 @@ This doc assumes you are already familiar with the [Report Portal CLI commands](
 
 ## Configure with pytest.ini
 
-Once you've spun up your instance of Report Portal (RP), there are only a few values you need to change in the `pytest.ini` file created when you ran `pylenium init`.
+Once you've spun up your instance of Report Portal (RP), there are only a few values you need to change in the <mark style="color:orange;">**pytest.ini**</mark> file created when you ran <mark style="color:purple;">`pylenium init`</mark>.
 
 Here is the default pytest.ini file:
 
@@ -32,13 +32,13 @@ rp_hierarchy_class = False
 ```
 
 {% hint style="info" %}
-The only value that _needs ****_ be changed is the `rp_uuid` which is the **ACCESS TOKEN** to connect
+The only value that _needs ****_ to __ be changed is the <mark style="color:purple;">`rp_uuid`</mark> which is the <mark style="color:yellow;">**ACCESS TOKEN**</mark> to connect
 {% endhint %}
 
 ### Launch and Project
 
-* `rp_launch` is the name of the **Test Run** and is the grouping of tests that will be reported to RP under the **Launches** tab.
-* `rp_project` is the name of the **Project** that you would like the Launch to report to.
+* <mark style="color:purple;">`rp_launch`</mark> is the name of the <mark style="color:yellow;">**Test Run**</mark> and is the grouping of tests that will be reported to RP under the <mark style="color:yellow;">**Launches**</mark> tab.
+* <mark style="color:purple;">`rp_project`</mark> is the name of the <mark style="color:yellow;">**Project**</mark>** ** that you would like the Launch to report to.
 
 By default, there is a `superadmin_personal` and a `default_personal` project when you first spin up your instance of RP. You can switch between them or create more on the **Administrate** page under the User Menu.
 
@@ -48,13 +48,13 @@ Any of these variables _can_ be overridden via the CLI in case you need them def
 
 ### Get the ACCESS TOKEN
 
-Once you have logged in to your instance of RP, go to the **Profile** page under the User Menu in the top right corner. This will have the ACCESS TOKEN for you to copy.
+Once you have logged in to your instance of RP, go to the <mark style="color:yellow;">**Profile**</mark>** ** page under the User Menu in the top right corner. This will have the ACCESS TOKEN for you to copy.
 
-Paste this into the `rp_uuid` value in `pytest.ini` and save. That's it!
+Paste this into the <mark style="color:purple;">`rp_uuid`</mark> value in <mark style="color:orange;">**pytest.ini**</mark> and save. That's it!
 
 ## Run the Tests
 
-All that's left is to run the tests like usual, but now include the `--reportportal` flag.
+All that's left is to run the tests like usual, but now include the <mark style="color:purple;">`--reportportal`</mark> flag.
 
 {% code title="Example" %}
 ```bash

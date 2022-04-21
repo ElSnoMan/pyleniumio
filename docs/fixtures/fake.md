@@ -14,7 +14,7 @@ Check out their docs when you have some time: [https://faker.readthedocs.io](htt
 
 ## Three Ways to Use it
 
-* `py.fake` - A basic Faker instance for UI tests
+* <mark style="color:purple;">`py.fake`</mark> - A basic Faker instance for UI tests
 * `fake fixture` - A fixture of Faker for any tests
 * `Create your own` - Some users may need advanced functionality like **Locales** and **Providers**
 
@@ -39,18 +39,18 @@ def test_(fake)
 {% code title="py.fake" %}
 ```python
 def test_new_user_flow(py):
-    py.visit('https://some-page.com')
-    py.get('#email').type(py.fake.email())
-    py.get('#password').type(py.fake.password())
-    py.contains('Login').click()
-    assert py.contains('Success!')
+    py.visit("https://some-page.com")
+    py.get("#email").type(py.fake.email())
+    py.get("#password").type(py.fake.password())
+    py.contains("Login").click()
+    assert py.contains("Success!")
 ```
 {% endcode %}
 
 {% code title="fake fixture" %}
 ```python
 def test_fake_cc_expire(fake):
-    fake.credit_card_expire(start='now', end='+10y', date_format='%m/%y')
+    fake.credit_card_expire(start="now", end="+10y", date_format="%m/%y")
     # '07/27'
     
 
@@ -68,9 +68,9 @@ To see a full list of all the default providers that come out of the box, go to 
 
 ## FAQs
 
-When I type `py.fake.`, I'm not seeing `address()` or anything else in your examples. What gives?
+When I type <mark style="color:purple;">`py.fake.`</mark>, I'm not seeing <mark style="color:purple;">`address()`</mark> or anything else in your examples. What gives?
 
-* Because of the way Faker works with their Providers, you don't get IntelliSense. This is good and bad. Bad because you don't see all the options that are available, but good because you can create your own, custom Providers to generate almost everything you'd need for your applications and systems. Just type `py.fake.address()` and it will work!
+* Because of the way Faker works with their Providers, you don't get IntelliSense. This is good and bad. Bad because you don't see all the options that are available, but good because you can create your own, custom Providers to generate almost everything you'd need for your applications and systems. Just type <mark style="color:purple;">`py.fake.address()`</mark> and it will work!
 
 Which of the three approaches should I use?
 
@@ -78,7 +78,7 @@ Which of the three approaches should I use?
 
 ```python
 def test_a_page(py, fake):
-    py.visit('https://page.').get('#email').type(fake.email())
+    py.visit("https://page.").get("#email").type(fake.email())
 ```
 
 * If you need more advanced power, you can always create your own instance of Faker:
