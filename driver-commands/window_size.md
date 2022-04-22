@@ -7,7 +7,7 @@ description: This property get the size of the current window.
 ## Syntax
 
 ```python
-py.window_size
+py.window_size -> Dict[str, int]
 ```
 
 ## Usage
@@ -17,10 +17,10 @@ py.window_size
 size = py.window_size
 
 # print the width
-print(size['width'])
+print(size["width"])
 
 # print the height
-print(size['height']
+print(size["height"]
 ```
 {% endcode %}
 
@@ -30,4 +30,4 @@ print(size['height']
 
 ## Yields
 
-* **Dict\[str, int]** The current window's size as a dictionary
+* <mark style="color:orange;">**Dict\[str, int]**</mark> - The current window's size as a dictionary

@@ -6,8 +6,8 @@ description: The command to get the current page's URL.
 
 ## Syntax
 
-```
-py.url()
+```python
+py.url() -> str
 ```
 
 ## Usage
@@ -30,10 +30,10 @@ py.url
 
 ## Yields
 
-* **(str)** The current page's URL
+* <mark style="color:orange;">**str**</mark> - The current page's URL
 
 ## Examples
 
 ```python
-assert py.url().endswith('/checkout')
+assert py.url().endswith("/checkout")
 ```

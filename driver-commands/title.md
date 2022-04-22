@@ -7,7 +7,7 @@ description: The command to get the current page's title.
 ## Syntax
 
 ```python
-py.title()
+py.title() -> str
 ```
 
 ## Usage
@@ -30,11 +30,11 @@ py.title
 
 ## Yields
 
-* **(str)** The `document.title` property of the current page
+* <mark style="color:orange;">**str**</mark>  - The <mark style="color:purple;">`document.title`</mark> property of the current page
 
 ## Examples
 
 ```python
-assert py.title() == 'QA at the Point'
+assert py.title() == "QA at the Point"
 ```
 

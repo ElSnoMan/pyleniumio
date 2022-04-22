@@ -6,8 +6,8 @@ description: The command to scroll to the given location.
 
 ## Syntax
 
-```
-py.scroll_to(x, y)
+```python
+py.scroll_to(x: int, y: int) -> Pylenium
 ```
 
 ## Usage
@@ -21,9 +21,9 @@ py.scroll_to(0, 500)
 
 ## Arguments
 
-* **`x (int)`**: The number of pixels to scroll horizontally
-* **`y (int)`**: The number of pixels to scroll vertically
+* <mark style="color:purple;">**`x (int)`**</mark>: The number of pixels to scroll horizontally
+* <mark style="color:purple;">**`y (int)`**</mark>: The number of pixels to scroll vertically
 
 ## Yields
 
-* **(Pylenium)** so you can chain another command
+* <mark style="color:orange;">**Pylenium**</mark> - so you can chain another command

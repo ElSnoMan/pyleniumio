@@ -9,7 +9,7 @@ description: >-
 ## Syntax
 
 ```python
-py.window_handles
+py.window_handles -> List[str]
 ```
 
 ## Usage
@@ -33,4 +33,4 @@ py.switch_to.window(name_or_handle=windows[1])
 
 ## Yields
 
-* **List\[str]** A list of all the window handles in the current browser session.
+* <mark style="color:orange;">**List\[str]**</mark> - A list of all the window handles in the current browser session.

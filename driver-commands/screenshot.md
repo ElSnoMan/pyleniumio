@@ -7,7 +7,7 @@ description: The command to take a screenshot of the current window.
 ## Syntax
 
 ```python
-py.screenshot(filename)
+py.screenshot(filename: str) -> None
 ```
 
 ## Usage
@@ -15,30 +15,30 @@ py.screenshot(filename)
 {% code title="correct usage" %}
 ```python
 # saves the screenshot to the current working directory
-py.screenshot('ss.png')
+py.screenshot("ss.png")
 
 ---or---
 
 # saves the screenshot using the filepath
-py.screenshot('../images/ss.png')
+py.screenshot("../images/ss.png")
 ```
 {% endcode %}
 
 {% code title="incorrect usage" %}
 ```python
 # Errors, include the file extension like '.png'
-py.screenshot('ss')
+py.screenshot("ss")
 
 ---or---
 
 # Errors, .screenshot() yields None
-py.screenshot('ss.png').get('a')
+py.screenshot("ss.png").get("a")
 ```
 {% endcode %}
 
 ## Arguments
 
-* `filename (str)` - The filename including the **path** to the directory you want to save it in
+* <mark style="color:purple;">`filename (str)`</mark> - The filename including the **path** to the directory you want to save it in
 
 {% hint style="info" %}
 Make sure to include the file extension like **.png**
