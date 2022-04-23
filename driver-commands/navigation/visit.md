@@ -7,18 +7,18 @@ description: The command to navigate to URLs.
 ## Syntax
 
 ```python
-py.visit(url)
+py.visit(url: str) -> Pylenium
 ```
 
 ## Usage
 
 ```bash
-py.visit('https://qap.dev')
+py.visit("https://qap.dev")
 ```
 
 ## Arguments
 
-* `url (str)` - the URL to visit
+* <mark style="color:purple;">`url (str)`</mark> - the URL to visit
 
 {% hint style="info" %}
 Make sure to include the protocol **http** or **https**
@@ -26,16 +26,16 @@ Make sure to include the protocol **http** or **https**
 
 ## Yields
 
-* **(Pylenium)** The current instance of **Pylenium** so you can _chain_ another command
+* <mark style="color:orange;">**Pylenium**</mark> - The current instance of **Pylenium** so you can _chain_ another command
 
 ## Examples
 
 ```bash
-# navigate to a URL
-py.visit('https://qap.dev')
+# Navigate to a URL
+py.visit("https://qap.dev")
 ```
 
 ```bash
-# navigate to a URL and click on About link
-py.visit('https://qap.dev').contains('About').click()
+# Navigate to a URL and click on About link
+py.visit("https://qap.dev").contains("About").click()
 ```

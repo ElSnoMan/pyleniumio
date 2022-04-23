@@ -7,14 +7,14 @@ description: The command to check if this element is checked.
 ## Syntax
 
 ```python
-Element.is_checked()
+Element.is_checked() -> bool
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-py.get('#checkbox').is_checked()
+py.get("#checkbox").is_checked()
 ```
 {% endcode %}
 
@@ -24,4 +24,4 @@ py.get('#checkbox').is_checked()
 
 ## Yields
 
-* **(bool)** True if the element is checked, else False
+* <mark style="color:orange;">**bool**</mark> - True if the element is checked, else False

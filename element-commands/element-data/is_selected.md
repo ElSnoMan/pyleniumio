@@ -7,14 +7,14 @@ description: The command that checks if the element is selected.
 ## Syntax
 
 ```python
-Element.is_selected()
+Element.is_selected() -> bool
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-py.get('.option').is_selected()
+py.get(".option").is_selected()
 ```
 {% endcode %}
 
@@ -24,4 +24,4 @@ py.get('.option').is_selected()
 
 ## Yields
 
-* **(bool)** True if the element is selected, else False
+* <mark style="color:orange;">**bool**</mark> - True if the element is selected, else False

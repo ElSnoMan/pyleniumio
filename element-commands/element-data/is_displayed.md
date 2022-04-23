@@ -7,14 +7,14 @@ description: The command to check if this element is displayed.
 ## Syntax
 
 ```python
-Element.is_displayed()
+Element.is_displayed() -> bool
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-py.get('#button').is_displayed()
+py.get("#button").is_displayed()
 ```
 {% endcode %}
 
@@ -24,7 +24,7 @@ py.get('#button').is_displayed()
 
 ## Yields
 
-* **(bool)** True if the element is displayed, else False
+* <mark style="color:orange;">**bool**</mark> - True if the element is displayed, else False
 
 {% hint style="info" %}
 "displayed" means that the element is in the DOM and has a size greater than zero such that it is visible to the user.

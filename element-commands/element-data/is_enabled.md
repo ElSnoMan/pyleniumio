@@ -7,14 +7,14 @@ description: The command to check if the element is enabled.
 ## Syntax
 
 ```python
-Element.is_enabled()
+Element.is_enabled() -> bool
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-py.get('#button').is_enabled()
+py.get("#button").is_enabled()
 ```
 {% endcode %}
 
@@ -24,4 +24,4 @@ py.get('#button').is_enabled()
 
 ## Yields
 
-* **(bool)** True if the element is enabled, else False
+* <mark style="color:orange;">**bool**</mark> - True if the element is enabled, else False

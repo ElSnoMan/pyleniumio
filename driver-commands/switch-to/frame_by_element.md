@@ -1,31 +1,32 @@
 ---
-description: The command to switch the driver's context to the frame given its name or id.
+description: The command to switch the driver's context to the given element.
 ---
 
-# frame
+# frame\_by\_element
 
 ## Syntax
 
 ```python
-py.switch_to.frame(name_or_id: str, timeout: int = 0) -> Pylenium
+py.switch_to.frame_by_element(element: Element, timeout: int = 0) -> Pylenium
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-# switch to an iframe with name of 'main-content'
-py.switch_to.frame("main-content")
+iframe = py.get("iframe")
+py.switch_to.frame_by_element(iframe)
 
 ---or--- # chain a Pylenium command
 
-py.switch_to.frame("main-content").contains("Add New").click()
+iframe = py.get("iframe")
+py.switch_to.frame_by_element(iframe).contains("Add New").click()
 ```
 {% endcode %}
 
 ## Arguments
 
-* <mark style="color:purple;">`name_or_id (str)`</mark> - The **name** or **id** attribute value of the `<frame>` element
+* <mark style="color:purple;">`element (Element)`</mark> - The <mark style="color:orange;">**Element**</mark> to switch to
 * <mark style="color:purple;">`timeout=0 (int)`</mark> - The number of seconds to wait for the frame to be switched to
 
 ## Yields
@@ -50,5 +51,6 @@ If we wanted to click the link above, we would need to:
 This is a piece of cake with Pylenium:
 
 ```python
-py.switch_to.frame("foo").get("#bar").click()
+iframe = py.get("#foo")
+py.switch_to.frame_by_element(iframe).get("#bar").click()
 ```

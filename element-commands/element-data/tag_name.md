@@ -7,21 +7,21 @@ description: The command that gets the current Element's tag name.
 ## Syntax
 
 ```python
-Element.tag_name()
+Element.tag_name() -> str
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-assert py.get('.btn').tag_name() == 'button'
+assert py.get(".btn").tag_name() == "button"
 ```
 {% endcode %}
 
 {% code title="incorrect usage" %}
 ```python
 # Errors, 'tag_name' is not a property
-py.get('a').tag_name
+py.get("a").tag_name
 ```
 {% endcode %}
 
@@ -31,4 +31,4 @@ py.get('a').tag_name
 
 ## Yields
 
-* **(str)** The tag name of the current Element
+* <mark style="color:orange;">**str**</mark> - The tag name of the current Element
