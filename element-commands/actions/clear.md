@@ -7,7 +7,7 @@ description: The command to clear the input of the current element.
 ## Syntax
 
 ```python
-Element.clear()
+Element.clear() -> Element
 ```
 
 ## Usage
