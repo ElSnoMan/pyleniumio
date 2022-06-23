@@ -1,3 +1,8 @@
+# Pylenium: Easy Python Web Test Automation
+
+<!-- ![HyperExecute Badge](./he_badge.png "Tested on HyperExecute") -->
+<img src="he_badge.png" alt="Kitten" title="A cute kitten" width="300" height="70" />
+
 ## The mission is simple
 
 > Bring the best of Selenium, Cypress and Python into one package.
