@@ -1,3 +1,4 @@
+import time
 import pytest
 from pylenium.driver import Pylenium
 
@@ -178,3 +179,9 @@ def test_findx_nested_element(py: Pylenium):
     assert len(elements) == 3
     for element in elements:
         assert element.get_attribute("type") == "checkbox"
+
+def test_focus(py: Pylenium):
+    py.visit(f"{DEMO_QA}/automation-practice-form")
+    element = py.getx('//*[@id="firstName"]').focus()
+    active_elem = py.webdriver.switch_to.active_element
+    assert active_elem == element.webelement    
