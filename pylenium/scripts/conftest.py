@@ -1,5 +1,5 @@
 """
-`conftest.py` and `pylenium.json` files should stay at your Workspace Root.
+`conftest.py` and `pylenium.json` files should stay at your Workspace Root (aka Project Root)
 
 conftest.py
     Although this file is editable, you should only change its contents if you know what you are doing.
@@ -9,7 +9,7 @@ pylenium.json
     You can change the values, but DO NOT touch the keys or you will break the schema.
 
 py
-    The only fixture you really need from this is `py`. This is the instance of Pylenium for each test.
+    The main fixture you need from this is `py`. This is the instance of Pylenium for each test.
     Just pass py into your test and you're ready to go!
 
 Examples:
@@ -28,10 +28,11 @@ from pathlib import Path
 import pytest
 import requests
 from faker import Faker
+from reportportal_client import RPLogger, RPLogHandler
+
 from pylenium.a11y import PyleniumAxe
 from pylenium.config import PyleniumConfig, TestCase
 from pylenium.driver import Pylenium
-from reportportal_client import RPLogger, RPLogHandler
 
 
 @pytest.fixture(scope="function")
@@ -78,7 +79,7 @@ def project_root() -> Path:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def test_run(project_root: Path, request) -> Path:
+def test_results_dir(project_root: Path, request) -> Path:
     """Creates the `/test_results` directory to store the results of the Test Run.
 
     Returns:
@@ -109,23 +110,51 @@ def test_run(project_root: Path, request) -> Path:
 
 
 @pytest.fixture(scope="session")
-def _py_config(project_root, request) -> PyleniumConfig:
-    """Read the PyleniumConfig for the test session
+def _load_pylenium_json(project_root, request) -> PyleniumConfig:
+    """Load the default pylenium.json file or the given pylenium.json config file (if specified).
 
-    1. This starts by deserializing the user-created pylenium.json from the Project Root.
-    2. If that file is not found, then proceed with Pylenium Defaults.
-    3. Then any CLI arguments override their respective key/values.
+    * Pylenium looks for these files from the Project Root!
+
+    I may have multiple pylenium.json files with different presets. For example:
+    - stage-pylenium.json
+    - dev-testing.json
+    - firefox-pylenium.json
+
+    Examples
+    --------
+    $ pytest
+    >>> Loads the default file: PROJECT_ROOT/pylenium.json
+
+    $ pytest pylenium_json=dev-pylenium.json
+    >>> Loads the config file: PROJECT_ROOT/dev-pylenium.json
+
+    $ pytest pylenium_json="configs/stage-pylenium.json"
+    >>> Loads the config file: PROJECT_ROOT/configs/stage-pylenium.json
     """
+    custom_config_filepath = request.config.getoption("pylenium_json")
+    config_filepath = project_root.joinpath(custom_config_filepath or "pylenium.json")
+
     try:
-        # 1. Load pylenium.json in Project Root, if available
-        with project_root.joinpath("pylenium.json").open() as file:
+        with config_filepath.open() as file:
             _json = json.load(file)
         config = PyleniumConfig(**_json)
     except FileNotFoundError:
-        # 2. pylenium.json not found, proceed with defaults
+        logging.warn(
+            f"The config_filepath was not found, so PyleniumConfig will load with default values. File not found: {config_filepath.absolute()}"
+        )
         config = PyleniumConfig()
 
-    # 3. Override with any CLI args/options
+    return config
+
+
+@pytest.fixture(scope="session")
+def _override_pylenium_config_values(_load_pylenium_json, request) -> PyleniumConfig:
+    """Override any PyleniumConfig values after loading the initial pylenium.json config file.
+
+    After a pylenium.json config file is loaded and converted to a PyleniumConfig object,
+    then any CLI arguments override their respective key/values.
+    """
+    config = _load_pylenium_json
     # Driver Settings
     cli_remote_url = request.config.getoption("--remote_url")
     if cli_remote_url:
@@ -169,28 +198,28 @@ def _py_config(project_root, request) -> PyleniumConfig:
 
 
 @pytest.fixture(scope="function")
-def py_config(_py_config) -> PyleniumConfig:
+def py_config(_override_pylenium_config_values) -> PyleniumConfig:
     """Get a fresh copy of the PyleniumConfig for each test
 
-    See _py_config for how the initial configuration is read.
+    See _load_pylenium_json and _override_pylenium_config_values for how the initial configuration is read.
     """
-    return copy.deepcopy(_py_config)
+    return copy.deepcopy(_override_pylenium_config_values)
 
 
 @pytest.fixture(scope="function")
-def test_case(test_run: Path, py_config, request) -> TestCase:
+def test_case(test_results_dir: Path, py_config, request) -> TestCase:
     """Manages data pertaining to the currently running Test Function or Case.
 
         * Creates the test-specific logger.
 
     Args:
-        test_run: The Test Run (or Session) this test is connected to.
+        test_results_dir: The ./test_results directory this Test Run (aka Session) is writing to
 
     Returns:
         An instance of TestCase.
     """
     test_name = request.node.name
-    test_result_path = test_run.joinpath(test_name)
+    test_result_path = test_results_dir.joinpath(test_name)
     py_config.driver.capabilities.update({"name": test_name})
     return TestCase(name=test_name, file_path=test_result_path)
 
@@ -245,6 +274,12 @@ def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="", help="The lowercase browser name: chrome | firefox")
     parser.addoption("--remote_url", action="store", default="", help="Grid URL to connect tests to.")
     parser.addoption("--screenshots_on", action="store", default="", help="Should screenshots be saved? true | false")
+    parser.addoption(
+        "--pylenium_json",
+        action="store",
+        default="",
+        help="The filepath of the pylenium.json file to use (ie dev-pylenium.json)",
+    )
     parser.addoption("--pylog_level", action="store", default="", help="Set the pylog_level: 'off' | 'info' | 'debug'")
     parser.addoption(
         "--options",
