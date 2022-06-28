@@ -1339,3 +1339,10 @@ class Element:
         apply_style(original_style)
 
         return self
+
+    def focus(self) -> "Element":
+        """Focus a Selenium Web driver element"""
+
+        self.py.log.debug("\t[STEP] .focus() - Focus this web element")
+        self.py.execute_script("arguments[0].focus();", self.webelement)
+        return self
