@@ -894,8 +894,7 @@ class Element:
         self.py.log.debug("\t[STEP] Check if this element is selected")
         return self.webelement.is_selected()
 
-    # ACTIONS #
-    ###########
+    # region ACTIONS
 
     def check(self, allow_selected=False) -> "Element":
         """Check this checkbox or radio button.
@@ -1139,6 +1138,43 @@ class Element:
         self.py.log.debug("\t[STEP] .type() - Type keys into this element")
         self.webelement.send_keys(args)
         return self
+
+    def upload(self, filepath: str) -> "Element":
+        """A convenience method to upload a file to the element.
+
+        You can already do this by using the `Element.type()` command,
+        but using `Element.upload()` is more intuitive and easier to read.
+
+        ```
+        # Selenium .send_keys()
+        driver.find_element(By.ID("select-file")).send_keys("path/to/file.png")
+
+        # Pylenium .type()
+        py.get("#select-file").type("path/to/file.png")
+        ```
+
+        Args:
+            filepath: The absolute path, including the filename and extension, of the file to upload.
+
+        Returns:
+            The current element.
+
+        Examples:
+            A 'normal' flow for uploading a file is:
+
+            1. Get the 'Select File' element to select the file to upload
+            2. Click on an 'Upload Button' to complete the upload
+
+            ```
+            py.get("#select-file").upload("path/to/file.png")
+            py.get("#upload-button").click()
+            ```
+        """
+        self.py.log.debug(f"\t[STEP] .upload() - Select a file to upload: {filepath}")
+        self.webelement.send_keys(filepath)
+        return self
+
+    # endregion
 
     # FIND ELEMENTS #
     #################
