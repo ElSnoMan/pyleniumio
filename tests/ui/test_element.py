@@ -185,4 +185,3 @@ def test_focus(py: Pylenium):
     element = py.getx('//*[@id="firstName"]').focus()
     active_elem = py.webdriver.switch_to.active_element
     assert active_elem == element.webelement
-    
