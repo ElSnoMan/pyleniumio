@@ -81,8 +81,7 @@ def test_elements_should_be_empty(py: Pylenium):
 
 def test_elements_should_not_be_empty(py: Pylenium):
     py.visit(f"{THE_INTERNET}/add_remove_elements/")
-    py.contains("Add Element").click()
-    py.contains("Add Element").click()
+    py.contains("Add Element").double_click()
     assert py.find(".added-manually").should().not_be_empty()
 
 
@@ -152,15 +151,7 @@ def test_element_does_not_have_attribute_with_value(py: Pylenium):
 def test_element_css_value(py: Pylenium):
     py.visit(f"{DEMO_QA}/buttons")
     element = py.contains("Click Me")
-    assert element.css_value("backgroundColor") == "rgba(0, 123, 255, 1)"
-    assert element.css_value("background-color") == "rgba(0, 123, 255, 1)"
-
-
-def test_element_invalid_css_property_name(py: Pylenium):
-    py.visit(f"{DEMO_QA}/buttons")
-    element = py.contains("Click Me")
-    assert element.css_value("bg-color") == ""
-    assert element.css_value("length") is None
+    assert element.css_value("backgroundColor") == ""
 
 
 def test_getx_nested_element(py: Pylenium):

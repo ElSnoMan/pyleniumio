@@ -27,7 +27,9 @@ class CDP:
             cmd_args: The command args. Pass an empty dict {} if there is no command args
 
         Examples:
+        ```
             py.cdp.execute_command('Network.getResponseBody', {'requestId': requestId})
+        ```
 
         Returns:
             A dict of results or an empty dict {} if there is no result to return.
@@ -40,10 +42,9 @@ class CDP:
         """Get performance metrics from Chrome DevTools - similar to the Performance tab in Chrome.
 
         Examples:
+        ```
             metrics = py.cdp.get_performance_metrics()
-
-        Returns:
-            A dict of performance metrics including 'ScriptDuration', 'ThreadTime', 'ProcessTime', and 'DomContentLoaded'.
+            >>> metrics
 
             {'metrics': [
                 {'name': 'Timestamp', 'value': 425608.80694},
@@ -52,6 +53,10 @@ class CDP:
                 ...
                 ]
             }
+        ```
+
+        Returns:
+            A dict of performance metrics including 'ScriptDuration', 'ThreadTime', 'ProcessTime', and 'DomContentLoaded'.
         """
         # The commented out code below should have been executed prior to this function call.
         # self._webdriver.execute_cdp_cmd("Performance.enable", {})

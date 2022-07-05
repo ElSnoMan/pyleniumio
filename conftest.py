@@ -31,6 +31,7 @@ import pytest
 import requests
 from faker import Faker
 from reportportal_client import RPLogger, RPLogHandler
+from selenium.common.exceptions import JavascriptException
 
 from pylenium.a11y import PyleniumAxe
 from pylenium.config import PyleniumConfig, TestCase
@@ -277,7 +278,10 @@ def py(test_case: TestCase, py_config, request, rp_logger):
         elif request.node.report.passed:
             # if the test passed, execute code in this block
             if os.environ.get("LT_USERNAME"):
-                py.execute_script("lambda-status=passed")
+                try:
+                    py.execute_script("lambda-status=passed")
+                except JavascriptException:
+                    pass  # test not executed in LambdaTest provider
         else:
             pass
     except AttributeError:
