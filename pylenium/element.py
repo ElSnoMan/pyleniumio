@@ -777,7 +777,7 @@ class Element:
     # region METHODS
 
     def css_value(self, property_name: str):
-        """Gets the CSS Value of this element given the property's name."""
+        """EXPERIMENTAL: Gets the CSS Value of this element given the property's name."""
         log.command("Element.css_value() - Get a CSS Value given the property: `%s`", property_name)
         try:
             return self.webelement.value_of_css_property(property_name)

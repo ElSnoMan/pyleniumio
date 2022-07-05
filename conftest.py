@@ -279,7 +279,7 @@ def py(test_case: TestCase, py_config, request, rp_logger):
             # if the test passed, execute code in this block
             if os.environ.get("LT_USERNAME"):
                 try:
-                    py.execute_script("lambda-status=passed")
+                    py.webdriver.execute_script("lambda-status=passed")
                 except JavascriptException:
                     pass  # test not executed in LambdaTest provider
         else:

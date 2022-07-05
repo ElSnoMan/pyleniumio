@@ -148,12 +148,6 @@ def test_element_does_not_have_attribute_with_value(py: Pylenium):
     py.get('[type="checkbox"]').should().not_have_attr("type", "box")
 
 
-def test_element_css_value(py: Pylenium):
-    py.visit(f"{DEMO_QA}/buttons")
-    element = py.contains("Click Me")
-    assert element.css_value("backgroundColor") == ""
-
-
 def test_getx_nested_element(py: Pylenium):
     py.visit(f"{DEMO_QA}/automation-practice-form")
     container = py.getx('//*[@id="subjectsContainer"]')
