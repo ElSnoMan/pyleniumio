@@ -69,7 +69,7 @@ If you want to see ALL the data points, take a look at [the file in the GitHub R
 
 This is why the <mark style="color:orange;">**WebPerformance**</mark> object exists! It contains calculations for metrics that have been very useful when we talk about and measure web performance. After navigating to a website and capturing these metrics with <mark style="color:purple;">`py.performance.get()`</mark>, we can do whatever we want with them!
 
-With a few lines of code, you have access many valuable metrics:
+With a few lines of code, you have access to many valuable metrics:
 
 ```python
 # perf will be used in the examples below
