@@ -25,9 +25,8 @@ For more information, visit their official docs: https://click.palletsprojects.c
 import os
 import shutil
 
-from rich_click import click
+import rich_click as click
 from pyfiglet import Figlet
-
 from pylenium.scripts import report_portal
 
 
