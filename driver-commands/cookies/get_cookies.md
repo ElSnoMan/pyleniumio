@@ -2,23 +2,23 @@
 description: The command to get all cookies in the current browser session.
 ---
 
-# get\_cookies
+# get\_all\_cookies
 
 ## Syntax
 
 ```python
-py.get_cookies() -> List[Dict]
+py.get_all_cookies() -> List[Dict]
 ```
 
 ## Usage
 
 {% code title="correct usage" %}
 ```python
-py.get_cookies()
+py.get_all_cookies()
 
 ---or--- # store in a variable
 
-cookies = py.get_cookies()
+cookies = py.get_all_cookies()
 ```
 {% endcode %}
 
@@ -42,7 +42,7 @@ cookies = py.get_cookies()
 ```python
 py.set_cookie({"name": "foo", "value": "bar"})
 
-cookie = py.get_cookies()[0]
+cookie = py.get_all_cookies()[0]
 
 print(cookie["name"])      # "foo"
 print(cookie.get("value")) # "bar"
@@ -52,7 +52,7 @@ print(cookie.get("value")) # "bar"
 py.set_cookie({"name": "foo", "value": "bar"})
 py.set_cookie({"name": "yes", "value", "please"})
 
-for cookie in py.get_cookies():
+for cookie in py.get_all_cookies():
     print(cookie["name"])
     print(cookie.get("value"))
 ```

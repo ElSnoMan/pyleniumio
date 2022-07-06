@@ -4,6 +4,10 @@ description: The command to type keys into a field, input or text box.
 
 # type
 
+{% hint style="info" %}
+Replaces **`send_keys`** from Selenium
+{% endhint %}
+
 ## Syntax
 
 ```python

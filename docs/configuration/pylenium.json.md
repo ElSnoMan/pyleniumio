@@ -116,3 +116,48 @@ py.config.custom["environment"]["url"]
 # Get the first item in the list of clusters
 py.config.custom["environment"]["clusters"][0]
 ```
+
+## Multiple Versions
+
+You can have multiple `pylenium.json` files and pick which one to use when executing tests.
+
+For example, you can have multiple at your Project Root...
+
+```
+📂 Project
+    📃 conftest.py
+    📃 pylenium.json
+    📃 local.pylenium.json
+    ...
+```
+
+or store them in another folder:
+
+```
+📂 Project
+    📃 conftest.py
+    📃 pylenium.json
+    📂 config
+	📃 local.pylenium.json
+	📃 dev.pylenium.json
+	📃 stage.config.json
+```
+
+{% hint style="success" %}
+Keep the original `pylenium.json` at the Project Root so the default behavior continues to work 😉
+{% endhint %}
+
+
+
+Then, use the `--pylenium_json` argument to pick which to use:
+
+```bash
+pytest --pylenium_json="local.pylenium.json"
+
+pytest --pylenium_json="config/dev.pylenium.json"
+```
+
+{% hint style="info" %}
+You can name your custom Pylenium config files whatever you like, but they MUST be `.json` and have the same shape (aka schema) as the default `pylenium.json`
+{% endhint %}
+
