@@ -1,10 +1,11 @@
-import logging
 import time
-from typing import Union, List, Optional
+from typing import List, Union
 
 from pydantic import BaseModel, Field
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
+
+from pylenium.log import logger as log
 
 
 def stopwatch(func):
@@ -18,28 +19,28 @@ def stopwatch(func):
         This is _logged_, not printed to the Terminal
 
     Examples:
-        1. How long does it take to add an item to the cart?
+    ```
+        # 1. How long does it take to add an item to the cart?
         @stopwatch
         def add_item_to_cart(py):
             py.get('#add-item').click()
             py.get('#added-notification').should().be_visible()
 
-        2. How long does it take to edit an item's available stock via the API
-           and see it change in the UI?
+        # 2. How long does it take to edit an item's available stock via the API and see it change in the UI?
         @stopwatch
         def update_available_stock(py, item, quantity):
             payload = {'item': item, 'qty': quantity}
             api.items.update(payload)
             py.get(f'#available-stock-{item}').should().have_text(quantity)
+    ```
     """
 
     def wrapper(*args, **kwargs):
-        log = logging.getLogger("driver")
         start_time = time.time()
         func(*args, **kwargs)
         stop_time = time.time()
         func_name = func.__name__
-        log.debug(f"STOPWATCH - {func_name} took {stop_time - start_time} seconds")
+        log.debug("STOPWATCH - %s took %s seconds", func_name, stop_time - start_time)
 
     return wrapper
 
@@ -60,12 +61,14 @@ class Performance:
             Calling this method too soon may yield NoneTypes because the browser hasn't generated them yet.
 
         Examples:
+        ```
             # Store the entire WebPerformance object and log it
             perf = py.performance.get()
-            py.log.info(perf.dict())
+            log.info(perf.dict())
 
             # Get a single data point from WebPerformance
             tti = py.performance.get().time_to_interactive()
+        ```
         """
         return WebPerformance(
             time_origin=self.get_time_origin(),

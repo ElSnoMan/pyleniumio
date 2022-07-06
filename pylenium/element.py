@@ -1,13 +1,15 @@
-from pylenium import jquery
 import time
-from typing import List, Tuple, Optional
+from typing import List, Optional, Tuple
 
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebElement
-from selenium.webdriver.support.select import Select
 from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.select import Select
+
+from pylenium import jquery
+from pylenium.log import logger as log
 
 
 class ElementWait:
@@ -39,12 +41,14 @@ class ElementWait:
 
 
 class ElementsShould:
-    """Expectations for the current list of elements, if any."""
+    """ElementsShould API: Commands (aka Expectations) for the current list of Elements."""
 
     def __init__(self, py, elements: "Elements", timeout: int, ignored_exceptions: list = None):
         self._py = py
         self._elements = elements
         self._wait = py.wait(timeout=timeout, use_py=True, ignored_exceptions=ignored_exceptions)
+
+    # region POSITIVE EXPECTATIONS
 
     def be_empty(self) -> bool:
         """An expectation that the list has no elements.
@@ -55,7 +59,7 @@ class ElementsShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().be_empty()")
+        log.command("Elements.should().be_empty()")
         try:
             if self._elements.is_empty():
                 return True
@@ -67,8 +71,7 @@ class ElementsShould:
         if value:
             return True
         else:
-            self._py.log.critical(".should().be_empty()")
-            raise AssertionError("List of elements was not empty.")
+            raise AssertionError("List of elements was not empty")
 
     def be_greater_than(self, length: int) -> bool:
         """An expectation that the number of elements in the list is greater than the given length.
@@ -79,7 +82,7 @@ class ElementsShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug(f"  [ASSERT] .should().be_greater_than() ``{length}``")
+        log.command("Elements.should().be_greater_than(): %s", length)
         try:
             if self._elements.length() > length:
                 return True
@@ -91,8 +94,7 @@ class ElementsShould:
         if value:
             return True
         else:
-            self._py.log.critical(".should().be_greater_than()")
-            raise AssertionError(f"Length of elements was not greater than {length}.")
+            raise AssertionError(f"Length of elements was not greater than {length}")
 
     def be_less_than(self, length: int) -> bool:
         """An expectation that the number of elements in the list is less than the given length.
@@ -103,7 +105,7 @@ class ElementsShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug(f"\t[ASSERT] .should().be_less_than() ``{length}``")
+        log.command("Elements.should().be_less_than(): %s", length)
         try:
             if self._elements.length() < length:
                 return True
@@ -115,8 +117,7 @@ class ElementsShould:
         if value:
             return True
         else:
-            self._py.log.critical(".should().be_less_than()")
-            raise AssertionError(f"Length of elements was not less than {length}.")
+            raise AssertionError(f"Length of elements was not less than {length}")
 
     def have_length(self, length: int) -> bool:
         """An expectation that the number of elements in the list is equal to the given length.
@@ -127,7 +128,7 @@ class ElementsShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug(f"\t[ASSERT] .should().have_length() ``{length}``")
+        log.command("Elements.should().have_length(): %s", length)
         try:
             if self._elements.length() == length:
                 return True
@@ -139,8 +140,11 @@ class ElementsShould:
         if value:
             return True
         else:
-            self._py.log.critical(".should().have_length()")
-            raise AssertionError(f"Length of elements was not equal to {length}.")
+            raise AssertionError(f"Length of elements was not equal to {length}")
+
+    # endregion
+
+    # region NEGATIVE EXPECTATIONS
 
     def not_be_empty(self) -> "Elements":
         """An expectation that the list has at least one element.
@@ -151,7 +155,7 @@ class ElementsShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().not_be_empty()")
+        log.command("Elements.should().not_be_empty()")
         try:
             if not self._elements.is_empty():
                 return self._elements
@@ -163,19 +167,20 @@ class ElementsShould:
         if value:
             return Elements(self._py, value, self._elements.locator)
         else:
-            self._py.log.critical(".should().not_be_empty()")
-            raise AssertionError("List of elements was empty.")
+            raise AssertionError("List of elements was empty")
+
+    # endregion
 
 
 class ElementShould:
-    """Expectations for the current element that is already in the DOM."""
+    """ElementShould API: Commands (aka Expectations) for the current Element."""
 
     def __init__(self, py, element: "Element", timeout: int, ignored_exceptions: list = None):
         self._py = py
         self._element = element
         self._wait = ElementWait(element.webelement, timeout, ignored_exceptions)
 
-    # region POSITIVE CONDITIONS
+    # region POSITIVE EXPECTATIONS
 
     def be_clickable(self) -> "Element":
         """An expectation that the element is displayed and enabled so you can click it.
@@ -186,7 +191,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().be_clickable()")
+        log.command("Element.should().be_clickable()")
         try:
             value = self._wait.until(lambda e: e.is_displayed() and e.is_enabled())
         except TimeoutException:
@@ -194,7 +199,6 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().be_clickable()")
             raise AssertionError("Element was not clickable")
 
     def be_checked(self) -> "Element":
@@ -206,7 +210,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().be_checked()")
+        log.command("Element.should().be_checked()")
         try:
             value = self._wait.until(lambda e: self._element.is_checked())
         except TimeoutException:
@@ -214,7 +218,6 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().be_checked()")
             raise AssertionError("Element was not checked")
 
     def be_disabled(self) -> "Element":
@@ -226,7 +229,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().be_disabled()")
+        log.command("Element.should().be_disabled()")
         try:
             value = self._wait.until(lambda e: not e.is_enabled())
         except TimeoutException:
@@ -234,7 +237,6 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().be_disabled()")
             raise AssertionError("Element was not disabled")
 
     def be_enabled(self) -> "Element":
@@ -246,7 +248,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().be_enabled()")
+        log.command("Element.should().be_enabled()")
         try:
             value = self._wait.until(lambda e: e.is_enabled())
         except TimeoutException:
@@ -254,7 +256,6 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().be_enabled()")
             raise AssertionError("Element was not enabled")
 
     def be_focused(self) -> "Element":
@@ -266,7 +267,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().be_focused()")
+        log.command("Element.should().be_focused()")
         try:
             value = self._wait.until(lambda e: e == self._py.webdriver.switch_to.active_element)
         except TimeoutException:
@@ -275,7 +276,6 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().be_focused()")
             raise AssertionError("Element was not focused")
 
     def be_hidden(self) -> "Element":
@@ -287,7 +287,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().be_hidden()")
+        log.command("Element.should().be_hidden()")
         try:
             value = self._wait.until(lambda e: e and not e.is_displayed())
         except TimeoutException:
@@ -296,7 +296,6 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().be_hidden()")
             raise AssertionError("Element was not hidden")
 
     def be_selected(self) -> "Element":
@@ -308,7 +307,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().be_selected()")
+        log.command("Element.should().be_selected()")
         try:
             value = self._wait.until(lambda e: e.is_selected())
         except TimeoutException:
@@ -317,7 +316,6 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().be_selected()")
             raise AssertionError("Element was not selected")
 
     def be_visible(self) -> "Element":
@@ -329,7 +327,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().be_visible()")
+        log.command("Element.should().be_visible()")
         try:
             value = self._wait.until(lambda e: e and e.is_displayed())
         except TimeoutException:
@@ -338,7 +336,6 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().be_visible()")
             raise AssertionError("Element was not visible")
 
     def have_attr(self, attr: str, value: Optional[str] = None) -> "Element":
@@ -354,7 +351,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug(f"\t[ASSERT] .should().have_attr() ``{attr}``")
+        log.command("Element.should().have_attr() `%s`", attr)
         try:
             if value is None:
                 val = self._wait.until(lambda e: e.get_attribute(attr))
@@ -366,13 +363,12 @@ class ElementShould:
         if val:
             return self._element
         else:
-            self._py.log.critical(".should().have_attr()")
             if value is None:
-                raise AssertionError(f"Element did not have attribute: ``{attr}``")
+                raise AssertionError(f"Element did not have attribute: `{attr}`")
             else:
                 raise AssertionError(
-                    f"Expected Attribute Value: ``{value}`` "
-                    f'- Actual Attribute Value: ``{self._element.get_attribute("value")}``'
+                    f"Expected Attribute Value: `{value}` "
+                    f'- Actual Attribute Value: `{self._element.get_attribute("value")}`'
                 )
 
     def have_class(self, class_name: str) -> "Element":
@@ -387,7 +383,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug(f"\t[ASSERT] .should().have_class() ``{class_name}``")
+        log.command("Element.should().have_class() `%s`", class_name)
         try:
             val = self._wait.until(lambda e: e.get_attribute("class") == class_name)
         except TimeoutException:
@@ -396,10 +392,8 @@ class ElementShould:
         if val:
             return self._element
         else:
-            self._py.log.critical(".should().have_class()")
             raise AssertionError(
-                f"Expected className: ``{class_name}`` "
-                f'- Actual className: ``{self._element.get_attribute("class")}``'
+                f"Expected className: `{class_name}` " f'- Actual className: `{self._element.get_attribute("class")}`'
             )
 
     def have_prop(self, prop: str, value: str) -> "Element":
@@ -415,7 +409,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug(f"\t[ASSERT] .should().have_prop() ``{prop}`` with value of ``{value}``")
+        log.command("Element.should().have_prop() `%s` with value of `%s`", prop, value)
         try:
             val = self._wait.until(lambda e: e.get_property(prop) == value)
         except TimeoutException:
@@ -424,10 +418,8 @@ class ElementShould:
         if val:
             return self._element
         else:
-            self._py.log.critical(".should().have_prop()")
             raise AssertionError(
-                f"Expected Property value: ``{value}`` "
-                f"- Actual Property value: ``{self._element.get_property(prop)}``"
+                f"Expected Property value: `{value}` " f"- Actual Property value: `{self._element.get_property(prop)}`"
             )
 
     def have_text(self, text, case_sensitive=True) -> "Element":
@@ -443,7 +435,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug(f"\t[ASSERT] .should().have_text() ``{text}``")
+        log.command("Element.should().have_text() `%s`", text)
         try:
             if case_sensitive:
                 value = self._wait.until(lambda e: e.text == text)
@@ -455,8 +447,7 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().have_text()")
-            raise AssertionError(f"Expected text: ``{text}`` - Actual text: ``{self._element.text()}``")
+            raise AssertionError(f"Expected text: `{text}` - Actual text: `{self._element.text()}`")
 
     def contain_text(self, text, case_sensitive=True) -> "Element":
         """An expectation that the element contains the given text.
@@ -471,7 +462,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug(f"\t[ASSERT] .should().contain_text() ``{text}``")
+        log.command("Element.should().contain_text() `%s`", text)
         try:
             if case_sensitive:
                 value = self._wait.until(lambda e: text in e.text)
@@ -483,8 +474,7 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().contain_text()")
-            raise AssertionError(f"Expected ``{text}`` to be in ``{self._element.text()}``")
+            raise AssertionError(f"Expected `{text}` to be in `{self._element.text()}`")
 
     def have_value(self, value) -> "Element":
         """An expectation that the element has the given value.
@@ -503,7 +493,7 @@ class ElementShould:
             * An element with a `value` attribute with no value will yield an empty string `""`
             * An element with a `value` attribute with a value will yield the value
         """
-        self._py.log.debug(f"\t[ASSERT] .should().have_value() ``{value}``")
+        log.command("Element.should().have_value() `%s`", value)
         try:
             val = self._wait.until(lambda e: e.get_attribute("value") == value)
         except TimeoutException:
@@ -512,14 +502,11 @@ class ElementShould:
         if val:
             return self._element
         else:
-            self._py.log.critical(".should().have_value()")
-            raise AssertionError(
-                f"Expected value: ``{value}`` " f'- Actual value: ``{self._element.get_attribute("value")}``'
-            )
+            raise AssertionError(f'Expected value: `{value}` - Actual value: `{self._element.get_attribute("value")}`')
 
     # endregion
 
-    # region NEGATIVE CONDITIONS
+    # region NEGATIVE EXPECTATIONS
 
     def not_be_focused(self) -> "Element":
         """An expectation that the element is not focused.
@@ -530,7 +517,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug("\t[ASSERT] .should().not_be_focused()")
+        log.command("Element.should().not_be_focused()")
         try:
             value = self._wait.until(lambda e: e != self._py.webdriver.switch_to.active_element)
         except TimeoutException:
@@ -539,7 +526,6 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().not_be_focused()")
             raise AssertionError("Element had focus")
 
     def disappear(self):
@@ -555,7 +541,7 @@ class ElementShould:
             # wait for a loading spinner to appear and then disappear once the load is complete
             py.get(#spinner).should().disappear()
         """
-        self._py.log.debug("\t[ASSERT] .should().disappear()")
+        log.command("Element.should().disappear()")
         try:
             value = self._wait.until(ec.invisibility_of_element(self._element.webelement))
         except TimeoutException:
@@ -563,7 +549,6 @@ class ElementShould:
         if value:
             return self._py
         else:
-            self._py.log.critical(".should().disappear()")
             raise AssertionError("Element was still visible or still in the DOM")
 
     def not_have_attr(self, attr: str, value: Optional[str] = None) -> "Element":
@@ -581,7 +566,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug(f"\t[ASSERT] .should().not_have_attr() ``{attr}``")
+        log.command("Element.should().not_have_attr() `%s`", attr)
         try:
             if value is None:
                 val = self._wait.until(lambda e: not e.get_attribute(attr))
@@ -593,11 +578,10 @@ class ElementShould:
         if val:
             return self._element
         else:
-            self._py.log.critical(".should().not_have_attr()")
             if value is None:
-                raise AssertionError(f"Element had the attribute: ``{attr}``")
+                raise AssertionError(f"Element had the attribute: `{attr}`")
             else:
-                raise AssertionError(f"Element still had attribute ``{attr}`` with the value of ``{value}``")
+                raise AssertionError(f"Element still had attribute `{attr}` with the value of `{value}`")
 
     def not_have_value(self, value) -> "Element":
         """An expectation that the element does not have the given value.
@@ -616,7 +600,7 @@ class ElementShould:
             * An element with a `value` attribute with no value will yield an empty string `""`
             * An element with a `value` attribute with a value will yield the value
         """
-        self._py.log.debug(f"\t[ASSERT] .should().not_have_value() ``{value}``")
+        log.command("Element.should().not_have_value() `%s`", value)
         try:
             val = self._wait.until(lambda e: e.get_attribute("value") != value)
         except TimeoutException:
@@ -625,7 +609,6 @@ class ElementShould:
         if val:
             return self._element
         else:
-            self._py.log.critical(".should().not_have_value()")
             raise AssertionError(f"Element had value matching ``{value}``")
 
     def not_have_text(self, text, case_sensitive=True) -> "Element":
@@ -641,7 +624,7 @@ class ElementShould:
         Raises:
             `AssertionError` if the condition is not met in the specified amount of time.
         """
-        self._py.log.debug(f"\t[ASSERT] .should().not_have_text() ``{text}``")
+        log.command("Element.should().not_have_text() `%s`", text)
         try:
             if case_sensitive:
                 value = self._wait.until(lambda e: e.text != text)
@@ -653,14 +636,13 @@ class ElementShould:
         if value:
             return self._element
         else:
-            self._py.log.critical(".should().not_have_text()")
             raise AssertionError(f"Element had the text matching ``{text}``")
 
     # endregion
 
 
 class Elements(List["Element"]):
-    """Represents a list of DOM elements."""
+    """Elements API: Represents a list of DOM webelements and includes commands to work with them."""
 
     def __init__(self, py, web_elements, locator: Optional[Tuple]):
         self._list = [Element(py, element, None) for element in web_elements]
@@ -672,7 +654,9 @@ class Elements(List["Element"]):
         """A collection of expectations for this list of elements.
 
         Examples:
-            py.find('option').should().not_be_empty()
+        ```
+            py.find("option").should().not_be_empty()
+        ```
         """
         if timeout:
             wait_time = timeout
@@ -680,13 +664,11 @@ class Elements(List["Element"]):
             wait_time = self._py.config.driver.wait_time
         return ElementsShould(self._py, self, wait_time, ignored_exceptions)
 
+    # region METHODS
+
     def length(self) -> int:
         """The number of elements in the list."""
         return len(self._list)
-
-    def is_empty(self) -> bool:
-        """Checks if there are no elements in the list."""
-        return self.length() == 0
 
     def first(self) -> "Element":
         """Gets the first element in the list.
@@ -697,7 +679,7 @@ class Elements(List["Element"]):
         if self.length() > 0:
             return self._list[0]
         else:
-            raise IndexError("Cannot get first() from an empty list.")
+            raise IndexError("Cannot get first() from an empty list")
 
     def last(self) -> "Element":
         """Gets the last element in the list.
@@ -708,10 +690,27 @@ class Elements(List["Element"]):
         if self.length() > 0:
             return self._list[-1]
         else:
-            raise IndexError("Cannot get last() from an empty list.")
+            raise IndexError("Cannot get last() from an empty list")
 
-    # ACTIONS #
-    ###########
+    # endregion
+
+    # region CONDITIONS
+
+    def is_empty(self) -> bool:
+        """Checks if there are zero elements in the list."""
+        return self.length() == 0
+
+    def are_checked(self) -> bool:
+        """Check that all checkbox or radio buttons in this list are selected."""
+        for element in self._list:
+            if not element.is_checked():
+                return False
+        # every element is checked
+        return True
+
+    # endregion
+
+    # region ACTIONS
 
     def check(self, allow_selected=False) -> "Elements":
         """Check all checkboxes or radio buttons in this list.
@@ -723,7 +722,7 @@ class Elements(List["Element"]):
             `ValueError` if any elements are already selected.
             `ValueError` if any elements are not checkboxes or radio buttons.
         """
-        self._py.log.debug("\t[STEP] elements.check() - Check all checkboxes or radio buttons in this list")
+        log.command("Elements.check() - Check all checkboxes or radio buttons in this list")
         for element in self._list:
             element.check(allow_selected)
         return self
@@ -738,25 +737,16 @@ class Elements(List["Element"]):
             `ValueError` if any elements are already selected.
             `ValueError` if any elements are not checkboxes or radio buttons.
         """
-        self._py.log.debug("\t[STEP] elements.uncheck() - Uncheck all checkboxes or radio buttons in this list")
+        log.command("Elements.uncheck() - Uncheck all checkboxes or radio buttons in this list")
         for element in self._list:
             element.uncheck(allow_deselected)
         return self
 
-    # CONDITIONS #
-    ##############
-
-    def are_checked(self) -> bool:
-        """Check that all checkbox or radio buttons in this list are selected."""
-        for element in self._list:
-            if not element.is_checked():
-                return False
-        # every element is checked
-        return True
+    # endregion
 
 
 class Element:
-    """Represents a DOM element."""
+    """Element API: Represents a single DOM webelement and includes the commands to work with it."""
 
     def __init__(self, py, web_element: WebElement, locator: Optional[Tuple]):
         self._py = py
@@ -770,52 +760,43 @@ class Element:
             return self._webelement[0]
         return self._webelement
 
-    @property
-    def py(self):
-        """The current instance of `py` that found this element."""
-        return self._py
-
-    def css_value(self, property_name: str):
-        """Gets the CSS Value of this element given the css_name."""
-        self.py.log.debug(f"\t[STEP] .css_value() - Get a CSS Value given the property: ``{property_name}``")
-        try:
-            return self.webelement.value_of_css_property(property_name)
-        except WebDriverException:
-            self.py.log.warning(f"Property Name: ``{property_name}`` is invalid or not found.")
-            return None
-
-    def tag_name(self) -> str:
-        """Gets the tag name of this element."""
-        tag_name = self.webelement.tag_name
-        self.py.log.debug(f"\t[STEP] .tag_name() - Get the tag name of this element ``{tag_name}``")
-        return tag_name
-
-    def text(self) -> str:
-        """Gets the InnerText of this element."""
-        text = self.webelement.text
-        self.py.log.debug(f"\t[STEP] .text() - Get the text of this element ``{text}``")
-        return text
-
-    # EXPECTATIONS #
-    ################
-
     def should(self, timeout: int = 0, ignored_exceptions: list = None) -> ElementShould:
         """A collection of expectations for this element.
 
         Examples:
-            py.get('#foo').should().be_clickable()
+        ```
+            py.get("#foo").should().be_clickable()
+        ```
         """
         if timeout:
             wait_time = timeout
         else:
             wait_time = self._py.config.driver.wait_time
-        return ElementShould(self.py, self, wait_time, ignored_exceptions)
+        return ElementShould(self._py, self, wait_time, ignored_exceptions)
 
-    # METHODS #
-    ###########
+    # region METHODS
+
+    def css_value(self, property_name: str):
+        """EXPERIMENTAL: Gets the CSS Value of this element given the property's name."""
+        log.command("Element.css_value() - Get a CSS Value given the property: `%s`", property_name)
+        try:
+            return self.webelement.value_of_css_property(property_name)
+        except WebDriverException:
+            log.warning("Property Name: `%s` is invalid or not found", property_name)
+            return None
+
+    def tag_name(self) -> str:
+        """Gets the tag name of this element."""
+        log.command("Element.tag_name() - Get the tag name of this element")
+        return self.webelement.tag_name
+
+    def text(self) -> str:
+        """Gets the InnerText of this element."""
+        log.command("Element.text() - Get the text of this element")
+        return self.webelement.text
 
     def get_attribute(self, attribute: str):
-        """Gets the attribute's value.
+        """Gets the given attribute's value.
 
             * If the value is 'true' or 'false', then this returns a Boolean
             * If the name does not exist, then return None
@@ -827,7 +808,7 @@ class Element:
         Returns:
             The value of the attribute. If the attribute does not exist, returns None
         """
-        self.py.log.debug(f"\t[STEP] .get_attribute() - Get the ``{attribute}`` value of this element")
+        log.command("Element.get_attribute() - Get the `%s` attribute value from this element", attribute)
         value = self.webelement.get_attribute(attribute)
         if value == "true":
             return True
@@ -843,13 +824,14 @@ class Element:
             prop: The name of the element's property.
 
         Returns:
-            The value of the attribute.
+            The value of the property.
         """
-        self.py.log.debug(f"\t[STEP] .get_property() - Get the ``{prop}`` value of this element")
+        log.command("Element.get_property() - Get the `%s` property value of this element", prop)
         return self.webelement.get_property(prop)
 
-    # CONDITIONS #
-    ##############
+    # endregion
+
+    # region CONDITIONS
 
     def is_checked(self) -> bool:
         """Check that this checkbox or radio button is selected.
@@ -859,10 +841,10 @@ class Element:
         """
         type_ = self.webelement.get_attribute("type")
         if type_ != "checkbox" and type_ != "radio":
-            raise ValueError("Element is not a checkbox or radio button.")
+            raise ValueError("Element is not a checkbox or radio button")
 
-        self.py.log.debug("\t[STEP] Check if this checkbox or radio button element is checked")
-        return self.py.execute_script("return arguments[0].checked;", self.webelement)
+        log.command("Element.is_checked() - Check if this checkbox or radio button element is selected")
+        return self._py.webdriver.execute_script("return arguments[0].checked;", self.webelement)
 
     def is_displayed(self) -> bool:
         """Check that this element is displayed.
@@ -873,7 +855,7 @@ class Element:
         Returns:
             True if element is visible to the user, else False
         """
-        self.py.log.debug("\t[STEP] Check if this element is displayed")
+        log.command("Element.is_displayed() - Check if this element is displayed")
         return self.webelement.is_displayed()
 
     def is_enabled(self) -> bool:
@@ -882,7 +864,7 @@ class Element:
         Returns:
             True if the element is enabled, else False
         """
-        self.py.log.debug("\t[STEP] Check if this element is enabled")
+        log.command("Element.is_enabled() - Check if this element is enabled")
         return self.webelement.is_enabled()
 
     def is_selected(self) -> bool:
@@ -891,8 +873,10 @@ class Element:
         Returns:
             True if the element is selected, else False
         """
-        self.py.log.debug("\t[STEP] Check if this element is selected")
+        log.command("Element.is_selected() - Check if this element is selected")
         return self.webelement.is_selected()
+
+    # endregion
 
     # region ACTIONS
 
@@ -903,24 +887,24 @@ class Element:
             allow_selected: Do not raise error if element is already selected.
 
         Raises:
-            `ValueError` if element is already selected.
-            `ValueError` if element is not a checkbox or radio button
+            - `ValueError` if element is already selected.
+            - `ValueError` if element is not a checkbox or radio button
 
         Returns:
-            This element so you can chain another command.
+            The current element
         """
-        self.py.log.debug("\t[STEP] .check() - Select this checkbox or radio button")
+        log.command("Element.check() - Select this checkbox or radio button")
         type_ = self.webelement.get_attribute("type")
         if type_ == "checkbox" or type_ == "radio":
-            checked = self.py.webdriver.execute_script("return arguments[0].checked;", self.webelement)
+            checked = self._py.webdriver.execute_script("return arguments[0].checked;", self.webelement)
             if not checked:
                 self.webelement.click()
                 return self
             elif allow_selected:
                 return self
             else:
-                raise ValueError(f"{type_} is already selected.")
-        raise ValueError("Element is not a checkbox or radio button.")
+                raise ValueError(f"{type_} is already selected")
+        raise ValueError("Element is not a checkbox or radio button")
 
     def uncheck(self, allow_deselected=False) -> "Element":
         """Uncheck this checkbox or radio button.
@@ -929,24 +913,24 @@ class Element:
             allow_deselected: Do not raise error if element is already deselected.
 
         Raises:
-            `ValueError` if element is already deselected.
-            `ValueError` if element is not a checkbox or radio button
+            - `ValueError` if element is already deselected.
+            - `ValueError` if element is not a checkbox or radio button
 
         Returns:
-            This element so you can chain another command.
+            The current element
         """
-        self.py.log.debug("\t[STEP] .uncheck() - Deselect this checkbox or radio button")
+        log.command("Element.uncheck() - Deselect this checkbox or radio button")
         type_ = self.webelement.get_attribute("type")
         if type_ == "checkbox" or type_ == "radio":
-            checked = self.py.webdriver.execute_script("return arguments[0].checked;", self.webelement)
+            checked = self._py.webdriver.execute_script("return arguments[0].checked;", self.webelement)
             if checked:
                 self.webelement.click()
                 return self
             elif allow_deselected:
                 return self
             else:
-                raise ValueError(f"{type_} is already deselected.")
-        raise ValueError("Element is not a checkbox or radio button.")
+                raise ValueError(f"{type_} is already deselected")
+        raise ValueError("Element is not a checkbox or radio button")
 
     def clear(self) -> "Element":
         """Clears the text of the input or textarea element.
@@ -954,9 +938,9 @@ class Element:
             * Only works on elements that can accept text entry.
 
         Returns:
-            This element so you can chain another command.
+            The current element
         """
-        self.py.log.debug("\t[STEP] .clear() - Clear the input of this element")
+        log.command("Element.clear() - Clear the input of this element.")
         self.webelement.clear()
         return self
 
@@ -967,14 +951,14 @@ class Element:
             force: If True, a JavascriptExecutor command is sent instead of Selenium's native `.click()`.
 
         Returns:
-            The current instance of Pylenium so you can chain another command.
+            The current instance of Pylenium
         """
-        self.py.log.debug("\t[STEP] .click() - Click this element")
+        log.command("Element.click() - Click this element")
         if force:
-            self.py.webdriver.execute_script("arguments[0].click()", self.webelement)
+            self._py.webdriver.execute_script("arguments[0].click()", self.webelement)
         else:
             self.webelement.click()
-        return self.py
+        return self._py
 
     def deselect(self, value):
         """Deselects all `<option>` within a multi `<select>` element that match the given value.
@@ -983,13 +967,13 @@ class Element:
             value: The value or text content of the `<option>` elements to be deselected.
 
         Raises:
-            * `UnexpectedTagNameException` if this element is not a `<select>`
-            * `NoSuchElementException` if a matching `<option>` element is not found.
+            - `UnexpectedTagNameException` if this element is not a `<select>`
+            - `NoSuchElementException` if a matching `<option>` element is not found.
 
         Returns:
-            This dropdown element so you can chain another command.
+            The current element
         """
-        self.py.log.debug("\t[STEP] .deselect() - Deselect options from a dropdown element")
+        log.command("Element.deselect() - Deselect options from a dropdown element")
         select = Select(self.webelement)
         try:
             select.deselect_by_visible_text(value)
@@ -1001,11 +985,11 @@ class Element:
         """Double clicks the element.
 
         Returns:
-            The current instance of Pylenium so you can chain another command.
+            The current instance of Pylenium
         """
-        self.py.log.debug("\t[STEP] .double_click() - Double click this element")
-        ActionChains(self.py.webdriver).double_click(self.webelement).perform()
-        return self.py
+        log.command("Element.double_click() - Double click this element")
+        ActionChains(self._py.webdriver).double_click(self.webelement).perform()
+        return self._py
 
     def drag_to(self, css: str) -> "Element":
         """Drag the current element to another element given its CSS selector.
@@ -1014,14 +998,16 @@ class Element:
             css: The CSS selector of the element to drag to.
 
         Returns:
-            The current element.
+            The current element
 
         Examples:
-            py.get('#draggable-card').drag_to('#done-column')
+        ```
+            py.get("#draggable-card").drag_to("#done-column")
+        ```
         """
-        self.py.log.debug("\t[STEP] .drag_to() - Drag this element to another element")
-        to_element = self.py.get(css).webelement
-        jquery.drag_and_drop(self.py.webdriver, self.webelement, to_element)
+        log.command("Element.drag_to() - Drag this element to another element by CSS: `%s`", css)
+        to_element = self._py.get(css).webelement
+        jquery.drag_and_drop(self._py.webdriver, self.webelement, to_element)
         return self
 
     def drag_to_element(self, to_element: "Element") -> "Element":
@@ -1031,35 +1017,48 @@ class Element:
             to_element: The Element to drag to.
 
         Returns:
-            The current element.
+            The current element
 
         Examples:
-            column = py.get('#done-column')
-            py.get('#draggable-card').drag_to_element(column)
+        ```
+            column = py.get("#done-column")
+            py.get("#draggable-card").drag_to_element(column)
+        ```
         """
-        self.py.log.debug("\t[STEP] .drag_to_element() - Drag this element to another element")
-        jquery.drag_and_drop(self.py.webdriver, self.webelement, to_element.webelement)
+        log.command("Element.drag_to_element() - Drag this element to another element")
+        jquery.drag_and_drop(self._py.webdriver, self.webelement, to_element.webelement)
+        return self
+
+    def focus(self) -> "Element":
+        """Put focus on the element.
+
+        Returns:
+            The current element
+        """
+
+        log.command("Element.focus() - Focus this element")
+        self._py.execute_script("arguments[0].focus();", self.webelement)
         return self
 
     def hover(self):
         """Hovers the element.
 
         Returns:
-            The current instance of Pylenium so you can chain another command.
+            The current instance of Pylenium
         """
-        self.py.log.debug("\t[STEP] .hover() - Hovers this element")
-        ActionChains(self.py.webdriver).move_to_element(self.webelement).perform()
-        return self.py
+        log.command("Element.hover() - Hovers this element")
+        ActionChains(self._py.webdriver).move_to_element(self.webelement).perform()
+        return self._py
 
     def right_click(self):
         """Right clicks the element.
 
         Returns:
-            The current instance of Pylenium so you can chain another command.
+            The current instance of Pylenium
         """
-        self.py.log.debug("\t[STEP] .right_click() - Right click this element")
-        ActionChains(self.py.webdriver).context_click(self.webelement).perform()
-        return self.py
+        log.command("Element.right_click() - Right click this element")
+        ActionChains(self._py.webdriver).context_click(self.webelement).perform()
+        return self._py
 
     def select_by_index(self, index: int) -> "Element":
         """Select an `<option>` element within a `<select>` dropdown given its index.
@@ -1070,13 +1069,13 @@ class Element:
             index: The index position of the `<option>` to be selected.
 
         Raises:
-            * `UnexpectedTagNameException` if the dropdown is not a `<select>` element.
-            * `NoSuchElementException` if the `<option>` with the given index doesn't exist.
+            - `UnexpectedTagNameException` if the dropdown is not a `<select>` element.
+            - `NoSuchElementException` if the `<option>` with the given index doesn't exist.
 
         Returns:
-            The dropdown element so you can chain another command if needed.
+            The current element
         """
-        self.py.log.debug("\t[STEP] .select_by_index() - Select an <option> element in this dropdown")
+        log.command("Element.select_by_index() - Select an <option> element in the dropdown by index: %s", index)
         dropdown = Select(self.webelement)
         dropdown.select_by_index(index)
         return self
@@ -1088,13 +1087,15 @@ class Element:
             text: The text within the `<option>` to be selected.
 
         Raises:
-            * `UnexpectedTagNameException` if the dropdown is not a `<select>` element.
-            * `NoSuchElementException` if the `<option>` with the given text doesn't exist.
+            - `UnexpectedTagNameException` if the dropdown is not a `<select>` element.
+            - `NoSuchElementException` if the `<option>` with the given text doesn't exist.
 
         Returns:
-            The dropdown element so you can chain another command if needed.
+            The current element
         """
-        self.py.log.debug("\t[STEP] .select_by_text() - Select all <option> elements in this dropdown")
+        log.command(
+            "Element.select_by_text() - Select one or more <option> elements in the dropdown by text: `%s`", text
+        )
         dropdown = Select(self.webelement)
         dropdown.select_by_visible_text(text)
         return self
@@ -1106,13 +1107,15 @@ class Element:
             value: The value within the `<option>` to be selected.
 
         Raises:
-            * `UnexpectedTagNameException` if the dropdown is not a `<select>` element.
-            * `NoSuchElementException` if the `<option>` with the given value doesn't exist.
+            - `UnexpectedTagNameException` if the dropdown is not a `<select>` element.
+            - `NoSuchElementException` if the `<option>` with the given value doesn't exist.
 
         Returns:
-            The dropdown element so you can chain another command if needed.
+            The current element
         """
-        self.py.log.debug("\t[STEP] .select_by_value() - Select all <option> elements in this dropdown")
+        log.command(
+            "Element.select_by_value() - Select one or more <option> elements in this dropdown by value: `%s`", value
+        )
         dropdown = Select(self.webelement)
         dropdown.select_by_value(value)
         return self
@@ -1120,22 +1123,22 @@ class Element:
     def submit(self):
         """Submits the form.
 
-            * Meant for <form> elements. May not have an effect on other types.
+            * Meant for `<form>` and `<input>` elements. May not have an effect on other types.
 
         Returns:
-            The current instance of Pylenium so you can chain another command.
+            The current instance of Pylenium
         """
-        self.py.log.debug("\t[STEP] .submit() - Submit the form")
+        log.command("Element.submit() - Submit the form")
         self.webelement.submit()
-        return self.py
+        return self._py
 
     def type(self, *args) -> "Element":
         """Simulate a user typing keys into the input.
 
         Returns:
-            This element so you can chain another command.
+            The current element
         """
-        self.py.log.debug("\t[STEP] .type() - Type keys into this element")
+        log.command("Element.type() - Type keys into this element")
         self.webelement.send_keys(args)
         return self
 
@@ -1157,27 +1160,25 @@ class Element:
             filepath: The absolute path, including the filename and extension, of the file to upload.
 
         Returns:
-            The current element.
+            The current element
 
         Examples:
             A 'normal' flow for uploading a file is:
-
+        ```
             1. Get the 'Select File' element to select the file to upload
             2. Click on an 'Upload Button' to complete the upload
 
-            ```
             py.get("#select-file").upload("path/to/file.png")
             py.get("#upload-button").click()
-            ```
+        ```
         """
-        self.py.log.debug(f"\t[STEP] .upload() - Select a file to upload: {filepath}")
+        log.command("Element.upload() - Select a file to upload: `%s`", filepath)
         self.webelement.send_keys(filepath)
         return self
 
     # endregion
 
-    # FIND ELEMENTS #
-    #################
+    # region FIND ELEMENTS
 
     def contains(self, text: str, timeout: int = None) -> "Element":
         """Gets the DOM element containing the `text`.
@@ -1189,16 +1190,16 @@ class Element:
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
-        self.py.log.debug(f"\t[STEP] .contains() - Find the element that contains text: ``{text}``")
+        log.command("Element.contains() - Get the element that contains text: `%s`", text)
         locator = (By.XPATH, f'.//*[contains(text(), "{text}")]')
 
         if timeout == 0:
             element = self.webelement.find_element(*locator)
         else:
-            element = self.py.wait(timeout).until(
-                lambda _: self.webelement.find_element(*locator), f"Could not find element with the text ``{text}``"
+            element = self._py.wait(timeout).until(
+                lambda _: self.webelement.find_element(*locator), f"Could not find element with the text: `{text}`"
             )
-        return Element(self.py, element, locator)
+        return Element(self._py, element, locator)
 
     def get(self, css: str, timeout: int = None) -> "Element":
         """Gets the DOM element that matches the `css` selector in this element's context.
@@ -1210,16 +1211,16 @@ class Element:
         Returns:
             The first element that is found, even if multiple elements match the query.
         """
-        self.py.log.debug(f"\t[STEP] .get() - Find the element that has css: ``{css}``")
+        log.command("Element.get() - Get the element with CSS: `%s`", css)
         by = By.CSS_SELECTOR
 
         if timeout == 0:
             element = self.webelement.find_element(by, css)
         else:
-            element = self.py.wait(timeout).until(
-                lambda _: self.webelement.find_element(by, css), f"Could not find element with the CSS ``{css}``"
+            element = self._py.wait(timeout).until(
+                lambda _: self.webelement.find_element(by, css), f"Could not find element with the CSS: `{css}`"
             )
-        return Element(self.py, element, locator=(by, css))
+        return Element(self._py, element, locator=(by, css))
 
     def find(self, css: str, timeout: int = None) -> Elements:
         """Finds all DOM elements that match the `css` selector in this element's context.
@@ -1229,21 +1230,21 @@ class Element:
             timeout: The number of seconds to find at least one element. Overrides default wait_time.
 
         Returns:
-            A list of the found elements.
+            A list of the found elements. If none are found, an empty list is returned.
         """
-        self.py.log.debug(f"\t[STEP] .find() - Find elements with css: ``{css}``")
+        log.command("Element.find() - Find elements with CSS: `%s`", css)
         by = By.CSS_SELECTOR
 
         try:
             if timeout == 0:
                 elements = self.webelement.find_elements(by, css)
             else:
-                elements = self.py.wait(timeout).until(
-                    lambda _: self.webelement.find_elements(by, css), f"Could not find any elements with CSS ``{css}``"
+                elements = self._py.wait(timeout).until(
+                    lambda _: self.webelement.find_elements(by, css), f"Could not find any elements with CSS: `{css}`"
                 )
         except TimeoutException:
             elements = []
-        return Elements(self.py, elements, locator=(by, css))
+        return Elements(self._py, elements, locator=(by, css))
 
     def getx(self, xpath: str, timeout: int = None) -> "Element":
         """Finds the DOM element that matches the `xpath` selector.
@@ -1255,17 +1256,17 @@ class Element:
         Returns:
             The first element found, even if multiple elements match the query.
         """
-        self.py.log.debug(f"\t[STEP] .getx() - Find the element with xpath: ``{xpath}``")
+        log.command("Element.getx() - Get the element with xpath: `%s`", xpath)
         by = By.XPATH
 
         if timeout == 0:
             elements = self.webelement.find_element(by, xpath)
         else:
-            elements = self.py.wait(timeout).until(
+            elements = self._py.wait(timeout).until(
                 lambda _: self.webelement.find_element(by, xpath),
-                f"Could not find any elements with the xpath ``{xpath}``",
+                f"Could not find any elements with the xpath: `{xpath}`",
             )
-        return Element(self.py, elements, locator=(by, xpath))
+        return Element(self._py, elements, locator=(by, xpath))
 
     def findx(self, xpath: str, timeout: int = None) -> "Elements":
         """Finds the DOM elements that matches the `xpath` selector.
@@ -1275,42 +1276,46 @@ class Element:
             timeout: The number of seconds to find at least one element. Overrides default wait_time.
 
         Returns:
-            A list of the found elements.
+            A list of the found elements. If none are found, an empty list is returned.
         """
-        self.py.log.debug(f"\t[STEP] .findx() - Find the elements with xpath: ``{xpath}``")
+        log.command("Element.findx() - Find the elements with xpath: `%s`", xpath)
         by = By.XPATH
 
         try:
             if timeout == 0:
                 elements = self.webelement.find_elements(by, xpath)
             else:
-                elements = self.py.wait(timeout).until(
+                elements = self._py.wait(timeout).until(
                     lambda _: self.webelement.find_elements(by, xpath),
-                    f"Could not find any elements with the xpath ``{xpath}``",
+                    f"Could not find any elements with the xpath: `{xpath}`",
                 )
         except TimeoutException:
             elements = []
-        return Elements(self.py, elements, locator=(by, xpath))
+        return Elements(self._py, elements, locator=(by, xpath))
+
+    # endregion
+
+    # region FAMILY
 
     def children(self) -> Elements:
         """Gets the Child elements."""
-        self.py.log.debug("\t[STEP] .children() - Get the children of this element")
-        elements = self.py.webdriver.execute_script("return arguments[0].children;", self.webelement)
-        return Elements(self.py, elements, None)
+        log.command("Element.children() - Get the children of this element")
+        elements = self._py.webdriver.execute_script("return arguments[0].children;", self.webelement)
+        return Elements(self._py, elements, None)
 
     def parent(self) -> "Element":
         """Gets the Parent element."""
-        self.py.log.debug("\t[STEP] .parent() - Get the parent of this element")
+        log.command("Element.parent() - Get the parent of this element")
         js = """
         elem = arguments[0];
         return elem.parentNode;
         """
-        element = self.py.webdriver.execute_script(js, self.webelement)
-        return Element(self.py, element, None)
+        element = self._py.webdriver.execute_script(js, self.webelement)
+        return Element(self._py, element, None)
 
     def siblings(self) -> Elements:
         """Gets the Sibling elements."""
-        self.py.log.debug("\t[STEP] .siblings() - Get the siblings of this element")
+        log.command("Element.siblings() - Get the siblings of this element")
         js = """
         elem = arguments[0];
         var siblings = [];
@@ -1324,11 +1329,12 @@ class Element:
         }
         return siblings;
         """
-        elements = self.py.webdriver.execute_script(js, self.webelement)
-        return Elements(self.py, elements, None)
+        elements = self._py.webdriver.execute_script(js, self.webelement)
+        return Elements(self._py, elements, None)
 
-    # UTILITIES #
-    #############
+    # endregion
+
+    # region UTILITIES
 
     def screenshot(self, filename) -> "Element":
         """Take a screenshot of the current element.
@@ -1337,37 +1343,46 @@ class Element:
             filename: the filepath including the filename and extension (like `.png`)
 
         Examples:
+        ```
             py.get('#save-button').screenshot('elements/save-button.png')
+        ```
         """
-        self.py.log.debug(f"\t[STEP] .screenshot() - Take a screenshot and save to: ``{filename}``")
+        log.command("Element.screenshot() - Take a screenshot of this element and save to: `%s`", filename)
         self.webelement.screenshot(filename)
         return self
 
     def scroll_into_view(self) -> "Element":
-        """Scroll this element into view."""
-        self.py.log.debug("\t[STEP] .scroll_into_view() - Scroll this element into view")
-        self.py.webdriver.execute_script("arguments[0].scrollIntoView(true);", self.webelement)
+        """Scroll this element into view.
+
+        This usually means the middle of the element will appear at the bottom of the viewport.
+        """
+        log.command("Element.scroll_into_view() - Scroll this element into view")
+        self._py.webdriver.execute_script("arguments[0].scrollIntoView(true);", self.webelement)
         return self
 
     def open_shadow_dom(self) -> "Element":
         """Open a Shadow DOM and return the Shadow Root element.
 
         Examples:
-            shadow1 = py.get('extensions-manager').open_shadow_dom()
-            shadow2 = py.get('extensions-list').open_shadow_dom()
+        ```
+            # Click a button within nested Shadow DOMs
+            shadow1 = py.get("extensions-manager").open_shadow_dom()
+            shadow2 = shadow1.get("extensions-list").open_shadow_dom()
+            shadow2.get("button").click()
+        ```
 
         References:
             https://www.seleniumeasy.com/selenium-tutorials/accessing-shadow-dom-elements-with-webdriver
         """
-        self.py.log.debug("\t[STEP] .open_shadow_dom() - Open a Shadow DOM and return the Root element")
-        shadow_element = self.py.execute_script("return arguments[0].shadowRoot", self.webelement)
-        return Element(self.py, shadow_element, locator=None)
+        log.command("Element.open_shadow_dom() - Open a Shadow DOM and return the Root element")
+        shadow_element = self._py.execute_script("return arguments[0].shadowRoot", self.webelement)
+        return Element(self._py, shadow_element, locator=None)
 
     def highlight(self, effect_time=1, color="red", border=5) -> "Element":
-        """Highlights (blinks) a Selenium Webdriver element"""
+        """Highlights (blinks) the element."""
 
         def apply_style(s):
-            self.py.execute_script("arguments[0].setAttribute('style', arguments[1]);", self.webelement, s)
+            self._py.webdriver.execute_script("arguments[0].setAttribute('style', arguments[1]);", self.webelement, s)
 
         original_style = self.webelement.get_attribute("style")
         apply_style("border: {0}px solid {1};".format(border, color))
@@ -1376,9 +1391,4 @@ class Element:
 
         return self
 
-    def focus(self) -> "Element":
-        """Focus a Selenium Web driver element"""
-
-        self.py.log.debug("\t[STEP] .focus() - Focus this web element")
-        self.py.execute_script("arguments[0].focus();", self.webelement)
-        return self
+    # endregion

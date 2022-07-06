@@ -15,7 +15,7 @@ class AxeSubNode(BaseModel):
     id: str
     impact: Optional[str]
     message: str
-    related_nodes: List[AxeRelatedNode] = Field(alias='relatedNodes')
+    related_nodes: List[AxeRelatedNode] = Field(alias="relatedNodes")
 
 
 class AxeNode(BaseModel):
@@ -30,7 +30,7 @@ class AxeNode(BaseModel):
 class AxeAudit(BaseModel):
     description: str
     help: str
-    help_url: str = Field(alias='helpUrl')
+    help_url: str = Field(alias="helpUrl")
     id: str
     impact: Optional[str]
     nodes: List
@@ -38,7 +38,7 @@ class AxeAudit(BaseModel):
 
 
 class AxeNodeViolation(AxeNode):
-    failure_summary: str = Field(alias='failureSummary')
+    failure_summary: str = Field(alias="failureSummary")
 
 
 class AxeAuditViolation(AxeAudit):
@@ -46,7 +46,8 @@ class AxeAuditViolation(AxeAudit):
 
 
 class AxeReport(BaseModel):
-    """ The aXe Audit Report in a user-friendly object. """
+    """The aXe Audit Report in a user-friendly object."""
+
     inapplicable: List[AxeAudit]
     incomplete: List[AxeAudit]
     passes: List[AxeAudit]
@@ -56,13 +57,15 @@ class AxeReport(BaseModel):
 
 
 class PyleniumAxe:
-    """ The Pylenium abstraction of the axe-selenium-python package. """
+    """The Pylenium abstraction of the axe-selenium-python package."""
 
     def __init__(self, webdriver: WebDriver):
         self.webdriver = webdriver
 
-    def run(self, name: Optional[str] = None, context: Optional[Dict] = None, options: Optional[Dict] = None) -> AxeReport:
-        """ Run the aXe audit and return an AxeReport object with the results.
+    def run(
+        self, name: Optional[str] = None, context: Optional[Dict] = None, options: Optional[Dict] = None
+    ) -> AxeReport:
+        """Run the aXe audit and return an AxeReport object with the results.
 
         For more info on the `context` and `options` parameters, visit the aXe official docs:
         https://github.com/dequelabs/axe-core/blob/master/doc/API.md#parameters-axerun
@@ -73,6 +76,7 @@ class PyleniumAxe:
             options: The dictionary of aXe options to include in the audit.
 
         Examples:
+        ```
             # Save the report to export or share
             PyleniumAxe(py.webriver).run(name='a11y_report.json')
 
@@ -80,6 +84,7 @@ class PyleniumAxe:
             report = PyleniumAxe(py.webdriver).run(name='ally_report.json')
             violation_count = len(report.violations)
             assert violation_count == 0, f'{violation_count} violation(s) found!'
+        ```
 
         Raises:
             FileNotFoundError if the given `name` is within a directory that doesn't exist.

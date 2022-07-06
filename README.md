@@ -1,7 +1,6 @@
 # Pylenium: Easy Python Web Test Automation
 
-<!-- ![HyperExecute Badge](./he_badge.png "Tested on HyperExecute") -->
-<img src="he_badge.png" alt="Kitten" title="A cute kitten" width="300" height="70" />
+[<img src="he_badge.png" alt="HyperExecute Logo" title="Tested on HyperExecute" width="300" height="70" />](https://www.lambdatest.com/hyperexecute)
 
 ## The mission is simple
 
