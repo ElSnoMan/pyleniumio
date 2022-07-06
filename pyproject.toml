@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pylenium"
-version = "1.15.4"
+version = "1.16.0"
 description = "The best of Selenium and Cypress in a single Python Package"
 authors = ["Carlos <carlos@qap.dev>"]
 license = "MIT"
