@@ -171,6 +171,10 @@ def _override_pylenium_config_values(_load_pylenium_json, request) -> PyleniumCo
     if cli_browser:
         config.driver.browser = cli_browser
 
+    cli_local_path = request.config.getoption("--local_path")
+    if cli_local_path:
+        config.driver.local_path = cli_local_path
+
     cli_capabilities = request.config.getoption("--caps")
     if cli_capabilities:
         # --caps must be in '{"name": "value", "boolean": true}' format
@@ -309,6 +313,7 @@ def pytest_runtest_makereport(item, call):
 
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="", help="The lowercase browser name: chrome | firefox")
+    parser.addoption("--local_path", action="store", default="", help="The filepath to the local driver")
     parser.addoption("--remote_url", action="store", default="", help="Grid URL to connect tests to.")
     parser.addoption("--screenshots_on", action="store", default="", help="Should screenshots be saved? true | false")
     parser.addoption(
