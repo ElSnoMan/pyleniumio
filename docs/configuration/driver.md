@@ -25,7 +25,7 @@ Supported Drivers:
     "page_load_wait_time": 0,
     "options": [],
     "capabilities": {},
-    "version": "latest",
+    "version": "",
     "experimental_options": null,
     "extension_paths": [],
     "webdriver_kwargs": {},
@@ -220,10 +220,34 @@ Default is empty or `[]`
 ### version
 
 {% hint style="info" %}
-Default is <mark style="color:yellow;">**`latest`**</mark>
+Default is <mark style="color:yellow;">**`""`**</mark>
 {% endhint %}
 
 The browser version to use.
+
+{% code title="pylenium.json" %}
+```javascript
+"driver": {
+    "version": "latest"
+}
+```
+{% endcode %}
+
+{% code title="Terminal" %}
+```bash
+You cannot set the browser version this way
+```
+{% endcode %}
+
+
+
+### viewport
+
+{% hint style="info" %}
+Default has maximize set to true
+{% endhint %}
+
+The browser window dimensions to use.
 
 {% code title="pylenium.json" %}
 ```javascript

@@ -19,6 +19,7 @@
 * [Configuration](configuration/README.md)
   * [pylenium.json](docs/configuration/pylenium.json.md)
   * [Driver](docs/configuration/driver.md)
+  * [Viewport](configuration/viewport.md)
   * [Report Portal](docs/configuration/report-portal.md)
 * [Fixtures](fixtures/README.md)
   * [axe](docs/fixtures/axe.md)
