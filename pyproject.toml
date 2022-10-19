@@ -26,7 +26,7 @@ webdriver-manager = "^3.8.4"
 black = "21.12b0"
 poethepoet = "^0.10.0"
 pytest-cov = "2.12.1"
-flake8 = "^4.0.1"
+flake8 = "^5.0.4"
 
 [tool.black]
 line-length = 120
