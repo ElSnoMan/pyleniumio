@@ -86,7 +86,7 @@ def test_switch_to_frame_by_element_then_back(py: Pylenium):
     py.switch_to.frame_by_element(iframe).get("#tinymce").clear().type("foo")
     assert py.switch_to.default_content().contains("An iFrame").tag_name() == "h3"
     py.switch_to.frame_by_element(iframe).get("#tinymce").type("bar")
-    assert py.get("#tinymce").text() == "foobar"
+    assert "foobar" in py.get("#tinymce").text()
     assert py.switch_to.parent_frame().contains("An iFrame").tag_name() == "h3"
 
 
