@@ -77,7 +77,7 @@ def init(overwrite_conftest, overwrite_pylenium_json, overwrite_pytest_ini):
             _copy(file=conftest, to_dir=user_cwd, message="conftest.py was overwritten at:")
         else:
             click.echo(
-                "conftest.py already exists at this location. " "Use -c flag if you want to replace it with the latest."
+                "conftest.py already exists at this location. " + "Use -c flag if you want to replace it with the latest."
             )
     else:
         _copy(file=conftest, to_dir=user_cwd, message="conftest.py was created at:")

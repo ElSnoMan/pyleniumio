@@ -11,6 +11,6 @@ def read_script_from_file(file_name) -> str:
         script = read_script_from_file('drag_and_drop.js')
     """
     path = str(pathlib.Path(__file__).parent.absolute())
-    with open(path + f'/scripts/{file_name}', 'r') as file:
+    with open(path + f'/scripts/{file_name}', 'r', encoding='utf-8') as file:
         script = file.read()
     return script

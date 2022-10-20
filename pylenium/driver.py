@@ -52,8 +52,7 @@ class PyleniumShould:
             value = False
         if value:
             return self._py
-        else:
-            raise AssertionError(f"Expected Title: `{title}` - Actual Title: `{self._py.title()}`")
+        raise AssertionError(f"Expected Title: `{title}` - Actual Title: `{self._py.title()}`")
 
     def contain_title(self, string: str) -> "Pylenium":
         """An expectation that the current title contains the given string.
@@ -74,8 +73,7 @@ class PyleniumShould:
             value = False
         if value:
             return self._py
-        else:
-            raise AssertionError(f"Expected `{string}` to be in `{self._py.title()}`")
+        raise AssertionError(f"Expected `{string}` to be in `{self._py.title()}`")
 
     def have_url(self, url: str) -> "Pylenium":
         """An expectation that the current URL matches the given url.
@@ -96,8 +94,7 @@ class PyleniumShould:
             value = False
         if value:
             return self._py
-        else:
-            raise AssertionError(f"Expected URL: `{url}` - Actual URL: `{self._py.url()}`")
+        raise AssertionError(f"Expected URL: `{url}` - Actual URL: `{self._py.url()}`")
 
     def contain_url(self, string: str) -> "Pylenium":
         """An expectation that the current URL contains the given string.
@@ -118,8 +115,7 @@ class PyleniumShould:
             value = False
         if value:
             return self._py
-        else:
-            raise AssertionError(f"Expected `{string}` to be in `{self._py.url()}`")
+        raise AssertionError(f"Expected `{string}` to be in `{self._py.url()}`")
 
     def not_find(self, css: str) -> bool:
         """An expectation that there are no elements with the given CSS in the DOM.
@@ -210,7 +206,7 @@ class Pylenium:
                 caps["platformName"],
                 self._webdriver.session_id,
             )
-        except:
+        except Exception:
             log.warning(
                 "webdriver.capabilities did not have a key that Pylenium was expecting. "
                 "Is your driver executable the right version?"
@@ -566,8 +562,7 @@ class Pylenium:
         """
         if timeout:  # if not None and greater than 0
             return self._wait.build(timeout, use_py, ignored_exceptions)
-        else:
-            return self._wait.build(self.config.driver.wait_time, use_py, ignored_exceptions)
+        return self._wait.build(self.config.driver.wait_time, use_py, ignored_exceptions)
 
     # endregion
 

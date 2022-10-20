@@ -63,15 +63,13 @@ class ElementsShould:
         try:
             if self._elements.is_empty():
                 return True
-            else:
-                locator = self._elements.locator
-                value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) == 0)
+            locator = self._elements.locator
+            value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) == 0)
         except TimeoutException:
             value = False
         if value:
             return True
-        else:
-            raise AssertionError("List of elements was not empty")
+        raise AssertionError("List of elements was not empty")
 
     def be_greater_than(self, length: int) -> bool:
         """An expectation that the number of elements in the list is greater than the given length.
@@ -86,15 +84,13 @@ class ElementsShould:
         try:
             if self._elements.length() > length:
                 return True
-            else:
-                locator = self._elements.locator
-                value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) > length)
+            locator = self._elements.locator
+            value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) > length)
         except TimeoutException:
             value = False
         if value:
             return True
-        else:
-            raise AssertionError(f"Length of elements was not greater than {length}")
+        raise AssertionError(f"Length of elements was not greater than {length}")
 
     def be_less_than(self, length: int) -> bool:
         """An expectation that the number of elements in the list is less than the given length.
@@ -109,15 +105,13 @@ class ElementsShould:
         try:
             if self._elements.length() < length:
                 return True
-            else:
-                locator = self._elements.locator
-                value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) < length)
+            locator = self._elements.locator
+            value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) < length)
         except TimeoutException:
             value = False
         if value:
             return True
-        else:
-            raise AssertionError(f"Length of elements was not less than {length}")
+        raise AssertionError(f"Length of elements was not less than {length}")
 
     def have_length(self, length: int) -> bool:
         """An expectation that the number of elements in the list is equal to the given length.
@@ -132,15 +126,13 @@ class ElementsShould:
         try:
             if self._elements.length() == length:
                 return True
-            else:
-                locator = self._elements.locator
-                value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) == length)
+            locator = self._elements.locator
+            value = self._wait.until(lambda drvr: len(drvr.find_elements(*locator)) == length)
         except TimeoutException:
             value = False
         if value:
             return True
-        else:
-            raise AssertionError(f"Length of elements was not equal to {length}")
+        raise AssertionError(f"Length of elements was not equal to {length}")
 
     # endregion
 
@@ -159,15 +151,13 @@ class ElementsShould:
         try:
             if not self._elements.is_empty():
                 return self._elements
-            else:
-                locator = self._elements.locator
-                value = self._wait.until(lambda drvr: drvr.find_elements(*locator))
+            locator = self._elements.locator
+            value = self._wait.until(lambda drvr: drvr.find_elements(*locator))
         except TimeoutException:
             value = False
         if value:
             return Elements(self._py, value, self._elements.locator)
-        else:
-            raise AssertionError("List of elements was empty")
+        raise AssertionError("List of elements was empty")
 
     # endregion
 
@@ -198,8 +188,7 @@ class ElementShould:
             value = False
         if value:
             return self._element
-        else:
-            raise AssertionError("Element was not clickable")
+        raise AssertionError("Element was not clickable")
 
     def be_checked(self) -> "Element":
         """An expectation that the element is checked.
@@ -217,8 +206,7 @@ class ElementShould:
             value = False
         if value:
             return self._element
-        else:
-            raise AssertionError("Element was not checked")
+        raise AssertionError("Element was not checked")
 
     def be_disabled(self) -> "Element":
         """An expectation that the element is disabled.
@@ -236,8 +224,7 @@ class ElementShould:
             value = False
         if value:
             return self._element
-        else:
-            raise AssertionError("Element was not disabled")
+        raise AssertionError("Element was not disabled")
 
     def be_enabled(self) -> "Element":
         """An expectation that the element is enabled.
@@ -255,8 +242,7 @@ class ElementShould:
             value = False
         if value:
             return self._element
-        else:
-            raise AssertionError("Element was not enabled")
+        raise AssertionError("Element was not enabled")
 
     def be_focused(self) -> "Element":
         """An expectation that the element is focused.
@@ -275,8 +261,7 @@ class ElementShould:
 
         if value:
             return self._element
-        else:
-            raise AssertionError("Element was not focused")
+        raise AssertionError("Element was not focused")
 
     def be_hidden(self) -> "Element":
         """An expectation that the element is not displayed but still in the DOM (aka hidden).
@@ -295,8 +280,7 @@ class ElementShould:
 
         if value:
             return self._element
-        else:
-            raise AssertionError("Element was not hidden")
+        raise AssertionError("Element was not hidden")
 
     def be_selected(self) -> "Element":
         """An expectation that the element is selected.
@@ -315,8 +299,7 @@ class ElementShould:
 
         if value:
             return self._element
-        else:
-            raise AssertionError("Element was not selected")
+        raise AssertionError("Element was not selected")
 
     def be_visible(self) -> "Element":
         """An expectation that the element is displayed.
@@ -335,8 +318,7 @@ class ElementShould:
 
         if value:
             return self._element
-        else:
-            raise AssertionError("Element was not visible")
+        raise AssertionError("Element was not visible")
 
     def have_attr(self, attr: str, value: Optional[str] = None) -> "Element":
         """An expectation that the element has the given attribute with the given value.
@@ -362,14 +344,12 @@ class ElementShould:
 
         if val:
             return self._element
-        else:
-            if value is None:
-                raise AssertionError(f"Element did not have attribute: `{attr}`")
-            else:
-                raise AssertionError(
-                    f"Expected Attribute Value: `{value}` "
-                    f'- Actual Attribute Value: `{self._element.get_attribute("value")}`'
-                )
+        if value is None:
+            raise AssertionError(f"Element did not have attribute: `{attr}`")
+        raise AssertionError(
+            f"Expected Attribute Value: `{value}` "
+            f'- Actual Attribute Value: `{self._element.get_attribute("value")}`'
+        )
 
     def have_class(self, class_name: str) -> "Element":
         """An expectation that the element has the given className.
@@ -391,10 +371,9 @@ class ElementShould:
 
         if val:
             return self._element
-        else:
-            raise AssertionError(
-                f"Expected className: `{class_name}` " f'- Actual className: `{self._element.get_attribute("class")}`'
-            )
+        raise AssertionError(
+            f"Expected className: `{class_name}` " f'- Actual className: `{self._element.get_attribute("class")}`'
+        )
 
     def have_prop(self, prop: str, value: str) -> "Element":
         """An expectation that the element has the given property with the given value.
@@ -417,10 +396,9 @@ class ElementShould:
 
         if val:
             return self._element
-        else:
-            raise AssertionError(
-                f"Expected Property value: `{value}` " f"- Actual Property value: `{self._element.get_property(prop)}`"
-            )
+        raise AssertionError(
+            f"Expected Property value: `{value}` " f"- Actual Property value: `{self._element.get_property(prop)}`"
+        )
 
     def have_text(self, text, case_sensitive=True) -> "Element":
         """An expectation that the element has the given text.
@@ -446,8 +424,7 @@ class ElementShould:
 
         if value:
             return self._element
-        else:
-            raise AssertionError(f"Expected text: `{text}` - Actual text: `{self._element.text()}`")
+        raise AssertionError(f"Expected text: `{text}` - Actual text: `{self._element.text()}`")
 
     def contain_text(self, text, case_sensitive=True) -> "Element":
         """An expectation that the element contains the given text.
@@ -473,8 +450,7 @@ class ElementShould:
 
         if value:
             return self._element
-        else:
-            raise AssertionError(f"Expected `{text}` to be in `{self._element.text()}`")
+        raise AssertionError(f"Expected `{text}` to be in `{self._element.text()}`")
 
     def have_value(self, value) -> "Element":
         """An expectation that the element has the given value.
@@ -501,8 +477,7 @@ class ElementShould:
 
         if val:
             return self._element
-        else:
-            raise AssertionError(f'Expected value: `{value}` - Actual value: `{self._element.get_attribute("value")}`')
+        raise AssertionError(f'Expected value: `{value}` - Actual value: `{self._element.get_attribute("value")}`')
 
     # endregion
 
@@ -525,8 +500,7 @@ class ElementShould:
 
         if value:
             return self._element
-        else:
-            raise AssertionError("Element had focus")
+        raise AssertionError("Element had focus")
 
     def disappear(self):
         """An expectation that the element eventually disappears from the DOM.
@@ -548,8 +522,7 @@ class ElementShould:
             value = False
         if value:
             return self._py
-        else:
-            raise AssertionError("Element was still visible or still in the DOM")
+        raise AssertionError("Element was still visible or still in the DOM")
 
     def not_have_attr(self, attr: str, value: Optional[str] = None) -> "Element":
         """An expectation that the element does not have the given attribute with the given value.
@@ -577,11 +550,9 @@ class ElementShould:
 
         if val:
             return self._element
-        else:
-            if value is None:
-                raise AssertionError(f"Element had the attribute: `{attr}`")
-            else:
-                raise AssertionError(f"Element still had attribute `{attr}` with the value of `{value}`")
+        if value is None:
+            raise AssertionError(f"Element had the attribute: `{attr}`")
+        raise AssertionError(f"Element still had attribute `{attr}` with the value of `{value}`")
 
     def not_have_value(self, value) -> "Element":
         """An expectation that the element does not have the given value.
@@ -608,8 +579,7 @@ class ElementShould:
 
         if val:
             return self._element
-        else:
-            raise AssertionError(f"Element had value matching ``{value}``")
+        raise AssertionError(f"Element had value matching ``{value}``")
 
     def not_have_text(self, text, case_sensitive=True) -> "Element":
         """An expectation that the element does not have the given text.
@@ -635,8 +605,7 @@ class ElementShould:
 
         if value:
             return self._element
-        else:
-            raise AssertionError(f"Element had the text matching ``{text}``")
+        raise AssertionError(f"Element had the text matching ``{text}``")
 
     # endregion
 
@@ -678,8 +647,7 @@ class Elements(List["Element"]):
         """
         if self.length() > 0:
             return self._list[0]
-        else:
-            raise IndexError("Cannot get first() from an empty list")
+        raise IndexError("Cannot get first() from an empty list")
 
     def last(self) -> "Element":
         """Gets the last element in the list.
@@ -689,8 +657,7 @@ class Elements(List["Element"]):
         """
         if self.length() > 0:
             return self._list[-1]
-        else:
-            raise IndexError("Cannot get last() from an empty list")
+        raise IndexError("Cannot get last() from an empty list")
 
     # endregion
 
@@ -812,10 +779,9 @@ class Element:
         value = self.webelement.get_attribute(attribute)
         if value == "true":
             return True
-        elif value == "false":
+        if value == "false":
             return False
-        else:
-            return value
+        return value
 
     def get_property(self, prop: str):
         """Gets the property's value.
@@ -900,10 +866,9 @@ class Element:
             if not checked:
                 self.webelement.click()
                 return self
-            elif allow_selected:
+            if allow_selected:
                 return self
-            else:
-                raise ValueError(f"{type_} is already selected")
+            raise ValueError(f"{type_} is already selected")
         raise ValueError("Element is not a checkbox or radio button")
 
     def uncheck(self, allow_deselected=False) -> "Element":
@@ -926,10 +891,9 @@ class Element:
             if checked:
                 self.webelement.click()
                 return self
-            elif allow_deselected:
+            if allow_deselected:
                 return self
-            else:
-                raise ValueError(f"{type_} is already deselected")
+            raise ValueError(f"{type_} is already deselected")
         raise ValueError("Element is not a checkbox or radio button")
 
     def clear(self) -> "Element":
@@ -1385,7 +1349,7 @@ class Element:
             self._py.webdriver.execute_script("arguments[0].setAttribute('style', arguments[1]);", self.webelement, s)
 
         original_style = self.webelement.get_attribute("style")
-        apply_style("border: {0}px solid {1};".format(border, color))
+        apply_style(f"border: {0}px solid {1};".format(border, color))
         time.sleep(effect_time)
         apply_style(original_style)
 
