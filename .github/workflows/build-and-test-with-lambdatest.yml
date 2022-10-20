@@ -5,11 +5,11 @@ name: Build and Test Pylenium with LambdaTest
 
 on:
   push:
-    branches: []
+    branches: [master]
     paths-ignore:
       - "docs/**"
   pull_request:
-    branches: []
+    branches: [master]
     paths-ignore:
       - "docs/**"
 
