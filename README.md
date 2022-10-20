@@ -1,7 +1,5 @@
 # Pylenium: Easy Python Web Test Automation
 
-[<img src="he_badge.png" alt="HyperExecute Logo" title="Tested on HyperExecute" width="300" height="70" />](https://www.lambdatest.com/hyperexecute)
-
 ## The mission is simple
 
 > Bring the best of Selenium, Cypress and Python into one package.
@@ -93,9 +91,28 @@ pip install pyleniumio
 ---or---
 
 pipenv install pyleniumio
+
+---or---
+
+poetry add pyleniumio
 ```
 
-### 2. Write a test
+### 2. Initialize Pylenium
+
+```bash
+# execute at your Project Root
+pylenium init
+```
+
+This creates three files:
+
+* `conftest.py` - This has the fixtures needed for Pylenium
+* `pylenium.json` - This is the config file for Pylenium
+* `pytest.ini` - This is the config file for pytest
+
+By default, Pylenium uses the Chrome browser. You have to install Chrome or update the `pylenium.json` file to use the browser of your choice.
+
+### 3. Write a test
 
 Create a directory called `tests` and then a test file called `test_google.py`
 
@@ -117,7 +134,7 @@ def test_google_search(py):
     assert py.should().contain_title('puppies')
 ```
 
-### 3. Run the Test
+### 4. Run the Test
 
 This will depend on your IDE, but you can always run tests from the CLI:
 

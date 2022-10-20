@@ -108,6 +108,6 @@ def test_upload_file(py: Pylenium, project_root):
 
     # 2. Test hidden upload
     py.visit("https://practice.automationbro.com/cart/")
-    py.get("#upfile_1").upload(f"{project_root}/he_badge.png")
+    py.get("#upfile_1").upload(f"{project_root}/logo.png")
     py.get("#upload_1").click()
     assert py.contains("uploaded successfully")
