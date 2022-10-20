@@ -1,7 +1,5 @@
 # Pylenium: Easy Python Web Test Automation
 
-[<img src="he_badge.png" alt="HyperExecute Logo" title="Tested on HyperExecute" width="300" height="70" />](https://www.lambdatest.com/hyperexecute)
-
 ## The mission is simple
 
 > Bring the best of Selenium, Cypress and Python into one package.

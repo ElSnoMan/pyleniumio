@@ -1,15 +1,15 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Build and Test Pylenium with LambdaTest
+name: Build and Test Pylenium with Selenoid
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths-ignore:
       - "docs/**"
   pull_request:
-    branches: [master]
+    branches: [main]
     paths-ignore:
       - "docs/**"
 
@@ -43,13 +43,11 @@ jobs:
         run: |
           poetry run pytest tests/unit
 
+      - name: Start Selenoid Server
+        # You may pin to the exact commit or the version.
+        # uses: Xotabu4/selenoid-github-action@abe532e06774138cf8c38c5dac461071de092504
+        uses: Xotabu4/selenoid-github-action@v1
+
       - name: Run UI Tests
-        env:
-          LT_USERNAME: ${{ secrets.LT_USERNAME }}
-          LT_ACCESS_KEY: ${{ secrets.LT_ACCESS_KEY }}
-          LT_BUILD_NAME: ${{ github.repository }}/${{ github.head_ref || github.ref_name }}/${{ github.run_number }}
-          LT_TESTRUN_NAME: GitHub Action
         run: |
-          curl -o hyperexecute https://downloads.lambdatest.com/hyperexecute/linux/hyperexecute
-          chmod u+x ./hyperexecute
-          ./hyperexecute -i hyperexecute.yml -u $LT_USERNAME -k $LT_ACCESS_KEY
+          poetry run pytest tests/ui --remote_url "http://localhost:4444/wd/hub"
