@@ -1349,7 +1349,7 @@ class Element:
             self._py.webdriver.execute_script("arguments[0].setAttribute('style', arguments[1]);", self.webelement, s)
 
         original_style = self.webelement.get_attribute("style")
-        apply_style(f"border: {0}px solid {1};".format(border, color))
+        apply_style(f"border: {border}px solid {color};")
         time.sleep(effect_time)
         apply_style(original_style)
 
