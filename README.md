@@ -1,5 +1,16 @@
 # Pylenium: Easy Python Web Test Automation
 
+- [The Mission](#the-mission-is-simple)
+    - [Test Example](#test-example)
+    - [Purpose](#purpose)
+- [Quickstart](#quick-start)
+    - [1. Install](#1-install-pyleniumio)
+    - [2. Initialize](#2-initialize-pylenium)
+    - [3. Write a Test](#3-write-a-test)
+    - [4. Run the Test](#4-run-the-test)
+- [Contribute](#contribute)
+
+
 ## The mission is simple
 
 > Bring the best of Selenium, Cypress and Python into one package.
@@ -143,3 +154,21 @@ python -m pytest tests/test_google.py
 ```
 
 You're all set! You should see the browser open and complete the commands we had in the test :\)
+
+## Contribute
+
+Pylenium uses [Gitpod](https://gitpod.io/) to make it easy to work on it from the _desktop or browser_ without having to worry about the setup like having the correct Python version installed after cloning the repo.
+
+> 💡 With a single click, you can open the repo in your browser, make your changes, then submit a pull request!
+
+0. If you're new to Gitpod, check out their [Getting Started](https://www.gitpod.io/docs/introduction/getting-started) docs to see how to use it
+1. Visit [Pylenium's repo](https://github.com/ElSnoMan/pyleniumio) and click the `Gitpod` button to open the repo in a VS Code browser window
+2. Wait for Gitpod to setup the project. You'll see things get setup from the various `.gitpod*` files at the Project Root
+3. Once complete, create a new branch and start making your changes
+4. When ready, submit a Pull Request!
+5. Reviewers will see your CI pipeline and even be able to open your Gitpod instance if needed - making collaboration much easier
+6. Gitpod instances are ephemeral, so you can create, share, and delete them as needed
+
+> 🧪 By default, UI tests executed in Gitpod are headless. If you'd like to see UI tests run, open port `6080` from the bottom right corner of VS Code.
+
+For more details and other ways to contribute to Pylenium, visit the [CONTRIBUTING.md](/CONTRIBUTING.md) doc 👀
