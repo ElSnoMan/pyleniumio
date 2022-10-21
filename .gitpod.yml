@@ -1,0 +1,22 @@
+vscode:
+  extensions:
+    - ms-python.python
+    - bungcip.better-toml
+    - PKief.material-icon-theme
+
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: "Setup"
+    command: |
+      git config --global pull.rebase false
+      pip install poetry
+      poetry install
+ports:
+  - port: 5900
+    onOpen: ignore
+  - port: 6080
+    onOpen: open-browser
+  - port: 10000
+    onOpen: ignore
