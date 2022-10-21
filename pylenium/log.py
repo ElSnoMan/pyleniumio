@@ -5,8 +5,8 @@ Log Levels:
     ERROR    = 40,
     WARNING  = 30,
     USER     = 25, *
-    INFO     = 20,
-    COMMAND  = 15, * (default)
+    INFO     = 20, (default)
+    COMMAND  = 15,
     DEBUG    = 10
 """
 
@@ -28,7 +28,7 @@ logging.USER = USER_LOG_LEVEL_NAME
 
 # Create logger
 logger = logging.getLogger("PYL")
-logger.setLevel(logging.COMMAND)
+logger.setLevel(logging.INFO)
 
 # Configure logger
 # DATE_FORMAT = "%Y/%m/%d %H:%M:%S"
@@ -52,7 +52,7 @@ def command(self, message: str, *args, **kwargs) -> None:
 
 
 def this(self, message: str, *args, **kwargs) -> None:
-    """Log a message above the INFO log level.
+    """Log a message at the USER log level (one above the INFO log level).
 
     * This is a convenient, custom log level for Pylenium users to use if needed
 

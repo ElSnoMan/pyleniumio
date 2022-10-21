@@ -1,13 +1,12 @@
 [tool.poetry]
 name = "pylenium"
-version = "1.16.0"
+version = "1.17.0"
 description = "The best of Selenium and Cypress in a single Python Package"
 authors = ["Carlos <carlos@qap.dev>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-webdriver-manager = "3.5.4"
 pydantic = "1.9.0"
 requests = "2.27.1"
 pyfiglet = "^0.8.post1"
@@ -18,15 +17,16 @@ pytest-parallel = "0.1.1"
 axe-selenium-python = "^2.1.6"
 Faker = "8.16.0"
 selenium = "4.1.0"
-selenium-wire = "4.6.3"
 python-dotenv = "^0.20.0"
 rich-click = "^1.5.1"
+webdriver-manager = "^3.8.4"
+selenium-wire = "^5.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "21.12b0"
 poethepoet = "^0.10.0"
 pytest-cov = "2.12.1"
-flake8 = "4.0.1"
+flake8 = "^5.0.4"
 
 [tool.black]
 line-length = 120

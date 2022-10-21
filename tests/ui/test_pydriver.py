@@ -80,22 +80,14 @@ def test_webdriver_wait_until(py: Pylenium):
     assert element.tag_name == "a"
 
 
-def test_switch_to_frame_then_back(py: Pylenium):
-    py.visit(f"{THE_INTERNET}/iframe")
-    py.switch_to.frame("mce_0_ifr").get("#tinymce").clear().type("foo")
-    assert py.switch_to.default_content().contains("An iFrame").tag_name() == "h3"
-    py.switch_to.frame("mce_0_ifr").get("#tinymce").type("bar")
-    assert py.get("#tinymce").text() == "foobar"
-    assert py.switch_to.parent_frame().contains("An iFrame").tag_name() == "h3"
-
-
-def test_switch_to_frame_by_element(py: Pylenium):
+def test_switch_to_frame_by_element_then_back(py: Pylenium):
     py.visit(f"{THE_INTERNET}/iframe")
     iframe = py.get("#mce_0_ifr")
     py.switch_to.frame_by_element(iframe).get("#tinymce").clear().type("foo")
     assert py.switch_to.default_content().contains("An iFrame").tag_name() == "h3"
     py.switch_to.frame_by_element(iframe).get("#tinymce").type("bar")
-    assert py.get("#tinymce").text() == "foobar"
+    assert "foobar" in py.get("#tinymce").text()
+    assert py.switch_to.parent_frame().contains("An iFrame").tag_name() == "h3"
 
 
 def test_have_url(py: Pylenium):
