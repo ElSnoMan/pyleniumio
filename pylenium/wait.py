@@ -53,7 +53,7 @@ class PyleniumWait:
         if isinstance(value, list):
             try:
                 return Elements(self._py, value, None)
-            except:
+            except Exception:
                 pass  # not a list of WebElement
         return value
 
@@ -81,7 +81,7 @@ class PyleniumWait:
         if isinstance(value, list):
             try:
                 return Elements(self._py, value, None)
-            except:
+            except Exception:
                 pass  # not a list of WebElement
         return value
 
@@ -100,5 +100,4 @@ class PyleniumWait:
         """
         if use_py:
             return PyleniumWait(self._py, self._webdriver, timeout, ignored_exceptions)
-        else:
-            return WebDriverWait(self._webdriver, timeout, ignored_exceptions=ignored_exceptions)
+        return WebDriverWait(self._webdriver, timeout, ignored_exceptions=ignored_exceptions)

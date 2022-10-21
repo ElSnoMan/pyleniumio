@@ -153,12 +153,11 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
 
     if browser == Browser.IE:
         return build_ie(**_config)
-    elif browser == Browser.OPERA:
+    if browser == Browser.OPERA:
         return build_opera(**_config)
-    elif browser == Browser.EDGE:
+    if browser == Browser.EDGE:
         return build_edge(**_config)
-    else:
-        raise ValueError(f"{config.driver.browser} is not supported. Cannot build WebDriver from config.")
+    raise ValueError(f"{config.driver.browser} is not supported. Cannot build WebDriver from config.")
 
 
 def build_chrome(

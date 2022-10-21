@@ -139,7 +139,7 @@ def _load_pylenium_json(project_root, request) -> PyleniumConfig:
             _json = json.load(file)
         config = PyleniumConfig(**_json)
     except FileNotFoundError:
-        logging.warn(
+        logging.warning(
             f"The config_filepath was not found, so PyleniumConfig will load with default values. File not found: {config_filepath.absolute()}"
         )
         config = PyleniumConfig()
@@ -187,7 +187,7 @@ def _override_pylenium_config_values(_load_pylenium_json, request) -> PyleniumCo
     # Logging Settings
     cli_screenshots_on = request.config.getoption("--screenshots_on")
     if cli_screenshots_on:
-        shots_on = True if cli_screenshots_on.lower() == "true" else False
+        shots_on = cli_screenshots_on.lower() == "true"
         config.logging.screenshots_on = shots_on
 
     cli_extensions = request.config.getoption("--extensions")

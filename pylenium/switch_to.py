@@ -134,10 +134,9 @@ class SwitchTo:
             log.command("py.switch_to.window() - Switch to a Tab or Window by index: %s", index)
             self._py.webdriver.switch_to.window(handle)
             return self._py
-        elif name_or_handle:
+        if name_or_handle:
             log.command("py.switch_to.window() - Switch to Tab or Window by name or handle: `%s`", name_or_handle)
             self._py.webdriver.switch_to.window(name_or_handle)
             return self._py
-        else:
-            # context unchanged
-            return self._py
+        # context unchanged
+        return self._py
