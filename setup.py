@@ -28,6 +28,7 @@ setup(
         "axe-selenium-python>=2.1.6",
         "selenium-wire>=4.6.3",
         "rich-click>=1.5.1",
+        "allure-pytest>=2.11.1",
     ],
     data_files=[
         (

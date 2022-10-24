@@ -1,5 +1,5 @@
 import subprocess
-from typing import List, Union
+from typing import List, Tuple, Union
 
 
 def run_process(tokenized_command: Union[List[str], str], shell=False) -> subprocess.CompletedProcess:
@@ -17,3 +17,9 @@ def run_process(tokenized_command: Union[List[str], str], shell=False) -> subpro
     """
     response = subprocess.run(args=tokenized_command, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=shell)
     return response
+
+
+def parse_response(response: subprocess.CompletedProcess) -> Tuple[str, str]:
+    output = str(response.stdout, "utf-8")
+    error = str(response.stderr, "utf-8")
+    return output, error
