@@ -23,7 +23,7 @@ class DriverConfig(BaseModel):
 
 
 class LoggingConfig(BaseModel):
-    pylog_level: str = "debug"
+    pylog_level: str = "INFO"
     screenshots_on: bool = True
 
 
