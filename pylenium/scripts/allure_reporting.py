@@ -9,18 +9,23 @@ def _install(commands: List[str]):
     """Command to install allure via the CLI"""
     click.echo("\n🛑 It's recommended that you run the above command(s) yourself to see all the output 🛑")
     answer = click.prompt("\nWould you like to proceed? (y/n)", default="n")
-    if answer == "y":
-        response = run_process(commands)
-        _, err = parse_response(response)
-        if response.returncode != 0:
-            click.echo(f"😢 Unable to install allure. {err}")
+    try:
+        if answer == "y":
+            response = run_process(commands)
+            _, err = parse_response(response)
+            if response.returncode != 0:
+                click.echo(f"😢 Unable to install allure. {err}")
+                click.echo("Visit allure's docs for more options: https://docs.qameta.io/allure/#_get_started")
+                return
+            click.echo("✅ allure installed. Try running `pylenium allure check` to verify the installation.")
             return
-        click.echo("✅ allure installed. Try running `pylenium allure check` to verify the installation.")
-        return
 
-    if answer == "n" or answer is not None:
-        click.echo("❌ Command aborted")
-        return
+        if answer == "n" or answer is not None:
+            click.echo("❌ Command aborted")
+            return
+    except FileNotFoundError:
+        click.echo("One of the commands was not found...")
+        click.echo("Visit their docs for more info: https://docs.qameta.io/allure/#_get_started")
 
 
 def install_for_linux():

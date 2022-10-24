@@ -128,14 +128,18 @@ def allure():
 @allure.command()
 def check():
     """Check if the allure CLI is installed on the current machine"""
+    err_message = "\n[ERROR] allure is not installed or not added to the PATH. Visit https://docs.qameta.io/allure/#_get_started"
     click.echo("\n>>> allure --version")
-    response = run_process(["allure", "--version"])
-    out, err = parse_response(response)
-    if response.returncode != 0:
-        click.echo("\n[ERROR] allure is not installed or not added to the PATH. Visit https://docs.qameta.io/allure/#_get_started")
-        click.echo(err)
-        return
-    click.echo(f"\n[SUCCESS] allure is installed with version: {out}")
+    try:
+        response = run_process(["allure", "--version"])
+        out, err = parse_response(response)
+        if response.returncode != 0:
+            click.echo(err_message)
+            click.echo(err)
+            return
+        click.echo(f"\n[SUCCESS] allure is installed with version: {out}")
+    except FileNotFoundError:
+        click.echo(err_message)
 
 
 @allure.command()
@@ -162,11 +166,13 @@ def serve(folder: str):
     """Start the allure server and serve the allure report given its folder path"""
     click.echo(f"\n>>> allure serve {folder}")
     click.echo("Press <Ctrl+C> to exit")
-    response = run_process(["allure", "serve", folder])
-    _, err = parse_response(response)
-    if response.returncode != 0:
-        click.echo(f"\n[ERROR] Unable to serve allure report. Check that the folder path is valid. {err}")
-
+    try:
+        response = run_process(["allure", "serve", folder])
+        _, err = parse_response(response)
+        if response.returncode != 0:
+            click.echo(f"\n[ERROR] Unable to serve allure report. Check that the folder path is valid. {err}")
+    except FileNotFoundError:
+        click.echo("\n[ERROR] allure is not installed or not added to the PATH. Visit https://docs.qameta.io/allure/#_get_started")
 
 # REPORT PORTAL #
 #################
