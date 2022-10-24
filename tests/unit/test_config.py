@@ -6,14 +6,14 @@ def test_py_config_defaults(py_config):
     assert py_config.driver.page_load_wait_time == 0
     assert py_config.driver.options == []
     assert py_config.driver.version == ""
-    # assert py_config.driver.capabilities == {}
+    assert py_config.driver.capabilities == {}
     assert py_config.driver.experimental_options is None
     assert py_config.driver.webdriver_kwargs == {}
     assert py_config.driver.seleniumwire_options == {}
 
     # logging settings
     assert py_config.logging.screenshots_on is True
-    assert py_config.logging.pylog_level == "debug"
+    assert py_config.logging.pylog_level == "INFO"
 
     # viewport settings
     assert py_config.viewport.maximize is True

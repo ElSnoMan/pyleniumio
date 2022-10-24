@@ -189,6 +189,7 @@ class Pylenium:
 
     def __init__(self, config: PyleniumConfig):
         self.config = config
+        log.setLevel(self.config.logging.pylog_level)
         self.fake = Faker()
         self.Keys = Keys
         self._webdriver = None

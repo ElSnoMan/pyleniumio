@@ -1,6 +1,7 @@
 # General
 .idea
 test_results
+allure-report
 test_env
 tests/data
 data

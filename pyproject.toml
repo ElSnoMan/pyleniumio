@@ -21,6 +21,7 @@ python-dotenv = "^0.20.0"
 rich-click = "^1.5.1"
 webdriver-manager = "^3.8.4"
 selenium-wire = "^5.1.0"
+allure-pytest = "^2.11.1"
 
 [tool.poetry.dev-dependencies]
 black = "21.12b0"

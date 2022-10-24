@@ -23,11 +23,14 @@ For more information, visit their official docs: https://click.palletsprojects.c
 """
 
 import os
+import platform
 import shutil
 
 import rich_click as click
 from pyfiglet import Figlet
+from pylenium.scripts.cli_utils import run_process, parse_response
 from pylenium.scripts import report_portal
+from pylenium.scripts import allure_reporting as allure_
 
 
 def _copy(file, to_dir, message) -> str:
@@ -111,6 +114,58 @@ def init(overwrite_conftest, overwrite_pylenium_json, overwrite_pytest_ini):
 def joy():
     custom_fig = Figlet(font="colossal")
     click.echo(custom_fig.renderText("Pyl e n i u m Sparks Joy"))
+
+
+# ALLURE REPORTING #
+####################
+
+@cli.group()
+def allure():
+    """CLI Commands to work with allure"""
+    pass
+
+
+@allure.command()
+def check():
+    """Check if the allure CLI is installed on the current machine"""
+    click.echo("\n>>> allure --version")
+    response = run_process(["allure", "--version"])
+    out, err = parse_response(response)
+    if response.returncode != 0:
+        click.echo("\n[ERROR] allure is not installed or not added to the PATH. Visit https://docs.qameta.io/allure/#_get_started")
+        click.echo(err)
+        return
+    click.echo(f"\n[SUCCESS] allure is installed with version: {out}")
+
+
+@allure.command()
+def install():
+    """Attempt to install allure to the current machine"""
+    click.echo("\nFor more installation options and details, please visit allure's docs: https://docs.qameta.io/allure/#_get_started")
+    operating_system = platform.system()
+    if operating_system.upper() == "LINUX":
+        allure_.install_for_linux()
+        return
+
+    if operating_system.upper() == "DARWIN":
+        allure_.install_for_mac()
+        return
+
+    if operating_system.upper() == "WINDOWS":
+        allure_.install_for_windows()
+        return
+
+
+@allure.command()
+@click.option("-f", "--folder", type=str, show_default=True)
+def serve(folder: str):
+    """Start the allure server and serve the allure report given its folder path"""
+    click.echo(f"\n>>> allure serve {folder}")
+    click.echo("Press <Ctrl+C> to exit")
+    response = run_process(["allure", "serve", folder])
+    _, err = parse_response(response)
+    if response.returncode != 0:
+        click.echo(f"\n[ERROR] Unable to serve allure report. Check that the folder path is valid. {err}")
 
 
 # REPORT PORTAL #
