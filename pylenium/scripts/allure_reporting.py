@@ -35,9 +35,9 @@ def install_for_linux():
     click.echo("    sudo apt-get update")
     click.echo("    sudo apt-get install allure")
     _install([
-            "sudo", "apt-add-repository", "ppa:qameta/allure",
-            "sudo", "apt-get", "update",
-            "sudo", "apt-get", "install", "allure",
+            "sudo", "apt-add-repository", "ppa:qameta/allure", "-y",
+            "sudo", "apt-get", "update", "-y",
+            "sudo", "apt-get", "install", "allure", "-y",
         ])
 
 
