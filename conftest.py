@@ -217,6 +217,18 @@ def py_config(_override_pylenium_config_values) -> PyleniumConfig:
     return copy.deepcopy(_override_pylenium_config_values)
 
 
+@pytest.fixture(scope="class")
+def pyc_config(_override_pylenium_config_values) -> PyleniumConfig:
+    """Get a fresh copy of the PyleniumConfig for each test class"""
+    return copy.deepcopy(_override_pylenium_config_values)
+
+
+@pytest.fixture(scope="session")
+def pys_config(_override_pylenium_config_values) -> PyleniumConfig:
+    """Get a fresh copy of the PyleniumConfig for each test session"""
+    return copy.deepcopy(_override_pylenium_config_values)
+
+
 @pytest.fixture(scope="function")
 def test_case(test_results_dir: Path, py_config, request) -> TestCase:
     """Manages data pertaining to the currently running Test Function or Case.
@@ -236,7 +248,7 @@ def test_case(test_results_dir: Path, py_config, request) -> TestCase:
 
 
 @pytest.fixture(scope="function")
-def py(test_case: TestCase, py_config, request, rp_logger):
+def py(test_case: TestCase, py_config: PyleniumConfig, request, rp_logger):
     """Initialize a Pylenium driver for each test.
 
     Pass in this `py` fixture into the test function.
@@ -270,6 +282,48 @@ def py(test_case: TestCase, py_config, request, rp_logger):
         rp_logger.error("Unable to access request.node.report.failed, unable to take screenshot.")
     except TypeError:
         rp_logger.debug("Report Portal is not connected to this test run.")
+    py.quit()
+
+
+@pytest.fixture(scope="class")
+def pyc(pyc_config: PyleniumConfig, request):
+    """Initialize a Pylenium driver for an entire test class."""
+    py = Pylenium(pyc_config)
+    yield py
+    try:
+        if request.node.report.failed:
+            # if the test failed, execute code in this block
+            if pyc_config.logging.screenshots_on:
+                allure.attach(py.webdriver.get_screenshot_as_png(), "test_failed.png", allure.attachment_type.PNG)
+        elif request.node.report.passed:
+            # if the test passed, execute code in this block
+            pass
+        else:
+            # if the test has another result (ie skipped, inconclusive), execute code in this block
+            pass
+    except Exception:
+        ...
+    py.quit()
+
+
+@pytest.fixture(scope="session")
+def pys(pys_config: PyleniumConfig, request):
+    """Initialize a Pylenium driver for an entire test session."""
+    py = Pylenium(pys_config)
+    yield py
+    try:
+        if request.node.report.failed:
+            # if the test failed, execute code in this block
+            if pys_config.logging.screenshots_on:
+                allure.attach(py.webdriver.get_screenshot_as_png(), "test_failed.png", allure.attachment_type.PNG)
+        elif request.node.report.passed:
+            # if the test passed, execute code in this block
+            pass
+        else:
+            # if the test has another result (ie skipped, inconclusive), execute code in this block
+            pass
+    except Exception:
+        ...
     py.quit()
 
 
