@@ -100,14 +100,7 @@ def test_checkbox_buttons(py):
 
 
 def test_upload_file(py: Pylenium, project_root):
-    # 1. Test visible upload
     py.visit(f"{THE_INTERNET}/upload")
     py.get("#file-upload").upload(f"{project_root}/LICENSE")
     py.get("#file-submit").click()
     assert py.contains("File Uploaded!")
-
-    # 2. Test hidden upload
-    py.visit("https://practice.automationbro.com/cart/")
-    py.get("#upfile_1").upload(f"{project_root}/logo.png")
-    py.get("#upload_1").click()
-    assert py.contains("uploaded successfully")
