@@ -26,7 +26,7 @@ import os
 import platform
 import shutil
 
-from rich_click import click
+import rich_click as click
 from pyfiglet import Figlet
 from pylenium.scripts.cli_utils import run_process, parse_response
 from pylenium.scripts import report_portal
