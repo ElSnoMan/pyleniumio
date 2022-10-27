@@ -1,29 +1,29 @@
 ---
-description: How to use Pylenium's logging
+description: How to use Pylenium's built-in logger
 ---
 
-# Logging
+# 📝 Logging
 
 Pylenium includes two custom <mark style="color:yellow;">**Log Levels**</mark> and a global <mark style="color:yellow;">**Logger**</mark> instance that you _can_ use.
 
 ## Log Levels
 
-| Name     | Level | Note         |
-| -------- | ----- | ------------ |
-| CRITICAL | 50    |              |
-| ERROR    | 40    |              |
-| WARNING  | 30    |              |
-| USER     | 25    | New          |
-| INFO     | 20    |              |
-| COMMAND  | 15    | New, Default |
-| DEBUG    | 10    |              |
+| Name     | Level | Note    |
+| -------- | ----- | ------- |
+| CRITICAL | 50    |         |
+| ERROR    | 40    |         |
+| WARNING  | 30    |         |
+| USER     | 25    | Custom  |
+| INFO     | 20    | Default |
+| COMMAND  | 15    | Custom  |
+| DEBUG    | 10    |         |
 
 If you are familiar with logging, then the above table is straightforward. If not, then all you really need to know about these levels is that you can set the <mark style="color:yellow;">**Log Level**</mark> when executing tests, and any logs at the specified level or higher will be captured.
 
 For example, if you wanted to set the <mark style="color:yellow;">**Log Level**</mark> to see only logs at **`INFO`** and higher, you would do this:
 
 ```bash
-pytest --log-cli-level=INFO
+pytest --pylog_level=INFO
 ```
 
 {% hint style="info" %}

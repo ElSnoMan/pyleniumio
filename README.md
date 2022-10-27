@@ -25,7 +25,7 @@ This means:
 
 Let's use this simple scenario to show the difference between using `Selenium` and `Pylenium`:
 
-1. **Visit** the QA at the Point website: [https://qap.dev](https://qap.dev)
+1. **Visit** the QA at the Point website: [https://qap.dev](https://qap.dev/)
 2. **Hover** the About link to reveal a menu
 3. **Click** the Leadership link in that menu
 4. **Assert** Carlos Kidman is on the Leadership page

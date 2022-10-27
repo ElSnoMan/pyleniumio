@@ -4,7 +4,7 @@ description: >-
   Requests
 ---
 
-# Inspect Network Requests
+# 🔁 Inspect Network Requests
 
 {% code title="test_network_reqs.py" %}
 ```python

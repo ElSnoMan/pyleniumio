@@ -1,4 +1,4 @@
-# Run Tests in Parallel
+# 🔀 Run Tests in Parallel
 
 ## Simple CLI
 

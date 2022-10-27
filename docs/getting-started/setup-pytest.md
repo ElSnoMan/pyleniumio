@@ -82,5 +82,5 @@ Select pytest in the "Default test runner" dropdown
 {% endtabs %}
 
 {% hint style="info" %}
-Visit the pytest docs for more info on how to use it: [https://docs.pytest.org/](https://docs.pytest.org)
+Visit the pytest docs for more info on how to use it: [https://docs.pytest.org/](https://docs.pytest.org/)
 {% endhint %}
