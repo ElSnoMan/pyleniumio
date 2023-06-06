@@ -29,8 +29,6 @@ jobs:
           pip install poetry
           # install dependencies from pyproject.toml
           poetry install
-          # install flake8 for linting step
-          poetry add flake8
 
       - name: Lint with flake8
         run: |
