@@ -18,7 +18,7 @@ class DriverConfig(BaseModel):
     seleniumwire_options: Dict = {}
     extension_paths: Optional[List[str]] = None
     webdriver_kwargs: Optional[Dict] = None
-    version: str = "latest"
+    version: Optional[str] = None
     local_path: str = ""
 
 
