@@ -15,6 +15,10 @@
     "**/*__pycache__": true
   },
   "python.linting.enabled": true,
-  "python.formatting.provider": "black",
-  "workbench.iconTheme": "material-icon-theme"
+  "flake8.args": ["--rcfile=.flake8"],
+  "python.formatting.provider": "none",
+  "workbench.iconTheme": "material-icon-theme",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  }
 }

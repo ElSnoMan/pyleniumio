@@ -5,7 +5,6 @@ allure-report
 test_env
 tests/data
 data
-poetry.lock
 
 # LambdaTest
 .hyperexecute
