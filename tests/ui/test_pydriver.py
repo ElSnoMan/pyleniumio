@@ -44,6 +44,7 @@ def test_cookies(py: Pylenium):
         "path": "/",
         "secure": True,
         "value": "bar",
+        "sameSite": "Lax",
     }
     py.visit("https://google.com")
 
