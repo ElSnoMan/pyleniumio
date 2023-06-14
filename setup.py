@@ -12,7 +12,7 @@ setup(
     author="Carlos Kidman",
     author_email="carlos@qap.dev",
     description="The best of Selenium and Cypress in a single Python Package",
-    long_description=open("README.md", encoding='utf-8').read(),
+    long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     install_requires=[
         "selenium>=4.1.0",
@@ -20,7 +20,6 @@ setup(
         "pytest-xdist>=2.4.0",
         "pytest-parallel>=0.1.1",
         "pydantic>=1.9.0",
-        "pytest-reportportal>=5.1.0",
         "Faker>=8.16.0",
         "requests>=2.27.1",
         "webdriver-manager>=3.8.6",

@@ -20,7 +20,6 @@ class TestSauceDemo:
         sauce.get("[id*='add-to-cart']").click()
         assert sauce.get("a.shopping_cart_link").should().have_text("1")
 
-
     def test_add_to_cart_xpath(self, sauce: Pylenium):
         """Add 6 different items to the cart. There should be 6 items in the cart."""
         for button in sauce.findx("//*[contains(@id, 'add-to-cart')]"):

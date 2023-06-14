@@ -21,16 +21,13 @@ Examples:
 import copy
 import json
 import logging
-import os
 import shutil
-import sys
 from pathlib import Path
 
 import allure
 import pytest
 import requests
 from faker import Faker
-from reportportal_client import RPLogger, RPLogHandler
 
 from pylenium.a11y import PyleniumAxe
 from pylenium.config import PyleniumConfig, TestCase
@@ -47,28 +44,6 @@ def fake() -> Faker:
 def api():
     """A basic instance of Requests to make HTTP API calls."""
     return requests
-
-
-@pytest.fixture(scope="session")
-def rp_logger(request):
-    """Report Portal Logger"""
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
-    # Create handler for Report Portal if the service has been
-    # configured and started.
-    if hasattr(request.node.config, "py_test_service"):
-        # Import Report Portal logger and handler to the test module.
-        logging.setLoggerClass(RPLogger)
-        rp_handler = RPLogHandler(request.node.config.py_test_service)
-        # Add additional handlers if it is necessary
-        console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setLevel(logging.INFO)
-        logger.addHandler(console_handler)
-    else:
-        rp_handler = logging.StreamHandler(sys.stdout)
-    # Set INFO level for Report Portal handler.
-    rp_handler.setLevel(logging.INFO)
-    return logger
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -141,9 +116,7 @@ def _load_pylenium_json(project_root, request) -> PyleniumConfig:
             _json = json.load(file)
         config = PyleniumConfig(**_json)
     except FileNotFoundError:
-        logging.warning(
-            f"The config_filepath was not found, so PyleniumConfig will load with default values. File not found: {config_filepath.absolute()}"
-        )
+        logging.warning(f"The config_filepath was not found, so PyleniumConfig will load with default values. File not found: {config_filepath.absolute()}")
         config = PyleniumConfig()
 
     return config
@@ -179,6 +152,12 @@ def _override_pylenium_config_values(_load_pylenium_json: PyleniumConfig, reques
         # --caps must be in '{"name": "value", "boolean": true}' format
         # with double quotes around each key. booleans are lowercase.
         config.driver.capabilities = json.loads(cli_capabilities)
+
+    cli_wire_enabled = request.config.getoption("--wire_enabled")
+    if cli_wire_enabled:
+        # --wire_enabled is false unless they specify "true"
+        wire_enabled = cli_wire_enabled.lower() == "true"
+        config.driver.seleniumwire_enabled = wire_enabled
 
     cli_wire_options = request.config.getoption("--wire_options")
     if cli_wire_options:
@@ -230,7 +209,7 @@ def pys_config(_override_pylenium_config_values) -> PyleniumConfig:
 
 
 @pytest.fixture(scope="function")
-def test_case(test_results_dir: Path, py_config, request) -> TestCase:
+def test_case(test_results_dir: Path, request) -> TestCase:
     """Manages data pertaining to the currently running Test Function or Case.
 
         * Creates the test-specific logger.
@@ -243,12 +222,11 @@ def test_case(test_results_dir: Path, py_config, request) -> TestCase:
     """
     test_name = request.node.name
     test_result_path = test_results_dir.joinpath(test_name)
-    py_config.driver.capabilities.update({"name": test_name})
     return TestCase(name=test_name, file_path=test_result_path)
 
 
 @pytest.fixture(scope="function")
-def py(test_case: TestCase, py_config: PyleniumConfig, request, rp_logger):
+def py(test_case: TestCase, py_config: PyleniumConfig, request):
     """Initialize a Pylenium driver for each test.
 
     Pass in this `py` fixture into the test function.
@@ -265,23 +243,16 @@ def py(test_case: TestCase, py_config: PyleniumConfig, request, rp_logger):
             # if the test failed, execute code in this block
             if py_config.logging.screenshots_on:
                 screenshot = py.screenshot(str(test_case.file_path.joinpath("test_failed.png")))
-                allure.attach(py.webdriver.get_screenshot_as_png(), "test_failed.png", allure.attachment_type.PNG)
+                allure.attach(screenshot, "test_failed.png", allure.attachment_type.PNG)
 
-                with open(screenshot, "rb") as image_file:
-                    rp_logger.debug(
-                        "Test Failed - Attaching Screenshot",
-                        attachment={"name": "test_failed.png", "data": image_file, "mime": "image/png"},
-                    )
         elif request.node.report.passed:
             # if the test passed, execute code in this block
             pass
         else:
             # if the test has another result (ie skipped, inconclusive), execute code in this block
             pass
-    except AttributeError:
-        rp_logger.error("Unable to access request.node.report.failed, unable to take screenshot.")
-    except TypeError:
-        rp_logger.debug("Report Portal is not connected to this test run.")
+    except Exception:
+        logging.error("Failed to take screenshot on test failure.")
     py.quit()
 
 
@@ -302,7 +273,7 @@ def pyc(pyc_config: PyleniumConfig, request):
             # if the test has another result (ie skipped, inconclusive), execute code in this block
             pass
     except Exception:
-        ...
+        logging.error("Failed to take screenshot on test failure.")
     py.quit()
 
 
@@ -323,7 +294,7 @@ def pys(pys_config: PyleniumConfig, request):
             # if the test has another result (ie skipped, inconclusive), execute code in this block
             pass
     except Exception:
-        ...
+        logging.error("Failed to take screenshot on test failure.")
     py.quit()
 
 
@@ -354,7 +325,9 @@ def pytest_addoption(parser):
         default="",
         help="The filepath of the pylenium.json file to use (ie dev-pylenium.json)",
     )
-    parser.addoption("--pylog_level", action="store", default="INFO", help="Set the logging level: 'DEBUG' | 'COMMAND' | 'INFO' | 'USER' | 'WARNING' | 'ERROR' | 'CRITICAL'")
+    parser.addoption(
+        "--pylog_level", action="store", default="INFO", help="Set the logging level: 'DEBUG' | 'COMMAND' | 'INFO' | 'USER' | 'WARNING' | 'ERROR' | 'CRITICAL'"
+    )
     parser.addoption(
         "--options",
         action="store",
@@ -373,8 +346,12 @@ def pytest_addoption(parser):
         default="",
         help="The amount of time to wait for a page load before raising an error. Default is 0.",
     )
+    parser.addoption("--extensions", action="store", default="", help='Comma-separated list of extension paths. Ex. "*.crx, *.crx"')
     parser.addoption(
-        "--extensions", action="store", default="", help='Comma-separated list of extension paths. Ex. "*.crx, *.crx"'
+        "--wire_enabled",
+        action="store",
+        default=False,
+        help="Should the Wire Protocol be enabled? true | false",
     )
     parser.addoption(
         "--wire_options",

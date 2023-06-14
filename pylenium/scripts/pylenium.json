@@ -6,10 +6,11 @@
     "page_load_wait_time": 0,
     "options": [],
     "capabilities": {},
-    "version": "",
+    "version": null,
     "experimental_options": null,
     "extension_paths": [],
     "webdriver_kwargs": {},
+    "seleniumwire_enabled": false,
     "seleniumwire_options": {},
     "local_path": ""
   },

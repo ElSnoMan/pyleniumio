@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pylenium"
-version = "1.17.0"
+version = "1.18.0"
 description = "The best of Selenium and Cypress in a single Python Package"
 authors = ["Carlos <carlos@qap.dev>"]
 license = "MIT"
@@ -11,17 +11,16 @@ pydantic = "1.9.0"
 requests = "2.27.1"
 pyfiglet = "^0.8.post1"
 pytest = "^6.1.0"
-pytest-reportportal = "5.1.0"
 pytest-xdist = "2.4.0"
 pytest-parallel = "0.1.1"
 axe-selenium-python = "^2.1.6"
 Faker = "8.16.0"
-selenium = "4.1.0"
 python-dotenv = "^0.20.0"
 rich-click = "^1.5.1"
 webdriver-manager = "^3.8.6"
 selenium-wire = "^5.1.0"
 allure-pytest = "^2.11.1"
+selenium = "4.10.0"
 
 [tool.poetry.dev-dependencies]
 black = "21.12b0"
@@ -30,7 +29,7 @@ pytest-cov = "2.12.1"
 flake8 = "^5.0.4"
 
 [tool.black]
-line-length = 120
+line-length = 160
 
 [tool.poe.tasks]
 test-unit = { "cmd" = "pytest tests/unit --cov=. --cov-report term-missing -n 4", "help" = "Run Unit Tests and get Code Coverage Report" }
