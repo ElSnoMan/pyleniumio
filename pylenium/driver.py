@@ -208,10 +208,7 @@ class Pylenium:
                 self._webdriver.session_id,
             )
         except Exception:
-            log.warning(
-                "webdriver.capabilities did not have a key that Pylenium was expecting. "
-                "Is your driver executable the right version?"
-            )
+            log.warning("webdriver.capabilities did not have a key that Pylenium was expecting. " "Is your driver executable the right version?")
 
         # Default instance of PyleniumWait
         self._wait = PyleniumWait(self, self._webdriver, self.config.driver.wait_time, ignored_exceptions=None)
@@ -418,9 +415,7 @@ class Pylenium:
         if timeout == 0:
             element = self.webdriver.find_element(*locator)
         else:
-            element = self.wait(timeout).until(
-                lambda x: x.find_element(*locator), f"Could not find element with the text `{text}`"
-            )
+            element = self.wait(timeout).until(lambda x: x.find_element(*locator), f"Could not find element with the text `{text}`")
         return Element(self, element, locator)
 
     def get(self, css: str, timeout: int = None) -> Element:
@@ -443,9 +438,7 @@ class Pylenium:
         if timeout == 0:
             element = self.webdriver.find_element(by, css)
         else:
-            element = self.wait(timeout).until(
-                lambda x: x.find_element(by, css), f"Could not find element with the CSS `{css}`"
-            )
+            element = self.wait(timeout).until(lambda x: x.find_element(by, css), f"Could not find element with the CSS `{css}`")
         return Element(self, element, locator=(by, css))
 
     def find(self, css: str, timeout: int = None) -> Elements:
@@ -469,9 +462,7 @@ class Pylenium:
             if timeout == 0:
                 elements = self.webdriver.find_elements(by, css)
             else:
-                elements = self.wait(timeout).until(
-                    lambda x: x.find_elements(by, css), f"Could not find any elements with the CSS `{css}`"
-                )
+                elements = self.wait(timeout).until(lambda x: x.find_elements(by, css), f"Could not find any elements with the CSS `{css}`")
         except TimeoutException:
             elements = []
         return Elements(self, elements, locator=(by, css))
@@ -496,9 +487,7 @@ class Pylenium:
         if timeout == 0:
             element = self.webdriver.find_element(by, xpath)
         else:
-            element = self.wait(timeout).until(
-                lambda x: x.find_element(by, xpath), f"Could not find an element with xpath: `{xpath}`"
-            )
+            element = self.wait(timeout).until(lambda x: x.find_element(by, xpath), f"Could not find an element with xpath: `{xpath}`")
         return Element(self, element, locator=(by, xpath))
 
     def findx(self, xpath: str, timeout: int = None) -> Elements:
@@ -522,9 +511,7 @@ class Pylenium:
             if timeout == 0:
                 elements = self.webdriver.find_elements(by, xpath)
             else:
-                elements = self.wait(timeout).until(
-                    lambda x: x.find_elements(by, xpath), f"Could not find an element with xpath: `{xpath}`"
-                )
+                elements = self.wait(timeout).until(lambda x: x.find_elements(by, xpath), f"Could not find an element with xpath: `{xpath}`")
         except TimeoutException:
             elements = []
         return Elements(self, elements, locator=(by, xpath))
@@ -533,9 +520,7 @@ class Pylenium:
 
     # region UTILITIES
 
-    def wait(
-        self, timeout: int = None, use_py: bool = False, ignored_exceptions: List = None
-    ) -> Union[WebDriverWait, PyleniumWait]:
+    def wait(self, timeout: int = None, use_py: bool = False, ignored_exceptions: List = None) -> Union[WebDriverWait, PyleniumWait]:
         """The Wait object with the given timeout in seconds.
 
         If `timeout=None` or `timeout=0`,
@@ -798,3 +783,5 @@ class Pylenium:
         ```
         """
         return self.webdriver.get_window_size()
+
+    # endregion

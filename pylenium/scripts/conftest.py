@@ -203,7 +203,7 @@ def pys_config(_override_pylenium_config_values) -> PyleniumConfig:
 
 
 @pytest.fixture(scope="function")
-def test_case(test_results_dir: Path, py_config, request) -> TestCase:
+def test_case(test_results_dir: Path, request) -> TestCase:
     """Manages data pertaining to the currently running Test Function or Case.
 
         * Creates the test-specific logger.
@@ -216,7 +216,6 @@ def test_case(test_results_dir: Path, py_config, request) -> TestCase:
     """
     test_name = request.node.name
     test_result_path = test_results_dir.joinpath(test_name)
-    py_config.driver.capabilities.update({"name": test_name})
     return TestCase(name=test_name, file_path=test_result_path)
 
 

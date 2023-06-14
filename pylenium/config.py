@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from pydantic import BaseModel
 
@@ -18,7 +18,7 @@ class DriverConfig(BaseModel):
     seleniumwire_options: Dict = {}
     extension_paths: List[str] = None
     webdriver_kwargs: Dict = None
-    version: str = "latest"
+    version: Optional[str] = None
     local_path: str = ""
 
 
