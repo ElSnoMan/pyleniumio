@@ -22,7 +22,7 @@ setup(
         "pydantic>=1.9.0",
         "Faker>=8.16.0",
         "requests>=2.27.1",
-        "webdriver-manager>=3.5.4",
+        "webdriver-manager>=3.8.6",
         "pyfiglet>=0.8.post1",
         "axe-selenium-python>=2.1.6",
         "selenium-wire>=4.6.3",

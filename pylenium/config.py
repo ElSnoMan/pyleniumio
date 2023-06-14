@@ -14,11 +14,10 @@ class DriverConfig(BaseModel):
     page_load_wait_time: int = 0
     options: List[str] = []
     capabilities: Dict = {}
-    experimental_options: List[Dict] = None
-    seleniumwire_enabled: bool = False
+    experimental_options: Optional[List[Dict]] = None
     seleniumwire_options: Dict = {}
-    extension_paths: List[str] = None
-    webdriver_kwargs: Dict = None
+    extension_paths: Optional[List[str]] = None
+    webdriver_kwargs: Optional[Dict] = None
     version: Optional[str] = None
     local_path: str = ""
 
