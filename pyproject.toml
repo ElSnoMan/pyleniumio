@@ -1,26 +1,30 @@
 [tool.poetry]
-name = "pylenium"
+name = "pyleniumio"
 version = "1.18.0"
 description = "The best of Selenium and Cypress in a single Python Package"
 authors = ["Carlos <carlos@qap.dev>"]
 license = "MIT"
+readme = "README.md"
+packages = [{ include = "pylenium" }]
+
+[tool.poetry.scripts]
+pylenium = "pylenium.scripts.cli:cli"
 
 [tool.poetry.dependencies]
 python = "^3.7"
 pydantic = "1.9.0"
 requests = "2.27.1"
 pyfiglet = "^0.8.post1"
-pytest = "^6.1.0"
 pytest-xdist = "2.4.0"
 pytest-parallel = "0.1.1"
 axe-selenium-python = "^2.1.6"
 Faker = "8.16.0"
-python-dotenv = "^0.20.0"
 rich-click = "^1.5.1"
 webdriver-manager = "^3.8.6"
 selenium-wire = "^5.1.0"
 allure-pytest = "^2.11.1"
 selenium = "4.10.0"
+pytest = "^7.3.2"
 
 [tool.poetry.dev-dependencies]
 black = "21.12b0"

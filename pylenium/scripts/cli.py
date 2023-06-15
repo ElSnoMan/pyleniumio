@@ -29,7 +29,6 @@ import shutil
 import rich_click as click
 from pyfiglet import Figlet
 from pylenium.scripts.cli_utils import run_process, parse_response
-from pylenium.scripts import report_portal
 from pylenium.scripts import allure_reporting as allure_
 
 
