@@ -8,13 +8,12 @@ readme = "README.md"
 packages = [{ include = "pylenium" }]
 
 [tool.poetry.scripts]
-pylenium = "pylenium.scripts.cli:cli"
+pylenium = "pylenium.scripts.cli:app"
 
 [tool.poetry.dependencies]
 python = "^3.7"
 pydantic = "1.9.0"
 requests = "2.27.1"
-pyfiglet = "^0.8.post1"
 pytest-xdist = "2.4.0"
 pytest-parallel = "0.1.1"
 axe-selenium-python = "^2.1.6"
@@ -25,6 +24,7 @@ selenium-wire = "^5.1.0"
 allure-pytest = "^2.11.1"
 selenium = "4.10.0"
 pytest = "^7.3.2"
+typer = { version = "^0.9.0", extras = ["all"] }
 
 [tool.poetry.dev-dependencies]
 black = "21.12b0"
