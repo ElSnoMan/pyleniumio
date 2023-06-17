@@ -35,6 +35,7 @@ flake8 = "^5.0.4"
 line-length = 160
 
 [tool.poe.tasks]
+lint = { "cmd" = "flake8 pylenium tests", "help" = "Run Flake8 Linter" }
 test-unit = { "cmd" = "pytest tests/unit --cov=. --cov-report term-missing -n 4", "help" = "Run Unit Tests and get Code Coverage Report" }
 test-ui = { "cmd" = "pytest tests/ui --cov=. --cov-report term-missing -n 2", "help" = "Run UI Tests" }
 
