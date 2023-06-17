@@ -1,35 +1,17 @@
-""" The Pylenium CLI.
+""" The Pylenium CLI using Typer.
 
-We are using `click` to create the CLI interface.
-In short, the structure of the interface looks like this:
-
-@click.group() as cli         # this is then publicly exposed as `pylenium` in the user's terminal
-    @cli.command()            # A
-    @cli.command()            # B
-
-    @cli.group() as allure
-        @allure.command()     # C
-        @allure.command()     # D
-
-This structure is what gives us commands and sub-commands.
-Examples:
-    # Use command A
-    $ pylenium init
-
-    # Use allure command C
-    $ pylenium allure install
-
-For more information, visit their official docs: https://click.palletsprojects.com/en/7.x/
+For more information, visit their official docs: https://typer.tiangolo.com/
 """
 
 import os
-import platform
 import shutil
 
-import rich_click as click
-from pyfiglet import Figlet
-from pylenium.scripts.cli_utils import run_process, parse_response
+import typer
+
 from pylenium.scripts import allure_reporting as allure_
+
+app = typer.Typer()
+app.add_typer(allure_.app, name="allure", help="Allure Reporting Commands")
 
 
 def _copy(file, to_dir, message) -> str:
@@ -41,28 +23,19 @@ def _copy(file, to_dir, message) -> str:
         The absolute path of the newly copied file.
     """
     newly_created_path = shutil.copy(src=file, dst=to_dir)
-    click.echo(f"{message} {newly_created_path}")
+    typer.secho(f"✅ {message} {newly_created_path}", fg=typer.colors.BRIGHT_GREEN)
     return newly_created_path
 
 
-@click.group()
-@click.version_option()
-def cli():
-    """The Pylenium CLI."""
-    pass
-
-
-@cli.command()
-@click.option("-c", "--overwrite-conftest", type=bool, show_default=True, is_flag=True)
-@click.option("-p", "--overwrite-pylenium-json", type=bool, show_default=True, is_flag=True)
-@click.option("-i", "--overwrite-pytest-ini", type=bool, show_default=True, is_flag=True)
-def init(overwrite_conftest, overwrite_pylenium_json, overwrite_pytest_ini):
+@app.command()
+def init(
+    overwrite_conftest: bool = typer.Option(False, "--conftest", "-c", help="Overwrite conftest.py"),
+    overwrite_pylenium_json: bool = typer.Option(False, "--pylenium_json", "-p", help="Overwrite pylenium.json"),
+    overwrite_pytest_ini: bool = typer.Option(False, "--pytest_ini", "-i", help="Overwrite pytest.ini"),
+):
     """Initializes Pylenium into the current directory.
 
-    By default, this creates (if they do not exist):
-    * conftest.py
-    * pylenium.json
-    * pytest.ini
+    By default, this creates (if they do not exist): conftest.py, pylenium.json, pytest.ini
 
     If you want to overwrite these existing files, use the available Options.
     """
@@ -78,7 +51,8 @@ def init(overwrite_conftest, overwrite_pylenium_json, overwrite_pytest_ini):
         if overwrite_conftest:
             _copy(file=conftest, to_dir=user_cwd, message="conftest.py was overwritten at:")
         else:
-            click.echo("conftest.py already exists at this location. " + "Use -c flag if you want to replace it with the latest.")
+            typer.secho("conftest.py already exists at this location", fg=typer.colors.BRIGHT_YELLOW)
+            typer.secho("💡 Use -c flag if you want to replace it with the latest\n", fg=typer.colors.BRIGHT_CYAN)
     else:
         _copy(file=conftest, to_dir=user_cwd, message="conftest.py was created at:")
 
@@ -87,7 +61,8 @@ def init(overwrite_conftest, overwrite_pylenium_json, overwrite_pytest_ini):
         if overwrite_pylenium_json:
             _copy(file=pylenium_json, to_dir=user_cwd, message="pylenium.json was overwritten at:")
         else:
-            click.echo("pylenium.json already exists at this location. " "Use -p flag if you want to replace it with the latest defaults.")
+            typer.secho("pylenium.json already exists at this location", fg=typer.colors.BRIGHT_YELLOW)
+            typer.secho("💡 Use -p flag if you want to replace it with the latest defaults\n", fg=typer.colors.BRIGHT_CYAN)
     else:
         _copy(file=pylenium_json, to_dir=user_cwd, message="pylenium.json was created at:")
 
@@ -96,76 +71,11 @@ def init(overwrite_conftest, overwrite_pylenium_json, overwrite_pytest_ini):
         if overwrite_pytest_ini:
             _copy(file=pytest_ini, to_dir=user_cwd, message="pytest.ini was overwritten at:")
         else:
-            click.echo("pytest.ini already exists at this location. " "Use -i flag if you want to replace it with the latest defaults.")
+            typer.secho("pytest.ini already exists at this location", fg=typer.colors.BRIGHT_YELLOW)
+            typer.secho("💡 Use -i flag if you want to replace it with the latest defaults\n", fg=typer.colors.BRIGHT_CYAN)
     else:
         _copy(file=pytest_ini, to_dir=user_cwd, message="pytest.ini was created at:")
 
 
-@cli.command()
-def joy():
-    custom_fig = Figlet(font="colossal")
-    click.echo(custom_fig.renderText("Pyl e n i u m Sparks Joy"))
-
-
-# ALLURE REPORTING #
-####################
-
-
-@cli.group()
-def allure():
-    """CLI Commands to work with allure"""
-    pass
-
-
-@allure.command()
-def check():
-    """Check if the allure CLI is installed on the current machine"""
-    err_message = "\n[ERROR] allure is not installed or not added to the PATH. Visit https://docs.qameta.io/allure/#_get_started"
-    click.echo("\n>>> allure --version")
-    try:
-        response = run_process(["allure", "--version"])
-        out, err = parse_response(response)
-        if response.returncode != 0:
-            click.echo(err_message)
-            click.echo(err)
-            return
-        click.echo(f"\n[SUCCESS] allure is installed with version: {out}")
-    except FileNotFoundError:
-        click.echo(err_message)
-
-
-@allure.command()
-def install():
-    """Attempt to install allure to the current machine"""
-    click.echo("\nFor more installation options and details, please visit allure's docs: https://docs.qameta.io/allure/#_get_started")
-    operating_system = platform.system()
-    if operating_system.upper() == "LINUX":
-        allure_.install_for_linux()
-        return
-
-    if operating_system.upper() == "DARWIN":
-        allure_.install_for_mac()
-        return
-
-    if operating_system.upper() == "WINDOWS":
-        allure_.install_for_windows()
-        return
-
-
-@allure.command()
-@click.option("-f", "--folder", type=str, show_default=True)
-def serve(folder: str):
-    """Start the allure server and serve the allure report given its folder path"""
-    click.echo(f"\n>>> allure serve {folder}")
-    click.echo("Press <Ctrl+C> to exit")
-    try:
-        response = run_process(["allure", "serve", folder])
-        _, err = parse_response(response)
-        if response.returncode != 0:
-            click.echo(f"\n[ERROR] Unable to serve allure report. Check that the folder path is valid. {err}")
-    except FileNotFoundError:
-        click.echo("\n[ERROR] allure is not installed or not added to the PATH. Visit https://docs.qameta.io/allure/#_get_started")
-
-
 if __name__ == "__main__":
-    cli()
+    app()

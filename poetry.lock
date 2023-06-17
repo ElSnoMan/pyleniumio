@@ -923,18 +923,6 @@ docs = ["sphinx (>=1.4.8)"]
 test = ["codecov (>=2.0.5)", "hypothesis (>=3.5.3)", "mock (>=1.0.1)", "pytest (>=3.0.3)", "pytest-cov (>=2.2.1)", "pytest-faulthandler (>=1.3.0,<2)", "pytest-timeout (>=1.0.0,<2)", "wheel (>=0.29)"]
 
 [[package]]
-name = "pyfiglet"
-version = "0.8.post1"
-description = "Pure-python FIGlet implementation"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pyfiglet-0.8.post1-py2.py3-none-any.whl", hash = "sha256:d555bcea17fbeaf70eaefa48bb119352487e629c9b56f30f383e2c62dd67a01c"},
-    {file = "pyfiglet-0.8.post1.tar.gz", hash = "sha256:c6c2321755d09267b438ec7b936825a4910fec696292139e664ca8670e103639"},
-]
-
-[[package]]
 name = "pyflakes"
 version = "2.5.0"
 description = "passive checker of Python programs"
@@ -1179,26 +1167,6 @@ typing-extensions = {version = ">=4.0.0,<5.0", markers = "python_version < \"3.9
 jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
-name = "rich-click"
-version = "1.6.1"
-description = "Format click help output nicely with rich"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "rich-click-1.6.1.tar.gz", hash = "sha256:f8ff96693ec6e261d1544e9f7d9a5811c5ef5d74c8adb4978430fc0dac16777e"},
-    {file = "rich_click-1.6.1-py3-none-any.whl", hash = "sha256:0fcf4d1a09029d79322dd814ab0b2e66ac183633037561881d45abae8a161d95"},
-]
-
-[package.dependencies]
-click = ">=7"
-importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
-rich = ">=10.7.0"
-
-[package.extras]
-dev = ["pre-commit"]
-
-[[package]]
 name = "selenium"
 version = "4.10.0"
 description = ""
@@ -1246,6 +1214,18 @@ zstandard = ">=0.14.1"
 
 [package.extras]
 dev = ["black", "bumpversion", "coverage", "flake8", "gunicorn", "httpbin", "isort", "mitmproxy (>5.3.0)", "mypy", "pre-commit", "pytest", "pytest-cov", "tox", "twine", "werkzeug (==2.0.3)", "wheel"]
+
+[[package]]
+name = "shellingham"
+version = "1.5.0.post1"
+description = "Tool to Detect Surrounding Shell"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "shellingham-1.5.0.post1-py2.py3-none-any.whl", hash = "sha256:368bf8c00754fd4f55afb7bbb86e272df77e4dc76ac29dbcbb81a59e9fc15744"},
+    {file = "shellingham-1.5.0.post1.tar.gz", hash = "sha256:823bc5fb5c34d60f285b624e7264f4dda254bc803a3774a147bf99c0e3004a28"},
+]
 
 [[package]]
 name = "six"
@@ -1438,6 +1418,31 @@ files = [
 ]
 
 [[package]]
+name = "typer"
+version = "0.9.0"
+description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "typer-0.9.0-py3-none-any.whl", hash = "sha256:5d96d986a21493606a358cae4461bd8cdf83cbf33a5aa950ae629ca3b51467ee"},
+    {file = "typer-0.9.0.tar.gz", hash = "sha256:50922fd79aea2f4751a8e0408ff10d2662bd0c8bbfa84755a699f3bada2978b2"},
+]
+
+[package.dependencies]
+click = ">=7.1.1,<9.0.0"
+colorama = {version = ">=0.4.3,<0.5.0", optional = true, markers = "extra == \"all\""}
+rich = {version = ">=10.11.0,<14.0.0", optional = true, markers = "extra == \"all\""}
+shellingham = {version = ">=1.3.0,<2.0.0", optional = true, markers = "extra == \"all\""}
+typing-extensions = ">=3.7.4.3"
+
+[package.extras]
+all = ["colorama (>=0.4.3,<0.5.0)", "rich (>=10.11.0,<14.0.0)", "shellingham (>=1.3.0,<2.0.0)"]
+dev = ["autoflake (>=1.3.1,<2.0.0)", "flake8 (>=3.8.3,<4.0.0)", "pre-commit (>=2.17.0,<3.0.0)"]
+doc = ["cairosvg (>=2.5.2,<3.0.0)", "mdx-include (>=1.4.1,<2.0.0)", "mkdocs (>=1.1.2,<2.0.0)", "mkdocs-material (>=8.1.4,<9.0.0)", "pillow (>=9.3.0,<10.0.0)"]
+test = ["black (>=22.3.0,<23.0.0)", "coverage (>=6.2,<7.0)", "isort (>=5.0.6,<6.0.0)", "mypy (==0.910)", "pytest (>=4.4.0,<8.0.0)", "pytest-cov (>=2.10.0,<5.0.0)", "pytest-sugar (>=0.9.4,<0.10.0)", "pytest-xdist (>=1.32.0,<4.0.0)", "rich (>=10.11.0,<14.0.0)", "shellingham (>=1.3.0,<2.0.0)"]
+
+[[package]]
 name = "typing-extensions"
 version = "4.6.3"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -1580,4 +1585,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "e9c40f06fbe8a08dd8fca70d14b1b1ce2613b4779bee99d1d3d8fbe780a3dd0e"
+content-hash = "0c7423367b51e6965424fb3344423c3cbc95bd546da3669edb063c0cd80bce33"
