@@ -1,7 +1,7 @@
 ---
 description: >-
   Pylenium, for Chrome and Firefox, allows you to capture and interact Network
-  Requests
+  Requests using the SeleniumWire integration.
 ---
 
 # 🔁 Inspect Network Requests

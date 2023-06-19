@@ -2,7 +2,7 @@
 description: A basic instance of Faker to generate test data.
 ---
 
-# fake
+# 🥸 fake
 
 ## What is Faker?
 

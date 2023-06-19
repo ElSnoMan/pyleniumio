@@ -2,7 +2,7 @@
 description: Pylenium has commands for working with allure reporting
 ---
 
-# Allure CLI
+# 📊 Allure CLI
 
 These are "convenience" commands if you are new to allure, but you can use these Pylenium commands or use the <mark style="color:yellow;">**`allure`**</mark>  CLI directly _(recommended)_
 

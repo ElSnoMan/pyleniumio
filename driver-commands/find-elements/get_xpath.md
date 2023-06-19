@@ -59,7 +59,7 @@ py.get_cookie().getx("//[text()='foo' and @class='bar']")
 
 * `xpath (str)` - The XPATH selector to use
 * `timeout=None (int)` - The number of seconds for this command to succeed.
-  * <mark style="color:purple;">`timeout=None`</mark> will use the default <mark style="color:orange;">**wait\_time**</mark>** ** in [pylenium.json](../../docs/configuration/pylenium.json.md)
+  * <mark style="color:purple;">`timeout=None`</mark> will use the default <mark style="color:orange;">**wait\_time**</mark> in [pylenium.json](../../docs/configuration/pylenium.json.md)
   * <mark style="color:purple;">`timeout=0`</mark> will poll the DOM immediately with no wait
   * Greater than zero will override the default <mark style="color:orange;">**wait\_time**</mark>
 

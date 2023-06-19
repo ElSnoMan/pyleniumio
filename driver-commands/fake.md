@@ -15,7 +15,7 @@ py.fake.<object>()
 ```
 
 {% hint style="info" %}
-This is a **command** and a **fixture**. More details in his doc: [**Fixtures > fake**](../docs/fixtures/fake.md)****
+This is a **command** and a **fixture**. More details in his doc: [**Fixtures > fake**](../docs/fixtures/fake.md)
 {% endhint %}
 
 ## Examples

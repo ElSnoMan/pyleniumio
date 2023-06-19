@@ -42,7 +42,7 @@ Default is **False** because why would you want to select a box that's already s
 
 ## Yields
 
-* <mark style="color:orange;">**Element**</mark>** ** - The current instance so you can chain commands
+* <mark style="color:orange;">**Element**</mark> - The current instance so you can chain commands
 
 ## Raises
 

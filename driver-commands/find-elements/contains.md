@@ -58,7 +58,7 @@ py.get_cookies().contains("Cooke Monster")
 
 * `text (str)` - The text to look for
 * `timeout=None (int)` - The number of seconds for this command to succeed.
-  * <mark style="color:purple;">`timeout=None`</mark> will use the default <mark style="color:orange;">**wait\_time**</mark>** ** in [pylenium.json](../../docs/configuration/pylenium.json.md)
+  * <mark style="color:purple;">`timeout=None`</mark> will use the default <mark style="color:orange;">**wait\_time**</mark> in [pylenium.json](../../docs/configuration/pylenium.json.md)
   * <mark style="color:purple;">`timeout=0`</mark> will poll the DOM immediately with no wait
   * Any value greater than zero will override the default **wait\_time**
 

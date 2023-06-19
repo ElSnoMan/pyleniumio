@@ -2,11 +2,11 @@
 description: Accessibility (A11y) Testing with aXe
 ---
 
-# axe
+# 🪓 axe
 
 ## Usage
 
-The <mark style="color:purple;">`axe`</mark> fixture is the recommended way to run A11y audits since it's so easy and straightforward.
+The <mark style="color:yellow;">**`axe`**</mark> fixture is the recommended way to run A11y audits since it's so easy and straightforward.
 
 ```python
 def test_axe_fixture(py, axe):
@@ -33,9 +33,9 @@ def run(name: str = None, context: Dict = None, options: Dict = None) -> AxeRepo
 
 ## Arguments
 
-* <mark style="color:purple;">`name: str`</mark> The file path (including name and `.json` extension) of the report to save as a JSON
-* <mark style="color:purple;">`context: Dict`</mark> The dictionary of page part(s), by CSS Selectors, to include or exclude in the audit
-* <mark style="color:purple;">`options: Dict`</mark> The dictionary of aXe options to include in the audit
+* <mark style="color:yellow;">**`name: str`**</mark> The file path (including name and `.json` extension) of the report to save as a JSON
+* <mark style="color:yellow;">**`context: Dict`**</mark> The dictionary of page part(s), by CSS Selectors, to include or exclude in the audit
+* <mark style="color:yellow;">**`options: Dict`**</mark> The dictionary of aXe options to include in the audit
 
 {% hint style="info" %}
 Visit the official aXe documentation for more information about the `context` and `options` arguments.
@@ -47,7 +47,7 @@ Visit the official aXe documentation for more information about the `context` an
 
 * <mark style="color:orange;">**AxeReport**</mark> - object that represents the audit report in code
 
-If you include the <mark style="color:purple;">`name`</mark> argument, then that report is also created at the specified file path.
+If you include the <mark style="color:yellow;">**`name`**</mark> argument, then that report is also created at the specified file path.
 
 {% hint style="danger" %}
 If any of the directories in the path do not exist, then a <mark style="color:red;">`FileNotFound`</mark> error is raised.

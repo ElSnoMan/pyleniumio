@@ -2,14 +2,14 @@
 description: The configuration file for Pylenium
 ---
 
-# pylenium.json
+# 📄 pylenium.json
 
 ## Configure with a JSON File
 
 If you don't want to use Pylenium's defaults but you don't want to configure it via the CLI, you can create a <mark style="color:orange;">**pylenium.json**</mark> file at the <mark style="color:yellow;">**Project Root**</mark> (same directory as our <mark style="color:orange;">**conftest.py**</mark> file) and do it with a JSON instead.
 
 {% hint style="info" %}
-<mark style="color:orange;">**pylenium.json**</mark> is already created when using the <mark style="color:purple;">`$ pylenium init`</mark> command
+<mark style="color:orange;">**pylenium.json**</mark> is already created when using the <mark style="color:purple;">**`pylenium init`**</mark> command
 {% endhint %}
 
 Here are all of the current settings (and their defaults) you can configure right now:
@@ -27,6 +27,7 @@ Here are all of the current settings (and their defaults) you can configure righ
     "experimental_options": null,
     "extension_paths": [],
     "webdriver_kwargs": {},
+    "seleniumwire_enabled": false,
     "seleniumwire_options": {},
     "local_path": ""
   },
@@ -119,9 +120,9 @@ py.config.custom["environment"]["clusters"][0]
 
 ## Multiple Versions
 
-You can have multiple `pylenium.json` files and pick which one to use when executing tests.
+You can have multiple <mark style="color:yellow;">**`pylenium.json`**</mark> files and pick which one to use when executing tests.
 
-For example, you can have multiple at your Project Root...
+For example, you can have multiple at your Project Root:
 
 ```
 📂 Project
@@ -149,7 +150,7 @@ Keep the original `pylenium.json` at the Project Root so the default behavior co
 
 
 
-Then, use the `--pylenium_json` argument to pick which to use:
+Then, use the <mark style="color:yellow;">**`--pylenium_json`**</mark> argument to pick which to use:
 
 ```bash
 pytest --pylenium_json="local.pylenium.json"

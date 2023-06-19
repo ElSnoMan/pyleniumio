@@ -2,7 +2,7 @@
 description: Configure the viewport, or browser window dimensions, for all tests.
 ---
 
-# Viewport
+# 🖥 Viewport
 
 ## The Viewport Settings
 

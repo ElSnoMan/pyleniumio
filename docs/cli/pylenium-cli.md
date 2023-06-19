@@ -2,15 +2,15 @@
 description: The CLI comes with commands to initialize and create Pylenium files, and more.
 ---
 
-# Pylenium CLI
+# 💻 Pylenium CLI
 
 ## pylenium init
 
 Initializes Pylenium into the current directory. This creates Pylenium's required files:
 
-* `conftest.py`
-* `pylenium.json`
-* `pytest.ini`
+* **`conftest.py`**
+* **`pylenium.json`**
+* **`pytest.ini`**
 
 {% code title="Terminal $" %}
 ```bash
@@ -28,7 +28,7 @@ By default, this will not overwrite Pylenium files if they already exist.
 
 ## Overwrite conftest.py file
 
-You can overwrite an existing <mark style="color:orange;">**conftest.py**</mark> file with the latest version by using the `-c` flag.
+You can overwrite an existing <mark style="color:yellow;">**conftest.py**</mark> file with the latest version by using the **`-c`** flag.
 
 {% code title="Terminal $" %}
 ```bash
@@ -38,7 +38,7 @@ pylenium init -c
 
 ## Overwrite pylenium.json file
 
-You can overwrite an existing <mark style="color:orange;">**pylenium.json**</mark> file with the latest defaults by using the `-p` flag.
+You can overwrite an existing <mark style="color:yellow;">**pylenium.json**</mark> file with the latest defaults by using the **`-p`** flag.
 
 {% code title="Terminal $" %}
 ```bash
@@ -48,10 +48,20 @@ pylenium init -p
 
 ## Overwrite pytest.ini file
 
-You can overwrite an existing <mark style="color:orange;">**pytest.ini**</mark> file with the latest defaults by using the `-i` flag.\\
+You can overwrite an existing <mark style="color:yellow;">**pytest.ini**</mark> file with the latest defaults by using the **`-i`** flag.
 
 {% code title="Terminal $" %}
 ```bash
 pylenium init -i
+```
+{% endcode %}
+
+## Overwrite multiple files at once
+
+You can overwrite two or more files by combining flags.
+
+{% code title="Terminal" %}
+```bash
+pylenium init -cpi
 ```
 {% endcode %}

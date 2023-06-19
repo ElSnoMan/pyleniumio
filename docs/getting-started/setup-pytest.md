@@ -20,17 +20,25 @@ pip install pyleniumio
 {% endtab %}
 
 {% tab title="poetry" %}
+{% code title="Terminal" %}
+```bash
 poetry add pyleniumio
+```
+{% endcode %}
 {% endtab %}
 
 {% tab title="pipenv" %}
-{% code title="Terminal $ (venv)" %}
-```
+{% code title="Terminal " %}
+```bash
 pipenv install pyleniumio
 ```
 {% endcode %}
 {% endtab %}
 {% endtabs %}
+
+{% hint style="success" %}
+`poetry` and `pipenv` auto-generate virtual environments for you!
+{% endhint %}
 
 ## 2. Initialize Pylenium
 
@@ -46,15 +54,15 @@ Execute this command at your Project Root
 
 This creates three files:
 
-* `conftest.py` - This has the fixtures needed for Pylenium.
-* `pylenium.json` - This is the [configuration ](../configuration/pylenium.json.md)file for Pylenium.
-* `pytest.ini` - This is the configuration file for pytest and is used to connect to [ReportPortal](../cli/report-portal.md)
+* <mark style="color:yellow;">**`conftest.py`**</mark> - This has the fixtures needed for Pylenium
+* <mark style="color:yellow;">**`pylenium.json`**</mark> - This is the [configuration ](../configuration/pylenium.json.md)file for Pylenium
+* <mark style="color:yellow;">**`pytest.ini`**</mark> - This is the configuration file for pytest
 
 By default, Pylenium uses the Chrome browser. Chrome must be installed on the machine, but you don't have to worry about installing any of the drivers.
 
 ## 3. Select pytest as the Test Framework
 
-To get the most out of your IDE, you need to configure it to use **pytest** as the Test Framework. This will give you:
+To get the most out of your IDE, you need to configure it to use <mark style="color:yellow;">**pytest**</mark> as the Test Framework. This will give you:
 
 * Intellisense
 * Autocomplete
@@ -64,20 +72,18 @@ To get the most out of your IDE, you need to configure it to use **pytest** as t
 {% tabs %}
 {% tab title="VS Code" %}
 ```
-Open Command Palette (CMD + SHIFT + P or CTRL + SHIFT + P)
-Search for "Python: Configure Tests"
-Select pytest
+1. Open Command Palette (CMD + SHIFT + P or CTRL + SHIFT + P)
+2. Search for "Python: Configure Tests"
+3. Select pytest
 ```
 {% endtab %}
 
 {% tab title="PyCharm" %}
-{% code title="(RECOMMENDED IDE)" %}
 ```
-Open Preferences (or Settings)
-Open Tools > Python Integrated Tools
-Select pytest in the "Default test runner" dropdown
+1. Open Preferences (or Settings)
+2. Open Tools > Python Integrated Tools
+3. Select pytest in the "Default test runner" dropdown
 ```
-{% endcode %}
 {% endtab %}
 {% endtabs %}
 

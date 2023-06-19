@@ -6,11 +6,11 @@ description: pytest uses specific naming conventions and project structure
 
 ## Pylenium Files
 
-You should have created these in the previous step, but they are required for **Pylenium** to do its magic.
+You should have created these in the [previous step](setup-pytest.md), but they are required for **Pylenium** to do its magic.
 
-* `conftest.py`
-* `pylenium.json`
-* `pytest.ini`
+* <mark style="color:yellow;">**`conftest.py`**</mark>
+* <mark style="color:yellow;">**`pylenium.json`**</mark>
+* <mark style="color:yellow;">**`pytest.ini`**</mark>
 
 {% hint style="success" %}
 Make sure these are at the Project Root (aka Workspace)
@@ -18,10 +18,10 @@ Make sure these are at the Project Root (aka Workspace)
 
 ## conftest.py
 
-pytest uses special functions called **Fixtures** to control the **Setup** and **Teardown** of tests and runs.
+pytest uses special functions called <mark style="color:purple;">**Fixtures**</mark> to control the <mark style="color:purple;">**Setup**</mark> and <mark style="color:purple;">**Teardown**</mark> of tests and runs.
 
 {% hint style="danger" %}
-If you put any other **custom** functions or fixtures in this **conftest.py**, they will be _overridden_ when you upgrade Pylenium
+If you put any other **custom** functions or fixtures in this **conftest.py**, they will be _overwritten_ when you upgrade Pylenium. Instead, create your own `conftest.py` file under your `/tests` directory.
 {% endhint %}
 
 ### Fixture Example
@@ -33,11 +33,11 @@ import pytest
 def user():
     new_user = user_service.create()
     yield new_user
-    user_service.delete(new_user)
+    user_service.delete(new_user.id)
 ```
 
 * `@pytest.fixture` - this decorator indicates that this function has a Setup and Teardown&#x20;
-* `def user():` - define the function like normal. `user` will be the name of the fixture to be used in tests
+* `def user():` - define the function normally. `user` will be the name of the fixture to be used in tests
 * Everything _before_ the `yield` is executed before each test
 * `yield new_user` - returns `new_user` and gives control back to the test. The rest of the function is not executed yet
 * Everything _after_ the `yield` is executed after each test
@@ -45,7 +45,7 @@ def user():
 ### Use the Fixture
 
 {% code title="test_*.py file" %}
-```bash
+```python
 def test_my_website(py, login, user):
     py.visit('https://qap.dev')
     login.with(user)
@@ -53,7 +53,7 @@ def test_my_website(py, login, user):
 ```
 {% endcode %}
 
-When this test is ran:
+When this test is executed:
 
 1. test - The test looks at its parameter list and calls the `py` fixture
 2. fixture - `user` yields the newly created user
@@ -65,7 +65,7 @@ When this test is ran:
 The `conftest.py` file is used to _store_ fixtures and make them available to any tests in their **Scope**.
 
 {% hint style="info" %}
-**Scope** refers to the file's siblings and their descendants.
+**Scope** refers to the file's siblings and descendants.
 {% endhint %}
 
 Take a look at the following Project Structure
@@ -111,13 +111,13 @@ These techniques help you and the Test Runner discover/find and execute your tes
 
 ```bash
 # run all tests
-$ python -m pytest tests
+$ pytest tests
 
 # run tests in ui directory
-$ python -m pytest tests/ui
+$ pytest tests/ui
 
 # run only the payment api tests
-$ python -m pytest tests/api/test_payment.py
+$ pytest tests/api/test_payment.py
 ```
 
 ### Classes
@@ -150,7 +150,7 @@ You can have as many Test Classes and Test Functions as you want in a file
 Tests do NOT need to be in a Test Class. They can exist by themselves in a file and makes the tests and overall file look much cleaner.
 
 {% hint style="success" %}
-RECOMMEND this approach for working with Pylenium for beginners and everyone else really
+RECOMMEND this approach for working with Pylenium for beginners (and everyone else really 😄)
 {% endhint %}
 
 {% code title="test_checkout.py" %}
@@ -170,7 +170,7 @@ Tests should not _share_ **data** or **state**.
 {% endhint %}
 
 {% hint style="success" %}
-Tests should be **modular**, **deterministic** and **meaningful**
+Tests should be **modular**, **deterministic,** and **meaningful**
 {% endhint %}
 
-Pylenium is architected in a way that makes test design easy and intuitive, but also gives you a lot of things for free. **The framework is already designed to be scaled with containerized solutions like Docker and Kubernetes.**
+Pylenium is architected in a way that makes test design easy and intuitive but also gives you a lot of things for free. **The framework is already designed to be scaled with containerized solutions like Docker and Kubernetes.**

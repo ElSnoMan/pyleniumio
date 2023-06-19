@@ -5,7 +5,7 @@ description: How to record and visualize your test results with Allure Reports
 # 📊 Visualize Test Results with Allure
 
 {% hint style="success" %}
-Pylenium uses <mark style="color:yellow;">**`pytest`**</mark> as the Test Framework and uses <mark style="color:yellow;">**`pytest-allure`**</mark> for reporting
+Pylenium uses <mark style="color:yellow;">**`pytest`**</mark> as the Test Framework and uses <mark style="color:yellow;">**`pytest-allure`**</mark> for reporting. However, you can use your preferred reporting strategy since it's easy to extend the framework :thumbsup:
 {% endhint %}
 
 Visit Allure's websites for more info and details:
@@ -60,8 +60,14 @@ allure serve allure-report
 {% endcode %}
 
 {% hint style="warning" %}
-It's recommended to use the <mark style="color:yellow;">**`allure`**</mark> command directly instead of through Pylenium
+It's recommended to use the <mark style="color:yellow;">**`allure`**</mark> command directly instead of through Pylenium:
 {% endhint %}
+
+{% code title="Terminal" %}
+```bash
+pylenium allure serve
+```
+{% endcode %}
 
 ### 4. View the Report
 
@@ -72,7 +78,7 @@ By default, allure will open a new window or browser tab in your default browser
 Take some time to review all of the data that you get from this report, but some notable mentions:
 
 * pass/fail percentages
-* trends on historical test results
+* trends in historical test results
 
 {% hint style="success" %}
 Yes, the more you run tests and save them to the same folder, you'll get more data in the report!
@@ -81,7 +87,7 @@ Yes, the more you run tests and save them to the same folder, you'll get more da
 * detailed steps on setup and teardown of each test
 * logs automatically included for each test
 * on test failure, a screenshot is automatically taken and attached to the test
-* test durations and test run durations
+* test case durations and test run durations
 * other visuals in the Graphs tab
 * and more!
 
@@ -122,7 +128,7 @@ Run the test
 
 {% code title="Terminal" %}
 ```bash
-pytest -k attach_screenshot --alluredir=allure-report
+pytest -k test_attach_screenshots --alluredir=allure-report
 ```
 {% endcode %}
 

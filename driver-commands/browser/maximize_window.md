@@ -25,4 +25,4 @@ py.maximize_window().visit("https://qap.dev")
 
 ## Yields
 
-* <mark style="color:orange;">**Pylenium**</mark>** ** - The current instance of Pylenium so you can chain commands
+* <mark style="color:orange;">**Pylenium**</mark> - The current instance of Pylenium so you can chain commands

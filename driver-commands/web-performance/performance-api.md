@@ -13,7 +13,7 @@ py.performance.get() -> WebPerformance
 
 ## Usage
 
-The <mark style="color:orange;">**Performance**</mark>** ** class is where everything lives. It provides access to the following methods:
+The <mark style="color:orange;">**Performance**</mark> class is where everything lives. It provides access to the following methods:
 
 ### WebPerformance
 

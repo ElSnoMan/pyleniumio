@@ -2,7 +2,7 @@
 description: Configure the driver via the pylenium.json or the CLI.
 ---
 
-# Driver
+# 🚗 Driver
 
 ## The Driver Settings
 
@@ -29,6 +29,7 @@ Supported Drivers:
     "experimental_options": null,
     "extension_paths": [],
     "webdriver_kwargs": {},
+    "seleniumwire_enabled": false,
     "seleniumwire_options": {},
     "local_path": ""
 }
@@ -220,7 +221,7 @@ Default is empty or `[]`
 ### version
 
 {% hint style="info" %}
-Default is <mark style="color:yellow;">**`""`**</mark>
+Default is <mark style="color:yellow;">**null**</mark>
 {% endhint %}
 
 The browser version to use.
@@ -228,7 +229,7 @@ The browser version to use.
 {% code title="pylenium.json" %}
 ```javascript
 "driver": {
-    "version": "latest"
+    "version": null
 }
 ```
 {% endcode %}
@@ -239,26 +240,48 @@ You cannot set the browser version this way
 ```
 {% endcode %}
 
-
-
-### viewport
-
 {% hint style="info" %}
-Default has maximize set to true
+If null (default), Pylenium uses what's on the PATH or latest
 {% endhint %}
 
-The browser window dimensions to use.
+### seleniumwire\_enabled
+
+{% hint style="info" %}
+Default is <mark style="color:yellow;">**false**</mark>
+{% endhint %}
+
+Use a SeleniumWire-enabled Chrome or Firefox driver.
 
 {% code title="pylenium.json" %}
 ```javascript
 "driver": {
-    "version": "latest"
+    "seleniumwire_enabled": false
 }
 ```
 {% endcode %}
 
 {% code title="Terminal" %}
 ```bash
-You cannot set the browser version this way
+pytest --seleniumwire_enabled=true
 ```
 {% endcode %}
+
+### seleniumwire\_options
+
+{% hint style="info" %}
+Default is <mark style="color:yellow;">**{}**</mark>
+{% endhint %}
+
+Options for the SeleniumWire-enabled Chrome or Firefox driver.
+
+{% code title="pylenium.json" %}
+```javascript
+"driver": {
+    "seleniumwire_options": {}
+}
+```
+{% endcode %}
+
+{% hint style="success" %}
+See their docs on [how to use it](https://www.zenrows.com/blog/selenium-wire#chromium-options) and the options you can set
+{% endhint %}

@@ -2,11 +2,12 @@
 
 ## Simple CLI
 
-Pylenium comes with **pytest** and the **pyest-xdist** plugin to run tests concurrently. All you need to do is use the `-n [NUMBER]` option when running the tests in the CLI.
+Pylenium comes with <mark style="color:yellow;">**pytest**</mark> and the <mark style="color:yellow;">**pytest-xdist**</mark> plugin to run tests concurrently. All you need to do is use the `-n [NUMBER]` option when running the tests in the CLI.
 
-{% code title="Terminal $ (venv) # run 2 tests concurrently" %}
+{% code title="Terminal" %}
 ```bash
-python -m pytest tests -n 2
+# run two tests in parallel
+pytest tests -n 2
 ```
 {% endcode %}
 

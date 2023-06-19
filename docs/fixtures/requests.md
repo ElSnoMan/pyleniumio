@@ -2,7 +2,7 @@
 description: A library for working with HTTP Clients and APIs.
 ---
 
-# api (aka requests)
+# ↗ api
 
 ## What is requests?
 
@@ -31,7 +31,7 @@ import requests
 {% code title="api fixture" %}
 ```python
 def test_api_fixture(api):
-    response = api.request.get(f"{BASE_URL}/api/cards")
+    response = api.get(f"{BASE_URL}/api/cards")
 ```
 {% endcode %}
 

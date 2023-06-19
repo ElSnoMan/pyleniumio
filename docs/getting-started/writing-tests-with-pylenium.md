@@ -1,5 +1,5 @@
 ---
-description: Easy as py
+description: Easy as py 🥁
 ---
 
 # 4. Writing Tests with Pylenium
@@ -9,12 +9,12 @@ description: Easy as py
 A **Test File** is just that - a file with tests in it. Depending on the type of project you're working on, you may want these to live right next to your code files or in a separate `/tests` directory.
 
 {% hint style="info" %}
-In these docs we will assume you are writing your tests in a `/tests` directory of your project.
+In these docs, we will assume you are writing your tests in a `/tests` directory of your project.
 {% endhint %}
 
 Create a Test File called `test_qap_dev.py`
 
-* Test Files do not need to start with `test_`
+* Test Files do not need to start with `test_`, but it's recommended
 * This is a naming convention used to make it easier to distinguish between code and tests
 
 You should now have a Project Structure that looks like this:
@@ -23,6 +23,8 @@ You should now have a Project Structure that looks like this:
   * tests
     * test\_qap\_dev.py
   * conftest.py
+  * pylenium.json
+  * pytest.ini
   * venv
 
 ## Write the Test
@@ -56,7 +58,7 @@ Let's move on with the steps.
 {% code title="test_qap_dev.py" %}
 ```bash
 def test_carlos_is_on_leadership(py):
-    py.visit('https://qap.dev')
+    py.visit("https://qap.dev")
 ```
 {% endcode %}
 
@@ -65,8 +67,8 @@ def test_carlos_is_on_leadership(py):
 {% code title="test_qap_dev.py" %}
 ```python
 def test_carlos_is_on_leadership(py):
-    py.visit('https://qap.dev')
-    py.get('a[href="/about"]').hover()
+    py.visit("https://qap.dev")
+    py.get("a[href='/about']").hover()
 ```
 {% endcode %}
 
@@ -94,9 +96,9 @@ Make sure to check out the many commands available in Pylenium
 {% code title="test_qap_dev.py" %}
 ```python
 def test_carlos_is_on_leadership(py):
-    py.visit('https://qap.dev')
-    py.get('a[href="/about"]').hover()
-    py.get('a[href="/leadership"][class^="Header-nav"]').click()
+    py.visit("https://qap.dev")
+    py.get("a[href='/about']").hover()
+    py.get("a[href='/leadership'][class^='Header-nav']").click()
 ```
 {% endcode %}
 
@@ -105,22 +107,22 @@ def test_carlos_is_on_leadership(py):
 {% code title="test_qap_dev.py" %}
 ```python
 def test_carlos_is_on_leadership(py):
-    py.visit('https://qap.dev')
-    py.get('a[href="/about"]').hover()
-    py.get('a[href="/leadership"][class^="Header-nav"]').click()
-    assert py.contains('Carlos Kidman')
+    py.visit("https://qap.dev")
+    py.get("a[href='/about']").hover()
+    py.get("a[href='/leadership'][class^='Header-nav']").click()
+    assert py.contains("Carlos Kidman")
 ```
 {% endcode %}
 
 ## Run the Test
 
-If you're using PyCharm, there should be a green **Play** button next to the test definition. Click it and select either **Run** to execute normally or **Debug** to use breakpoints in Debug Mode.
+If you're using PyCharm or VS Code, there should be a green **Play** button next to the test definition. Click it and select either **Run** to execute normally or **Debug** to use breakpoints in Debug Mode.
 
 Otherwise, use the method your IDE provides. You can always use the CLI as well:
 
 {% code title="Terminal $ (venv)" %}
 ```bash
-python -m pytest tests/test_qap_dev.py
+pytest tests/test_qap_dev.py
 ```
 {% endcode %}
 
@@ -129,7 +131,7 @@ python -m pytest tests/test_qap_dev.py
 Here is the same test but written with Selenium out of the box:
 
 ```bash
-# define your setup and teardown fixture
+# Define your setup and teardown fixture
 @pytest.fixture
 def driver():
     driver = webdriver.Chrome()
@@ -138,17 +140,17 @@ def driver():
 
 
 def test_carlos_is_on_leadership_page_with_selenium(driver):
-    driver.get('https://qap.dev')
+    driver.get("https://qap.dev")
     
-    # hover About link
+    # Hover About link
     about_link = driver.find_element(By.CSS_SELECTOR, "a[href='/about']")
     actions = ActionChains(driver)
     actions.move_to_element(about_link).perform()
     
-    # click Leadership link in About menu
+    # Click Leadership link in About menu
     driver.find_element(By.CSS_SELECTOR, "a[href='/leadership'][class^='Header-nav']").click()
     
-    # check if 'Carlos Kidman' is on the page
+    # Check if 'Carlos Kidman' is on the page
     assert driver.find_element(By.XPATH, "//*[contains(text(), 'Carlos Kidman')]")
 ```
 
@@ -163,19 +165,19 @@ Let's write another test that searches for `Pylenium` and makes sure the results
 
 ```python
 def test_google_search(py):
-    py.visit('https://google.com')
-    py.get('[name="q"]').type('Pylenium')
-    py.get('[name="btnK"]').submit()
-    assert py.should().contain_title('Pylenium')
+    py.visit("https://google.com")
+    py.get("[name='q']").type("Pylenium")
+    py.get("[name='btnK']").submit()
+    assert py.should().contain_title("Pylenium")
 ```
 
-You've already seen different Element commands like `.visit()`, `.type()` and `.submit()`,  but there is also a _Should_ object for:
+You've already seen different Element commands like <mark style="color:yellow;">**`.visit()`**</mark>, <mark style="color:yellow;">**`.type()`**</mark> and <mark style="color:yellow;">**`.submit()`**</mark>,  but there is also a _Should_ object for:
 
 * [Element](../../element-commands/should.md)
 * [Elements](../../element-commands/should.md)
 * [Pylenium](../../driver-commands/should.md)
 
-In the example above, `py.should()` uses an Explicit Wait to wait until the "driver" detects that the current page's title contains `"Pylenium"`.&#x20;
+In the example above, <mark style="color:yellow;">**`py.should()`**</mark> uses an Explicit Wait to wait until the "driver" detects that the current page's title contains `"Pylenium"`.&#x20;
 
 * If the title contains `"Pylenium"` within the specified timeout, then it returns `True` and passes the assertion
 * If the title does not meet the expectation within the specified timeout, then it returns `False` and fails the assertion

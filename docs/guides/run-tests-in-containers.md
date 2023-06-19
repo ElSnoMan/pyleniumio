@@ -6,7 +6,7 @@ Regardless of the scaling option you go with (Selenoid, Zalenium, Docker vs Kube
 
 You can do this two ways:
 
-* Update **remote\_url** in **** `pylenium.json`
+* Update <mark style="color:yellow;">**remote\_url**</mark> in **`pylenium.json`**
 * Pass in the argument when running the tests in the CLI
 
 ### Run Tests in CLI
@@ -15,21 +15,30 @@ You can do this two ways:
 This is the most common option since it is what you will use in your pipelines and CI
 {% endhint %}
 
-{% code title="Terminal $ (venv) # example" %}
+{% code title="Terminal" %}
 ```bash
-python -m pytest tests/ui -n 2 --remote_url="http://localhost:4444/wd/hub"
+pytest tests/ui -n 2 --remote_url="http://localhost:4444/wd/hub"
 ```
 {% endcode %}
 
 ### Update pylenium.json
 
-{% hint style="info" %}
-This option is great for local development and debugging
-{% endhint %}
-
 {% code title="pylenium.json" %}
 ```bash
 "remote_url": "http://localhost:4444/wd/hub"
+```
+{% endcode %}
+
+You can have multiple `pylenium.json` files, so you might have:
+
+* **`dev-pylenium.json`** for local development
+* **`ci-pylenium.json`** for CI Pipelines
+
+Then pick which config file to use in the CLI. For example, in a CI Pipeline:
+
+{% code title="Terminal" %}
+```bash
+pytest pylenium_json=ci-pylenium.json
 ```
 {% endcode %}
 
@@ -95,7 +104,7 @@ docker-compose up -d
 {% endcode %}
 
 {% hint style="info" %}
-Once complete, you can visually see these Grid by going to [http://localhost:4444/grid/console](http://localhost:4444/grid/console)
+Once complete, you can visually see this Grid by going to [http://localhost:4444/grid/console](http://localhost:4444/grid/console)
 {% endhint %}
 
 Now **Configure the Test Run** (steps at top of this doc) to target the Hub which will balance the tests across its Nodes.

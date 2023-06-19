@@ -32,7 +32,7 @@ The above command would ignore logs _below_ the `INFO` level. In other words, ig
 
 ### &#x20;COMMAND Level
 
-The **`COMMAND`** Log Level is used by <mark style="color:orange;">**Pylenium**</mark> for logging its commands in a cleaner and easier to parse format. You shouldn't use this level unless you _really want to_. Take a look at our <mark style="color:purple;">**`visit()`**</mark> command to see it in action:
+The **`COMMAND`** Log Level is used by **Pylenium** for logging its commands in a cleaner and easier to parse format. You shouldn't use this level unless you _really want to_. Take a look at our <mark style="color:purple;">**`visit()`**</mark> command to see it in action:
 
 ```python
 def visit(self, url: str) -> "Pylenium":

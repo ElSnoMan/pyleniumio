@@ -14,7 +14,7 @@ You can skip this step if you already have a Virtual Environment in your Project
 
 ## What is a Virtual Environment?&#x20;
 
-Without Virtual Environments (**venv**), everything you install would be global to your machine. Every project you have would be sharing the same packages and dependencies which could cause clashes or unwanted side effects.
+Without Virtual Environments (<mark style="color:yellow;">**venv**</mark> or <mark style="color:yellow;">**.venv**</mark>), everything you install would be global to your machine. Every project you have would be sharing the same packages and dependencies which could cause clashes or unwanted side effects.
 
 Luckily, **venvs** are easy to setup. Open a Terminal in the context of your Project Directory.
 
@@ -53,24 +53,24 @@ Otherwise, you can manually configure your IDE to use the Virtual Environment.
 {% tabs %}
 {% tab title="VS Code" %}
 ```
-Install the Python extension
-Open the Command Palette (CMD + SHIFT + P or CTRL + SHIFT + P)
-Search for "Python: Select Interpreter"
-Select the venv for your Project
+1. Install the Python extension
+2. Open the Command Palette (CMD + SHIFT + P or CTRL + SHIFT + P)
+3. Search for "Python: Select Interpreter"
+4. Select the venv for your Project
 ```
 {% endtab %}
 
 {% tab title="PyCharm" %}
 ```
-Open Preferences (or Settings)
-Open Project > Project Interpreter
-Select the venv for your Project in the Project Interpreter dropdown
-Click APPLY, then OK
+1. Open Preferences (or Settings)
+2. Open Project > Project Interpreter
+3. Select the venv for your Project in the Project Interpreter dropdown
+4. Click APPLY, then OK
 ```
 {% endtab %}
 {% endtabs %}
 
-Kill all Terminal sessions, then reopen a Terminal. It should now open and activate the Virtual Environment automatically. This is indicated by the **(venv)** prefix as seen in the example below:
+Kill all Terminal sessions, then reopen a Terminal. It should now open and activate the Virtual Environment automatically. This is indicated by the <mark style="color:yellow;">**(venv)**</mark> prefix as seen in the example below:
 
 {% code title="New Terminal" %}
 ```bash

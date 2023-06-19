@@ -24,7 +24,7 @@ Now take a look at the next code snippet:
 py.get(".form").get("#city").type("Salt Lake City")
 ```
 
-This starts by searching the entire DOM for an element with <mark style="color:purple;">`class=form`</mark>. Then, _**within** _ the form element, search for the first element with <mark style="color:purple;">`id=city`</mark> and type "Salt Lake City" into it.
+This starts by searching the entire DOM for an element with <mark style="color:purple;">`class=form`</mark>. Then, _**within**_ the form element, search for the first element with <mark style="color:purple;">`id=city`</mark> and type "Salt Lake City" into it.
 
 Also, you can hold <mark style="color:orange;">**Element**</mark> and <mark style="color:orange;">**Elements**</mark> in variables instead of chaining them like the snippet above. The ability to set this context with a smaller scope can be powerful!
 
