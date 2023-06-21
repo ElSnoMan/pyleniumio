@@ -1,13 +1,10 @@
 ---
 description: Web Test Automation made easy
-cover: >-
-  https://images.unsplash.com/photo-1548504769-900b70ed122e?crop=entropy&cs=srgb&fm=jpg&ixid=M3wxOTcwMjR8MHwxfHNlYXJjaHwxfHxvcmFuZ2V8ZW58MHx8fHwxNjg3MTkxNTQ2fDA&ixlib=rb-4.0.3&q=85
-coverY: 0
 ---
 
 # Welcome to Pylenium
 
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://github.com/ElSnoMan/pyleniumio/tree/0bd684d227127daf2eccd2f284b849d4a91e3cb5/docs/code\_of\_conduct.md)
+<figure><img src=".gitbook/assets/pylenium-banner.png" alt=""><figcaption></figcaption></figure>
 
 ### The mission is simple
 
