@@ -55,7 +55,7 @@ pipenv sync
 {% endcode %}
 
 {% hint style="warning" %}
-You must be using **Python 3.7** or greater!
+You must be using **Python 3.8.1** or greater!
 {% endhint %}
 
 ## 4. Follow our Contributing Guide

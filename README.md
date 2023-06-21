@@ -163,7 +163,7 @@ Pylenium uses [Gitpod](https://gitpod.io/) to make it easy to work on it from th
 
 0. If you're new to Gitpod, check out their [Getting Started](https://www.gitpod.io/docs/introduction/getting-started) docs to see how to use it
 1. Visit [Pylenium's repo](https://github.com/ElSnoMan/pyleniumio) and click the `Gitpod` button to open the repo in a VS Code browser window
-2. Wait for Gitpod to setup the project. You'll see things get setup from the various `.gitpod*` files at the Project Root
+2. Wait for Gitpod to set up the project. You'll see things get setup from the various `.gitpod*` files at the Project Root
 3. Once complete, create a new branch and start making your changes
 4. When ready, submit a Pull Request!
 5. Reviewers will see your CI pipeline and even be able to open your Gitpod instance if needed - making collaboration much easier
