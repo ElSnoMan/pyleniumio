@@ -1,5 +1,5 @@
 ---
-description: Web Test Automation made easy
+description: Web Test Automation for Python
 ---
 
 # Welcome to Pylenium

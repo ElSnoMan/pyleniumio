@@ -1,7 +1,6 @@
 # Table of contents
 
 * [Welcome to Pylenium](README.md)
-* [Pylenium GitHub Repo](https://github.com/elsnoman/pyleniumio)
 * [Getting Started](getting-started/README.md)
   * [1. Virtual Environments](docs/getting-started/virtual-environments.md)
   * [2. Setup pytest](docs/getting-started/setup-pytest.md)
