@@ -40,9 +40,8 @@ jobs:
           poetry run pytest tests/unit
 
       - name: Start Selenoid Server
-        # You may pin to the exact commit or the version.
-        # uses: Xotabu4/selenoid-github-action@abe532e06774138cf8c38c5dac461071de092504
-        uses: Xotabu4/selenoid-github-action@v1
+        # https://github.com/marketplace/actions/start-selenoid-server?version=v2
+        uses: Xotabu4/selenoid-github-action@v2
 
       - name: Run UI Tests
         run: |
