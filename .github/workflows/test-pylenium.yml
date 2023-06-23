@@ -5,7 +5,7 @@ name: Build and Test Pylenium with Selenoid
 
 on:
   push:
-    branches: [main]
+    branches: [patch-1]
     paths-ignore:
       - "docs/**"
   pull_request:
