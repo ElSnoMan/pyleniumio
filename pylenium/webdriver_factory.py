@@ -199,7 +199,7 @@ def build_chrome(
 
     if seleniumwire_options is None:  # default to regular ChromeDriver
         driver = webdriver.Chrome(
-            service=ChromeService(local_path or ChromeDriverManager(version=version).install()),
+            service=ChromeService(local_path or ChromeDriverManager(driver_version=version).install()),
             options=browser_options,
             **(webdriver_kwargs or {}),
         )
@@ -207,7 +207,7 @@ def build_chrome(
     else:
         wire_options = seleniumwire_options or {}
         driver = wire_driver.Chrome(
-            service=ChromeService(local_path or ChromeDriverManager(version=version).install()),
+            service=ChromeService(local_path or ChromeDriverManager(driver_version=version).install()),
             options=browser_options,
             seleniumwire_options=wire_options,
             **(webdriver_kwargs or {}),
