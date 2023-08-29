@@ -176,16 +176,7 @@ class PyleniumShould:
 
 
 class Pylenium:
-    """The Pylenium API.
-
-    Chrome is the default local browser
-
-    Other supported browsers:
-        * Firefox
-        * Edge Chromium
-        * IE
-        * Opera
-    """
+    """The Pylenium API."""
 
     def __init__(self, config: PyleniumConfig):
         self.config = config

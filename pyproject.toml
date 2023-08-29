@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyleniumio"
-version = "1.19.1"
+version = "1.20.0"
 description = "The best of Selenium and Cypress in a single Python Package"
 authors = ["Carlos <carlos@qap.dev>"]
 license = "MIT"
@@ -15,15 +15,13 @@ python = ">=3.8.1"
 pydantic = "^1.10.9"
 requests = "^2.31.0"
 pytest-xdist = "^3.3.1"
-pytest-parallel = "^0.1.1"
 axe-selenium-python = "^2.1.6"
 Faker = "^18.11.1"
-webdriver-manager = "^3.8.6"
 selenium-wire = "^5.1.0"
 allure-pytest = "^2.13.2"
-selenium = "^4.10.0"
 pytest = "^7.3.2"
 typer = { version = "^0.9.0", extras = ["all"] }
+selenium = "^4.11.2"
 
 [tool.poetry.dev-dependencies]
 black = "^23.3.0"
