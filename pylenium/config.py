@@ -19,7 +19,6 @@ class DriverConfig(BaseModel):
     seleniumwire_options: Dict = {}
     extension_paths: Optional[List[str]] = None
     webdriver_kwargs: Optional[Dict] = None
-    version: Optional[str] = None
     local_path: str = ""
 
 
@@ -50,5 +49,5 @@ class TestCase(BaseModel):
     name: str
     file_path: Path
 
-    class Config:
+    class ConfigDict:
         arbitrary_types_allowed = True

@@ -5,7 +5,6 @@ def test_py_config_defaults(py_config):
     assert py_config.driver.wait_time == 10
     assert py_config.driver.page_load_wait_time == 0
     assert py_config.driver.options == []
-    assert py_config.driver.version is None
     assert py_config.driver.capabilities == {}
     assert py_config.driver.experimental_options is None
     assert py_config.driver.webdriver_kwargs == {}
