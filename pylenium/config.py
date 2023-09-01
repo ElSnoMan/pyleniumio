@@ -49,5 +49,5 @@ class TestCase(BaseModel):
     name: str
     file_path: Path
 
-    class Config:
+    class ConfigDict:
         arbitrary_types_allowed = True
