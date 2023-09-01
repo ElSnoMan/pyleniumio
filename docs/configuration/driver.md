@@ -9,10 +9,10 @@ description: Configure the driver via the pylenium.json or the CLI.
 Supported Drivers:
 
 * **Chrome**
+* **Edge**
+* **Safari**
 * **Firefox**
-* **IE**
-* **Opera**
-* **Edge (Chromium)**
+* **Internet Explorer**
 
 &#x20;Let's take a look at the Driver Settings in <mark style="color:orange;">**pylenium.json**</mark>
 
@@ -25,7 +25,6 @@ Supported Drivers:
     "page_load_wait_time": 0,
     "options": [],
     "capabilities": {},
-    "version": "",
     "experimental_options": null,
     "extension_paths": [],
     "webdriver_kwargs": {},
@@ -44,7 +43,7 @@ Let's break each one of these down so you know what they are for and how you can
 Default is <mark style="color:yellow;">**`chrome`**</mark>
 {% endhint %}
 
-This is the browser name - <mark style="color:purple;">`"chrome"`</mark> or <mark style="color:purple;">`"firefox"`</mark> or <mark style="color:purple;">`"ie"`</mark> or <mark style="color:purple;">`"opera"`</mark> or <mark style="color:purple;">`"edge"`</mark>
+This is the browser name - <mark style="color:purple;">`"chrome"`</mark> or <mark style="color:purple;">`"firefox"`</mark> or <mark style="color:purple;">`"ie"`</mark> or <mark style="color:purple;">`"safari"`</mark> or <mark style="color:purple;">`"edge"`</mark>
 
 {% code title="pylenium.json" %}
 ```javascript
@@ -217,32 +216,6 @@ Default is empty or `[]`
     }
 }
 ```
-
-### version
-
-{% hint style="info" %}
-Default is <mark style="color:yellow;">**null**</mark>
-{% endhint %}
-
-The browser version to use.
-
-{% code title="pylenium.json" %}
-```javascript
-"driver": {
-    "version": null
-}
-```
-{% endcode %}
-
-{% code title="Terminal" %}
-```bash
-You cannot set the browser version this way
-```
-{% endcode %}
-
-{% hint style="info" %}
-If null (default), Pylenium uses what's on the PATH or latest
-{% endhint %}
 
 ### seleniumwire\_enabled
 

@@ -23,7 +23,6 @@ Here are all of the current settings (and their defaults) you can configure righ
     "page_load_wait_time": 0,
     "options": [],
     "capabilities": {},
-    "version": "latest",
     "experimental_options": null,
     "extension_paths": [],
     "webdriver_kwargs": {},
