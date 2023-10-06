@@ -6,7 +6,6 @@
     "page_load_wait_time": 0,
     "options": [],
     "capabilities": {},
-    "version": null,
     "experimental_options": null,
     "extension_paths": [],
     "webdriver_kwargs": {},
