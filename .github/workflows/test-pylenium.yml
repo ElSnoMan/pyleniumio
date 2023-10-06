@@ -44,7 +44,7 @@ jobs:
         uses: Xotabu4/selenoid-github-action@v2
         with:
           selenoid-start-arguments: |
-            --args "-timeout 300s"
+            --args "-timeout 250s"
 
       - name: Run UI Tests
         run: |
