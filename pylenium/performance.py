@@ -109,6 +109,48 @@ class Performance:
         except TimeoutException:
             return None  # because there were no Resources captured for the current web page
 
+    def mark(self, name) -> str:
+        js = 'return window.performance.mark("{}")[0];'.format(name)
+        start_mark = self._wait().until(lambda driver: driver.execute_script(js), "PerformanceMark not generated yet")
+        print(start_mark)
+        return PerformanceMark(**start_mark).name
+
+    def measure(self, start_name) -> float:
+        end_name = self.mark("end")
+        js = 'return window.performance.measure("{}", "{}", "{}")[0];'.format("measure", start_name, end_name)
+        measures = self._wait().until(lambda driver: driver.execute_script(js),"PerformanceMeasure not generated yet")
+        print(measures)
+        
+
+class PerformanceMeasure(BaseModel):
+    """The PerformanceNavigationTiming Representation.
+
+    Metrics regarding the browser's document navigation events
+
+    References:
+        https://developer.mozilla.org/en-US/docs/Web/API/PerformanceMeasure
+    """
+
+    detail: str = Field(alias="detail")
+    name: str = Field(alias="name")
+    entry_type: str = Field(alias="entryType")
+    start_time: float = Field(alias="startTime")
+    duration: float = Field(alias="duration")
+
+class PerformanceMark(BaseModel):
+    """The PerformanceMark Representation.
+
+    Metrics regarding the browser's document navigation events
+
+    References:
+        https://developer.mozilla.org/en-US/docs/Web/API/PerformanceMark
+    """
+
+    detail: str = Field(alias="detail")
+    name: str = Field(alias="name")
+    entry_type: str = Field(alias="entryType")
+    start_time: float = Field(alias="startTime")
+    duration: float = Field(alias="duration")
 
 class NavigationTiming(BaseModel):
     """The PerformanceNavigationTiming Representation.
