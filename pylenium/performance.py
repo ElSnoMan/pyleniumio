@@ -113,9 +113,9 @@ class Performance:
         js = 'return performance.mark("{}");'.format(mark)
         self._wait().until(lambda driver: driver.execute_script(js), "PerformanceMark not generated yet")
 
-    def measure(self, start) -> float:
+    def measure(self, mark) -> float:
 
-        js = 'return performance.measure("Measure", "{}");'.format(start)
+        js = 'return performance.measure("Measure", "{}");'.format(mark)
         measured = self._wait().until(lambda driver: driver.execute_script(js), "PerformanceMeasure not generated yet")
         return PerformanceMeasure(**measured).duration
         
