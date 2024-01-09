@@ -27,12 +27,12 @@ class TestSauceDemo:
         sauce.getx("//a[@class='shopping_cart_link']").click()
         assert sauce.findx("//*[@class='cart_item']").should().have_length(6)
 
-    def test_add_to_cart_xpath(sauce: Pylenium):
+    def test_add_to_cart_xpath(self, sauce: Pylenium):
         """Add 6 different items to the cart. There should be 6 items in the cart."""
-        start_name = sauce.performance.mark("before")
+        sauce.performance.mark("Adding item in cart")
         for button in sauce.findx("//*[contains(@id, 'add-to-cart')]"):
             button.click()
         sauce.getx("//a[@class='shopping_cart_link']").click()
+        time_in_ms = sauce.performance.measure("Adding item in cart")
         assert sauce.findx("//*[@class='cart_item']").should().have_length(6)
-        time = sauce.performance.measure("measure", start_name)
-        assert time < 5, "Took longer than 5 seconds to add item to cart using xpath"
+        assert time_in_ms < 2000, "should be less 2000ms"
