@@ -118,7 +118,6 @@ class Performance:
         js = 'return performance.measure("Measure", "{}");'.format(mark)
         measured = self._wait().until(lambda driver: driver.execute_script(js), "PerformanceMeasure not generated yet")
         return PerformanceMeasure(**measured).duration
-        
 
 class PerformanceMeasure(BaseModel):
     """The PerformanceMeasure Representation.
