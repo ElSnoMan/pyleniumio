@@ -13,21 +13,21 @@ pylenium = "pylenium.scripts.cli:app"
 [tool.poetry.dependencies]
 python = ">=3.8.1"
 requests = "^2.31.0"
-pytest-xdist = "^3.3.1"
+pytest-xdist = "^3.5.0"
 axe-selenium-python = "^2.1.6"
 selenium-wire = "^5.1.0"
 allure-pytest = "^2.13.2"
 typer = { version = "^0.9.0", extras = ["all"] }
-selenium = "^4.11.2"
-pydantic = "^2.3.0"
-faker = "^19.3.1"
-pytest = "^7.4.0"
+selenium = "^4.17.2"
+pydantic = "^2.6.1"
+faker = "^23.1.0"
+pytest = "^8.0.0"
 
 [tool.poetry.dev-dependencies]
-black = "^23.7.0"
+black = "^24.1.1"
 pytest-cov = "4.1.0"
-flake8 = "^6.0.0"
-poethepoet = "^0.22.0"
+flake8 = "^7.0.0"
+poethepoet = "^0.24.4"
 
 [tool.black]
 line-length = 160
