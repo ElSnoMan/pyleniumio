@@ -15,7 +15,7 @@ However, you can use Selenium's ExpectedConditions class or lambdas as shown on 
 There are two types of Wait objects:
 
 * **WebDriverWait (default)**
-  * Directly from Seleniujm
+  * Directly from Selenium
   * Returns <mark style="color:orange;">**`WebElement`**</mark> and <mark style="color:orange;">**`List[WebElement]`**</mark>
 * **PyleniumWait**
   * Returns <mark style="color:orange;">**`Element`**</mark> and <mark style="color:orange;">**`Elements`**</mark>

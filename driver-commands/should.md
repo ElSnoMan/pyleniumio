@@ -2,7 +2,7 @@
 description: A collection of expected conditions against the current browser.
 ---
 
-# ⏱ Driver.should()
+# ⏱️ Driver.should()
 
 ## Expectations
 
@@ -66,7 +66,7 @@ def test_title_matches(py):
 ```python
 def test_url_matches(py):
     py.visit("https://qap.dev")
-    assert py.should().have_title("https://www.qap.dev/")
+    assert py.should().have_url("https://www.qap.dev/")
 ```
 {% endcode %}
 
