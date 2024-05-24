@@ -153,18 +153,6 @@ def _override_pylenium_config_values(_load_pylenium_json: PyleniumConfig, reques
         # with double quotes around each key. booleans are lowercase.
         config.driver.capabilities = json.loads(cli_capabilities)
 
-    cli_wire_enabled = request.config.getoption("--wire_enabled")
-    if cli_wire_enabled:
-        # --wire_enabled is false unless they specify "true"
-        wire_enabled = cli_wire_enabled.lower() == "true"
-        config.driver.seleniumwire_enabled = wire_enabled
-
-    cli_wire_options = request.config.getoption("--wire_options")
-    if cli_wire_options:
-        # --wire_options must be in '{"name": "value", "boolean": true}' format
-        # with double quotes around each key. booleans are lowercase.
-        config.driver.seleniumwire_options = json.loads(cli_wire_options)
-
     cli_page_wait_time = request.config.getoption("--page_load_wait_time")
     if cli_page_wait_time and cli_page_wait_time.isdigit():
         config.driver.page_load_wait_time = int(cli_page_wait_time)
@@ -347,15 +335,3 @@ def pytest_addoption(parser):
         help="The amount of time to wait for a page load before raising an error. Default is 0.",
     )
     parser.addoption("--extensions", action="store", default="", help='Comma-separated list of extension paths. Ex. "*.crx, *.crx"')
-    parser.addoption(
-        "--wire_enabled",
-        action="store",
-        default=False,
-        help="Should the Wire Protocol be enabled? true | false",
-    )
-    parser.addoption(
-        "--wire_options",
-        action="store",
-        default="",
-        help='Dict of key-value pairs as a string. Ex. \'{"name": "value", "boolean": true}\'',
-    )

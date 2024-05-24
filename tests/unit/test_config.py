@@ -8,7 +8,6 @@ def test_py_config_defaults(py_config):
     assert py_config.driver.capabilities == {}
     assert py_config.driver.experimental_options is None
     assert py_config.driver.webdriver_kwargs == {}
-    assert py_config.driver.seleniumwire_options == {}
 
     # logging settings
     assert py_config.logging.screenshots_on is True
