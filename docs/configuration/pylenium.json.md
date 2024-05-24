@@ -26,8 +26,6 @@ Here are all of the current settings (and their defaults) you can configure righ
     "experimental_options": null,
     "extension_paths": [],
     "webdriver_kwargs": {},
-    "seleniumwire_enabled": false,
-    "seleniumwire_options": {},
     "local_path": ""
   },
   "logging": {

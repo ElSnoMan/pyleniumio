@@ -26,5 +26,5 @@ Look at these sections if you are looking for the commands available in the Pyle
 If you are looking for different flows and examples using Pylenium, then look at the [Guides](../guides/) section. Some guides include:
 
 * [Run Tests in Parallel](../docs/guides/run-tests-in-parallel.md)
-* [Inspect Network Requests](../guides/inspect-network-requests.md)
+* [Inspect Network Requests](broken-reference)
 * [How to wait for things using the .should() API](../guides/should-expected-conditions.md)

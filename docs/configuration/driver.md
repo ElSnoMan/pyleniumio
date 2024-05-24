@@ -28,8 +28,6 @@ Supported Drivers:
     "experimental_options": null,
     "extension_paths": [],
     "webdriver_kwargs": {},
-    "seleniumwire_enabled": false,
-    "seleniumwire_options": {},
     "local_path": ""
 }
 ```
@@ -216,45 +214,3 @@ Default is empty or `[]`
     }
 }
 ```
-
-### seleniumwire\_enabled
-
-{% hint style="info" %}
-Default is <mark style="color:yellow;">**false**</mark>
-{% endhint %}
-
-Use a SeleniumWire-enabled Chrome or Firefox driver.
-
-{% code title="pylenium.json" %}
-```javascript
-"driver": {
-    "seleniumwire_enabled": false
-}
-```
-{% endcode %}
-
-{% code title="Terminal" %}
-```bash
-pytest --seleniumwire_enabled=true
-```
-{% endcode %}
-
-### seleniumwire\_options
-
-{% hint style="info" %}
-Default is <mark style="color:yellow;">**{}**</mark>
-{% endhint %}
-
-Options for the SeleniumWire-enabled Chrome or Firefox driver.
-
-{% code title="pylenium.json" %}
-```javascript
-"driver": {
-    "seleniumwire_options": {}
-}
-```
-{% endcode %}
-
-{% hint style="success" %}
-See their docs on [how to use it](https://www.zenrows.com/blog/selenium-wire#chromium-options) and the options you can set
-{% endhint %}

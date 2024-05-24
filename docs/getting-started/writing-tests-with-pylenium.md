@@ -6,7 +6,7 @@ description: Easy as py 🥁
 
 ## Create a Test File
 
-A **Test File** is just that - a file with tests in it. Depending on the type of project you're working on, you may want these to live right next to your code files or in a separate `/tests` directory.
+A **Test File** is just that - a file with tests in it. Depending on the type of project you're working on, you may want these to live right next to your code files or in a separate <mark style="color:yellow;">**`/tests`**</mark> directory.
 
 {% hint style="info" %}
 In these docs, we will assume you are writing your tests in a `/tests` directory of your project.

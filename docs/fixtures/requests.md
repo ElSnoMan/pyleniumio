@@ -2,13 +2,15 @@
 description: A library for working with HTTP Clients and APIs.
 ---
 
-# ↗ api
+# ↗️ api
 
 ## What is requests?
 
 <mark style="color:orange;">**Requests**</mark> is an elegant and simple HTTP library for Python, built for human beings.
 
-{% embed url="https://2.python-requests.org/en/master/" %}
+{% embed url="https://requests.readthedocs.io/en/latest/" %}
+requests official documentation
+{% endembed %}
 
 ## Two Ways to Use it
 
