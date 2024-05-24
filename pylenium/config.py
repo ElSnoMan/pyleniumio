@@ -15,8 +15,6 @@ class DriverConfig(BaseModel):
     options: List[str] = []
     capabilities: Dict = {}
     experimental_options: Optional[List[Dict]] = None
-    seleniumwire_enabled: bool = False
-    seleniumwire_options: Dict = {}
     extension_paths: Optional[List[str]] = None
     webdriver_kwargs: Optional[Dict] = None
     local_path: str = ""

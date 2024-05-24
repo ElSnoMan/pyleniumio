@@ -3,6 +3,7 @@
 The Pylenium class asks for a PyleniumConfig object to build a WebDriver,
 so the `build_from_config` method is the "main" method in this module.
 """
+
 from typing import Dict, List, Optional
 
 from selenium import webdriver
@@ -12,7 +13,6 @@ from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.safari.service import Service as SafariService
 from selenium.webdriver.remote.webdriver import WebDriver
-from seleniumwire import webdriver as wire_driver
 
 from pylenium.config import PyleniumConfig
 
@@ -123,7 +123,6 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
     """
     browser = config.driver.browser.lower()
     remote_url = config.driver.remote_url
-    seleniumwire_enabled = config.driver.seleniumwire_enabled
     _config = {
         "options": config.driver.options,
         "capabilities": config.driver.capabilities,
@@ -139,23 +138,15 @@ def build_from_config(config: PyleniumConfig) -> WebDriver:
     # Set fields for the rest of the non-remote drivers
     _config["local_path"] = config.driver.local_path
 
-    # Build SeleniumWire driver if enabled
-    if seleniumwire_enabled:
-        if browser == Browser.CHROME:
-            return build_chrome(seleniumwire_options=config.driver.seleniumwire_options, **_config)
-        if browser == Browser.FIREFOX:
-            return build_firefox(seleniumwire_options=config.driver.seleniumwire_options, **_config)
-        raise ValueError(f"Only chrome and firefox are supported by SeleniumWire, not {config.driver.browser}")
-
-    # Otherwise, build the driver normally
+    # Build the WebDriver based on the browser
     if browser == Browser.CHROME:
-        return build_chrome(seleniumwire_options=None, **_config)
+        return build_chrome(**_config)
     if browser == Browser.EDGE:
         return build_edge(**_config)
     if browser == Browser.SAFARI:
         return build_safari(**_config)
     if browser == Browser.FIREFOX:
-        return build_firefox(seleniumwire_options=None, **_config)
+        return build_firefox(**_config)
     if browser == Browser.IE:
         return build_ie(**_config)
     raise ValueError(f"{config.driver.browser} is not supported. Cannot build WebDriver from config.")
@@ -165,20 +156,16 @@ def build_chrome(
     options: Optional[List[str]],
     capabilities: Optional[Dict],
     experimental_options: Optional[List[Dict]],
-    seleniumwire_options: Optional[Dict],
     extension_paths: Optional[List[str]],
     local_path: Optional[str],
     webdriver_kwargs: Optional[Dict],
 ):
     """Build a Chrome WebDriver.
 
-    If seleniumwire_options is not None, a SeleniumWire Chrome WebDriver is built.
-
     Args:
         options: The list of options/arguments to include.
         capabilities: The dict of capabilities to include.
         experimental_options: The list of experimental options to include.
-        seleniumwire_options: The dict of seleniumwire options to include.
         extension_paths: The list of extension filepaths to add to the browser.
         local_path: The path to the driver binary (only to bypass WebDriverManager)
         webdriver_kwargs: additional keyword arguments to pass.
@@ -191,21 +178,11 @@ def build_chrome(
     for cap in caps:
         browser_options.set_capability(cap, caps[cap])
 
-    if seleniumwire_options is None:  # default to regular ChromeDriver
-        driver = webdriver.Chrome(
-            options=browser_options,
-            service=ChromeService(local_path or None),
-            **(webdriver_kwargs or {}),
-        )
-
-    else:
-        wire_options = seleniumwire_options or {}
-        driver = wire_driver.Chrome(
-            service=ChromeService(local_path or None),
-            options=browser_options,
-            seleniumwire_options=wire_options,
-            **(webdriver_kwargs or {}),
-        )
+    driver = webdriver.Chrome(
+        options=browser_options,
+        service=ChromeService(local_path or None),
+        **(webdriver_kwargs or {}),
+    )
 
     # enable Performance Metrics from Chrome Dev Tools
     driver.execute_cdp_cmd("Performance.enable", {})
@@ -282,20 +259,16 @@ def build_firefox(
     options: Optional[List[str]],
     capabilities: Optional[Dict],
     experimental_options: Optional[List[Dict]],
-    seleniumwire_options: Optional[Dict],
     extension_paths: Optional[List[str]],
     local_path: Optional[str],
     webdriver_kwargs: Optional[Dict],
 ):
     """Build a Firefox WebDriver.
 
-    If seleniumwire_options is not None, a SeleniumWire Firefox WebDriver is built.
-
     Args:
         options: The list of options/arguments to include.
         capabilities: The dict of capabilities to include.
         experimental_options: The list of experimental options to include.
-        seleniumwire_options: The dict of seleniumwire options to include.
         extension_paths: The list of extensions to add to the browser.
         local_path: The path to the driver binary.
         webdriver_kwargs: additional keyword arguments to pass.
@@ -308,20 +281,11 @@ def build_firefox(
     for cap in caps:
         browser_options.set_capability(cap, caps[cap])
 
-    if seleniumwire_options is None:  # default to regular FirefoxDriver
-        return webdriver.Firefox(
-            options=browser_options,
-            service=FirefoxService(local_path or None),
-            **(webdriver_kwargs or {}),
-        )
-    else:
-        wire_options = seleniumwire_options or {}
-        return wire_driver.Firefox(
-            options=browser_options,
-            service=FirefoxService(local_path or None),
-            seleniumwire_options=wire_options,
-            **(webdriver_kwargs or {}),
-        )
+    return webdriver.Firefox(
+        options=browser_options,
+        service=FirefoxService(local_path or None),
+        **(webdriver_kwargs or {}),
+    )
 
 
 def build_ie(
