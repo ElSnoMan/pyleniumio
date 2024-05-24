@@ -6,6 +6,7 @@ from pylenium.driver import Pylenium
 
 
 THE_INTERNET = "https://the-internet.herokuapp.com"
+TEST_PAGES = "https://testpages.eviltester.com"
 
 
 def test_jit_webdriver(py: Pylenium):
@@ -82,13 +83,19 @@ def test_webdriver_wait_until(py: Pylenium):
 
 
 def test_switch_to_frame_by_element_then_back(py: Pylenium):
-    py.visit(f"{THE_INTERNET}/iframe")
-    iframe = py.get("#mce_0_ifr")
-    py.switch_to.frame_by_element(iframe).get("#tinymce").clear().type("foo")
-    assert py.switch_to.default_content().contains("An iFrame").tag_name() == "h3"
-    py.switch_to.frame_by_element(iframe).get("#tinymce").type("bar")
-    assert "foobar" in py.get("#tinymce").text()
-    assert py.switch_to.parent_frame().contains("An iFrame").tag_name() == "h3"
+    py.visit(f"{TEST_PAGES}/styled/iframes-test.html")
+    iframe = py.get("iframe#theheaderhtml")
+    py.switch_to.frame_by_element(iframe)
+    assert py.get("h1").should().contain_text("Nested Page Example")
+
+    py.switch_to.default_content()
+    assert py.get("h1").should().contain_text("iFrames Example")
+
+    py.switch_to.frame_by_element(iframe)
+    assert py.get("h1").should().contain_text("Nested Page Example")
+
+    py.switch_to.parent_frame()
+    assert py.get("h2").should().contain_text("iFrame Example List")
 
 
 def test_have_url(py: Pylenium):
